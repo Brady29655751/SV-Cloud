@@ -99,9 +99,12 @@ public class RoomManager : Manager<RoomManager>
         var allPlayers = PhotonNetwork.PlayerList;        
         var otherPlayer = PhotonNetwork.PlayerListOthers;
         var hash = player.CustomProperties;
-        if ((!player.IsLocal) && (bool)hash["ready"]) {
-            opView.SetReady(true);
-        }
+
+        if (!player.IsLocal)
+            opView.SetReady((bool)hash["ready"]);
+        
+        if ((allPlayers == null) || (otherPlayer == null))
+            return;
 
         bool isAllReady = (allPlayers.Length > 1) && allPlayers.All(x => (x != null) && (bool)x.CustomProperties["ready"]);
         if (isAllReady) {

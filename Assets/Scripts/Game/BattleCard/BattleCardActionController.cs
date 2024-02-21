@@ -19,6 +19,8 @@ public class BattleCardActionController
         set => SetIdentifier("attackChance", Mathf.Clamp(value, 0, MaxAttackChance));
     }
 
+    public bool IsAttackFinished => CurrentAttackChance == 0;
+
     public Dictionary<string, float> options = new Dictionary<string, float>();
 
     public BattleCardActionController() {
@@ -33,6 +35,7 @@ public class BattleCardActionController
     public float GetIdentifier(string id) 
     {
         return id switch {
+            "isAttackFinished" => IsAttackFinished ? 1 : 0,
             _ => options.Get(id, 0),
         };
     }

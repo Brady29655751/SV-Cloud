@@ -60,10 +60,8 @@ public class GameManager : Singleton<GameManager>
             RequestManager.OnRequestFail("獲取版本資料失敗，請重新啟動遊戲");
         } 
 
+        Utility.InitScreenSizeWithRatio(16, 9);
         Player.gameData = SaveSystem.LoadData();
-        if (Player.gameData.IsEmpty())
-            Utility.InitScreenSizeWithRatio(16, 9);
-
         ResourceManager.LoadXML<VersionData>(versionDataUrl, OnRequestSuccess, OnRequestFail);
     }
 

@@ -22,7 +22,6 @@ public class VersionData
     [XmlArray("topicDeck"), XmlArrayItem(typeof(Deck), ElementName = "deck")]
     public List<Deck> topicDecks = new List<Deck>();
 
-
     public bool IsEmpty() {
         return string.IsNullOrEmpty(gameVersion);
     }

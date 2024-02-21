@@ -46,7 +46,7 @@ public class BattleCard : IIdentifyHandler
         evolveCard?.effects.ForEach(x => x.source = this);
 
         newEffects = rhs.newEffects.Select(x => new KeyValuePair<Func<bool>, Effect>
-            (new Func<bool>(x.Key), new Effect(x.Value))).ToList();
+            (x.Key, new Effect(x.Value))).ToList();
 
         newEffects.ForEach(x => x.Value.source = this);
 
@@ -114,6 +114,18 @@ public class BattleCard : IIdentifyHandler
         return result;
     }
 
+    public BattleCard GetCurrentBattleCard(int cost, string situation) {
+        if (string.IsNullOrEmpty(situation))
+            return this;
+
+        var ability = situation.ToEffectAbility();
+        var effect = CurrentCard.effects.Find(x => (x.ability == ability) && (int.Parse(x.abilityOptionDict.Get("accelerate", "-1")) == cost));
+        if (effect == null)
+            return this;
+
+        return BattleCard.Get(int.Parse(effect.abilityOptionDict.Get("id", "-1"))) ?? this;
+    }
+
     public string GetConditionDescription() {
         var card = CurrentCard;
         var description = string.Empty;
@@ -161,13 +173,19 @@ public class BattleCard : IIdentifyHandler
         //     description += "消費 " + costBuff.ToStringWithSign() + "\n";
 
         var keywords = CardDatabase.KeywordEffects.Where(x => !originalKeywords.Contains(x)).ToList();
+        var keywordCount = 0;
         for (int i = 0; i < keywords.Count; i++) {
-            if (actionController.IsKeywordAvailable(keywords[i]))
+            if (actionController.IsKeywordAvailable(keywords[i])) {
                 description += ("[ffbb00]" + keywords[i].GetKeywordName() + "[-]").GetDescription() + "\n";
+                keywordCount++;
+            }
         }
 
+        if ((keywordCount > 0) && (newEffects.Count > 0))
+            description += "------\n";
+
         for (int i = 0; i < newEffects.Count; i++) {
-            if (newEffects[i].Value.hudOptionDict.TryGetValue("description", out var effectDesc))
+            if (newEffects[i].Value.hudOptionDict.TryGetValue("description", out var effectDesc) && (!string.IsNullOrEmpty(effectDesc)))
                 description += effectDesc + "\n";
         }
 
@@ -177,7 +195,8 @@ public class BattleCard : IIdentifyHandler
     public void GetTargetEffectWithTiming(string timing, out Queue<Effect> targetEffectQueue, out Queue<EffectTargetInfo> targetInfoQueue, out Queue<List<short>> selectableTargetQueue) {
         bool isEvolveTiming = timing == "on_this_evolve_with_ep";
 
-        var nowCard = GetCurrentCard(isEvolveTiming ? evolveCard : OriginalCard);
+        var nowCost = GetUseCost(Hud.CurrentState.myUnit.leader, out var situation);
+        var nowCard = GetCurrentBattleCard(nowCost, situation).CurrentCard;
 
         targetEffectQueue = new Queue<Effect>();
         targetInfoQueue = new Queue<EffectTargetInfo>();
@@ -227,7 +246,7 @@ public class BattleCard : IIdentifyHandler
         if (currentInfo.places.Contains(BattlePlaceId.Hand)) {
             var myHand = Hud.CurrentState.myUnit.hand;
             var opHand = Hud.CurrentState.opUnit.hand;
-            
+
             var myIndex = (currentInfo.unit == "op") ? new List<int>() : 
                 Enumerable.Range(0, myHand.Count).Where(x => currentInfo.filter.FilterWithCurrentCard(myHand.cards[x])).ToList();
                     
@@ -272,28 +291,53 @@ public class BattleCard : IIdentifyHandler
         var card = CurrentCard;
         var effects = card.effects;
 
-        var enhanceList = new List<int>() { -1 };
-        for (int i = 0; i < effects.Count; i++) {
-            var currentEffect = effects[i];
-            if (currentEffect.abilityOptionDict.TryGetValue("enhance", out var trimId))
-                enhanceList.Add(int.Parse(trimId));
+        List<int> GetSecondChoiceCostList(string choiceSituation, out int choiceCost) {
+            var choiceList = new List<int>() { -1 };
+            for (int i = 0; i < effects.Count; i++) {
+                var currentEffect = effects[i];
+                if (currentEffect.abilityOptionDict.TryGetValue(choiceSituation, out var choiceCostId))
+                    choiceList.Add(int.Parse(choiceCostId));
+            }
+
+            choiceCost = choiceList.Where(x => x <= leader.PP).Max();
+            return choiceList;
         }
-        var enhanceCost = enhanceList.Where(x => x <= leader.PP).Max();
+
+        var enhanceList = GetSecondChoiceCostList("enhance", out var enhanceCost);
         if (enhanceCost != -1) {
             situation = "enhance";
             return enhanceCost;
         }
 
-        situation = string.Empty;
-        return card.cost;
+        var accelList = GetSecondChoiceCostList("accelerate", out var accelCost);
+        var crystalList = GetSecondChoiceCostList("crystalize", out var crystalCost);
+
+        // If cost enough or no accel/crystal effect
+        if ((card.cost <= leader.PP) || ((accelList.Count <= 1) && (crystalList.Count <= 1))) {
+            situation = string.Empty;
+            return card.cost;
+        }
+
+        // If accel/crystal effect exists but not enough cost => show min cost.
+        if ((accelCost == -1) && (crystalCost == -1)) {
+            accelCost = accelList.Where(x => x >= 0).DefaultIfEmpty(-1).Min();
+            crystalCost = crystalList.Where(x => x >= 0).DefaultIfEmpty(-1).Min();
+        }
+
+        bool isAccel = accelCost >= crystalCost;
+        situation = isAccel ? "accelerate" : "crystalize";
+        return isAccel ? accelCost : crystalCost;
     }
 
     public bool IsUsable(BattleUnit sourceUnit) {
-        bool isCostEnough = sourceUnit.leader.PP >= GetUseCost(sourceUnit.leader, out _);
-        bool isFieldFull = CurrentCard.IsFollower() && sourceUnit.field.IsFull;
+        var useCost = GetUseCost(sourceUnit.leader, out var situation);
+        var useCard = GetCurrentBattleCard(useCost, situation);
+
+        bool isCostEnough = sourceUnit.leader.PP >= useCost;
+        bool isFieldFull = useCard.CurrentCard.IsFollower() && sourceUnit.field.IsFull;
         bool isSpellTargetable = true;
 
-        if (CurrentCard.Type == CardType.Spell) {
+        if (useCard.CurrentCard.Type == CardType.Spell) {
             GetTargetEffectWithTiming("on_this_use", out _, out var infoQueue, out var selectableQueue);
 
             while (infoQueue.Count > 0) {
@@ -307,7 +351,7 @@ public class BattleCard : IIdentifyHandler
     }
 
     public int GetEvolveCost() {
-        return 1;
+        return Mathf.CeilToInt(CurrentCard.GetIdentifier("evolveCost"));
     }
 
     public bool IsEvolvable(BattleUnit sourceUnit) {

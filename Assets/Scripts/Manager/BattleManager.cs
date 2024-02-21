@@ -69,7 +69,7 @@ public class BattleManager : Manager<BattleManager>
     }
 
     public void OnConfirmBattleResult(bool isBattleEnd) {
-        if (!isBattleEnd) {
+        if (Battle.Settings.isLocal || (!isBattleEnd)) {
             BackToScene();
             return;
         }

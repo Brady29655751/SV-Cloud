@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_DefaultGroup: 645c737f918d63d42b67745bfe26a75a
   m_OptimizeCatalogSize: 0
-  m_BuildRemoteCatalog: 0
+  m_BuildRemoteCatalog: 1
   m_BundleLocalCatalog: 0
   m_CatalogRequestsTimeout: 0
   m_DisableCatalogUpdateOnStart: 0
@@ -30,15 +30,16 @@ MonoBehaviour:
   m_MonoScriptBundleNaming: 0
   m_MonoScriptBundleCustomNaming: 
   m_RemoteCatalogBuildPath:
-    m_Id: 
+    m_Id: df40ce22e78d9ed47a0f3aed31157ec8
   m_RemoteCatalogLoadPath:
-    m_Id: 
+    m_Id: 76636c5a94870bf4aab7206b981c12ac
   m_ContentStateBuildPath: 
   m_overridePlayerVersion: 
   m_GroupAssets:
   - {fileID: 11400000, guid: 9e30a06ea582e0d428f78ba07a1329b9, type: 2}
   - {fileID: 11400000, guid: 1388f03f9fd876544a86ee0c0669bd8c, type: 2}
   - {fileID: 11400000, guid: 952222991ea94fd4cb21dfa0b490a0ea, type: 2}
+  - {fileID: 11400000, guid: 4a24326238e6d2b49aad1397907928f7, type: 2}
   m_BuildSettings:
     m_CompileScriptsInVirtualMode: 0
     m_CleanupStreamingAssetsAfterBuilds: 1

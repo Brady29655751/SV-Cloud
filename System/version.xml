@@ -1,11 +1,12 @@
 <versionData>
-    <gameVersion>0.1</gameVersion>
-    <buildVersion>0.2</buildVersion>
-    <releaseDate>2023-02-13+08:00</releaseDate>
+    <gameVersion>0.2</gameVersion>
+    <buildVersion>0.3</buildVersion>
+    <releaseDate>2023-02-21+08:00</releaseDate>
     <releaseNote>
-    【當前版本】0.2
-    【版本日期】2023/02/13
-    【已知錯誤】對戰中存在部分情形會導致UI顯示錯誤
+    【當前版本】0.3
+    【版本日期】2023/02/21
+    【更新內容】《新界基石》中立卡片、寶石賽制。
+    【修復錯誤】牌組無法翻頁、使用卡片時錯誤顯示使用時的費用和體質、跳費可以超過10費等等。
 
     【1】當前版本為測試版本，流量達到上限後無法進行私人對戰。
     【2】初次加載資源會非常慢，請耐心等待並確保網路連線環境順暢。
@@ -14,10 +15,10 @@
     【5】進化請直接點擊場上從者並按下進化按鈕。目前無法透過拖曳EP到從者身上進化。
     </releaseNote>
     
-    <keywordCount>26</keywordCount>
-    <traitCount>6</traitCount>
-    <cardCount>232</cardCount>
-    <cardPack>0/0/0</cardPack>
+    <keywordCount>29</keywordCount>
+    <traitCount>8</traitCount>
+    <cardCount>282</cardCount>
+    <cardPack>0/1/0</cardPack>
     <topicDeck>
         <deck>
           <name>預設牌組（精靈）</name>

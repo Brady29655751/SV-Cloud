@@ -28,14 +28,18 @@ public class CreateRoomController : IMonoBehaviour
         //if (!GameManager.instance.debugMode) 
         //    return;
 
+        ResourceManager.LoadCSV(GameManager.serverUrl + "System/deckTest.csv", PrepareBattle, Debug.Log);
+    }
+
+    private void PrepareBattle(string[] deckTestData) {
         BattleSettings settings = new BattleSettings(CardZone.Engineering, GameFormat.Rotation, true) {
             evolveStart = 1,
             masterName = Player.Nickname,
             clientName = "電腦",
         };
 
-        BattleDeck myDeck = new BattleDeck(1, 1, 1, Player.gameData.decks[0].cardIds.ToArray());
-        BattleDeck opDeck = new BattleDeck(1, 1, 2, Player.gameData.decks[1].cardIds.ToArray());
+        BattleDeck myDeck = new BattleDeck(1, 1, 1, deckTestData[0].ToIntList('/').ToArray());
+        BattleDeck opDeck = new BattleDeck(1, 1, 2, deckTestData[1].ToIntList('/').ToArray());
         Battle battle = new Battle(myDeck, opDeck, settings);
         SceneLoader.instance.ChangeScene(SceneId.Battle);
     }

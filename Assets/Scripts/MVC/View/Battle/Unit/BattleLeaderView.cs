@@ -21,9 +21,9 @@ public class BattleLeaderView : BattleBaseView
         currentLeader = leader;
         backgroundImage?.SetColor(SpriteResources.GetLeaderBattleColor(leader.Craft));
         leaderImage?.SetSprite(SpriteResources.GetLeaderProfileSprite(leader.CraftId));
-        hpText?.SetText(leader.Hp.ToString());
-        hpText?.SetColor(ColorHelper.GetAtkHpTextColor(leader.Hp, leader.HpMax, leader.HpInit));
-        hpOutline?.SetColor(ColorHelper.GetAtkHpOutlineColor(leader.Hp, leader.HpMax, leader.HpInit));
+        hpText?.SetText(leader.HP.ToString());
+        hpText?.SetColor(ColorHelper.GetAtkHpTextColor(leader.HP, leader.HPMax, leader.HPInit));
+        hpOutline?.SetColor(ColorHelper.GetAtkHpOutlineColor(leader.HP, leader.HPMax, leader.HPInit));
     }
 
     public void ShowLeaderInfo() {

@@ -13,8 +13,9 @@ public static class CardDatabase
     };
 
     public static Dictionary<CardPack, string> packNameDict = new Dictionary<CardPack, string>() {
-        { CardPack.Basic, "基本卡包" },
-        { CardPack.EngineeringBasic, "基本卡包" },
+        { CardPack.Basic,               "基本卡包" },
+        { CardPack.EngineeringBasic,    "基本卡包" },
+        { CardPack.NewWorldStone,       "新界基石" },
     };
 
     public static Dictionary<CardZone, string> zoneNameDict = new Dictionary<CardZone, string>() {
@@ -24,6 +25,7 @@ public static class CardDatabase
 
     public static Dictionary<GameFormat, string> formatNameDict = new Dictionary<GameFormat, string>() {
         { GameFormat.Unlimited, "無限制" },  { GameFormat.Rotation, "指定系列" },
+        { GameFormat.GemOfFortune, "寶石盃" },
         { GameFormat.TwoPick, "2Pick" },    { GameFormat.AllStarTwoPick, "AS 2Pick"},
     };
 
@@ -99,6 +101,7 @@ public static class CardDatabase
     public static string GetKeywordInfo(this CardKeyword keyword) => DatabaseManager.instance.GetKeywordInfo(keyword);
 
     public static int GetMaxCardCountInDeck(this GameFormat format) => format switch {
+        GameFormat.GemOfFortune => 30,
         GameFormat.TwoPick => 30,
         GameFormat.AllStarTwoPick => 30,
         _ => 40,
@@ -123,6 +126,14 @@ public static class CardDatabase
         return typeEnglishNameDict.FirstOrDefault(x => x.Value == type).Key;
     }
 
+    public static CardTrait ToCardTrait(this string trait) {
+        return DatabaseManager.instance.traitNameDict.FirstOrDefault(x => x.Value == trait).Key;
+    }
+
+    public static CardKeyword ToCardKeyword(this string keyword) {
+        return DatabaseManager.instance.keywordNameDict.FirstOrDefault(x => x.Value == keyword).Key;
+    }
+
     public static BattlePlaceId ToBattlePlace(this string place) {
         if (!placeNameDict.Values.Contains(place))
             return BattlePlaceId.None;
@@ -133,13 +144,13 @@ public static class CardDatabase
 
 public enum CardGroup 
 {
-    Normal = 1, Balanced = 2, Territorize = 6, Accelerate = 7, Crystal = 8, Token = 9
+    Normal = 1, Balanced = 2, Special = 5, Territorize = 6, Crystalize = 7, Accelerate = 8, Token = 9
 }
 
 public enum GameFormat 
 {
-    Unlimited = 0,      Rotation = 1, 
-    AllStarTwoPick = 8, TwoPick = 9,
+    Unlimited = 0,      Rotation = 1, GemOfFortune = 2,
+    TwoPick = 3, AllStarTwoPick = 4,
 }
 
 public enum CardZone 
@@ -157,7 +168,7 @@ public enum BestOf
 public enum CardPack
 {
     Basic = 0,
-    EngineeringBasic = 100,
+    EngineeringBasic = 100, NewWorldStone = 101,
 }
 
 public enum CardCraft 
@@ -182,6 +193,7 @@ public enum CardTrait
 {
     All = 0,
     Soldier = 1, Commander = 2, Earth = 3, Artifact = 4, Golem = 5,
+    Light = 6, Dark = 7,
 }
 
 public enum CardKeyword 
@@ -190,7 +202,8 @@ public enum CardKeyword
     Fanfare = 7, Lastword = 8, Attack = 9, Defense = 10, Evolve = 11, 
     Combo = 12, Rally = 13, SpellBoost = 14, Awake = 15, Necromance = 16,
     Venge = 17, Countdown = 18, Reson = 19, EarthRitual = 20, Enhance = 21,
-    Pressure = 22, Bury = 23, Reanimate = 24, Aura = 25,
+    Pressure = 22, Bury = 23, Reanimate = 24, Aura = 25, Accelerate = 26,
+    Crystalize = 27, Travel = 28,
 }
 
 public enum BattlePlaceId 

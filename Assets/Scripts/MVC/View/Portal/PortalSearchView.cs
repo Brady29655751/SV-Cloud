@@ -62,6 +62,7 @@ public class PortalSearchView : IMonoBehaviour
             _ => null,
         };
         int indent = which switch {
+            "pack" => 100,
             "type" => 1,
             "rarity" => 1,
             _ => 0,

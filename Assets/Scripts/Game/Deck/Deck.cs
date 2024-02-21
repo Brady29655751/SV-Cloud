@@ -7,6 +7,13 @@ using System.Linq;
 
 public class Deck
 {
+    public static Deck GetGemDeck(CardZone zone, CardCraft craft) {
+        return new Deck(zone, GameFormat.GemOfFortune, craft) {
+            name = craft.GetCraftName(),
+            cardIds = Enumerable.Repeat(510101201, 30).ToList(),
+        };
+    }
+
     public string name;
     public int zone, format, craft;
     

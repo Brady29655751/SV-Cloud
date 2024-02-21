@@ -63,8 +63,16 @@ public class BattleUnitView : BattleBaseView
                 if (invokeUnit.id != unit.id)
                     goto default;
 
+                var status = effect.hudOptionDict.Get("status", "none").ToIntList('/');
+                var card = new Card(effect.invokeTarget[0].CurrentCard)
+                {
+                    cost = status[0],
+                    atk = status[1],
+                    hp = status[2],
+                };
+
                 SetUnit(unit, false);
-                Anim.UseAnim(0, effect.invokeTarget[0], SetMyUnit);
+                Anim.UseAnim(0, card, SetMyUnit);
                 break;
 
             case EffectAbility.Attack:
@@ -155,8 +163,9 @@ public class BattleUnitView : BattleBaseView
                 if (whoGetToken != who)
                     goto default;
 
+                var tokenHide = bool.Parse(effect.hudOptionDict.Get("hide", "false"));
                 var tokenList = effect.hudOptionDict.Get("token", string.Empty).ToIntList('/');
-                Anim.GetTokenAnim(0, tokenList.Select(Card.Get).ToList(), SetMyUnit);
+                Anim.GetTokenAnim(0, tokenHide, tokenList.Select(Card.Get).ToList(), SetMyUnit);
                 break;
 
             case EffectAbility.AddDeck:
@@ -164,9 +173,9 @@ public class BattleUnitView : BattleBaseView
                 if (whoAddDeck != who)
                     goto default;
 
-                var hide = bool.Parse(effect.hudOptionDict.Get("hide", "false"));
+                var addDeckHide = bool.Parse(effect.hudOptionDict.Get("hide", "false"));
                 var addDeckList = effect.hudOptionDict.Get("token", string.Empty).ToIntList('/');
-                Anim.AddDeckAnim(0, addDeckList.Select(Card.Get).ToList(), hide, SetMyUnit);
+                Anim.AddDeckAnim(0, addDeckHide, addDeckList.Select(Card.Get).ToList(), SetMyUnit);
                 break;
 
             case EffectAbility.Bury:
@@ -195,8 +204,16 @@ public class BattleUnitView : BattleBaseView
                 if (invokeUnit.id != unit.id)
                     goto default;
 
+                var status = effect.hudOptionDict.Get("status", "none").ToIntList('/');
+                var card = new Card(effect.invokeTarget[0].CurrentCard)
+                {
+                    cost = status[0],
+                    atk = status[1],
+                    hp = status[2],
+                };
+
                 SetUnit(unit, false);
-                Anim.UseAnim(1, effect.invokeTarget[0], SetOpUnit);
+                Anim.UseAnim(1, card, SetOpUnit);
                 break;
 
             case EffectAbility.Attack:
@@ -291,8 +308,9 @@ public class BattleUnitView : BattleBaseView
                 if (whoGetToken != who)
                     goto default;
 
+                var tokenHide = bool.Parse(effect.hudOptionDict.Get("hide", "false"));
                 var tokenList = effect.hudOptionDict.Get("token", string.Empty).ToIntList('/');
-                Anim.GetTokenAnim(1, tokenList.Select(Card.Get).ToList(), SetOpUnit);
+                Anim.GetTokenAnim(1, tokenHide, tokenList.Select(Card.Get).ToList(), SetOpUnit);
                 break;
 
             case EffectAbility.AddDeck:
@@ -300,9 +318,9 @@ public class BattleUnitView : BattleBaseView
                 if (whoAddDeck != who)
                     goto default;
 
-                var hide = bool.Parse(effect.hudOptionDict.Get("hide", "false"));
+                var addDeckHide = bool.Parse(effect.hudOptionDict.Get("hide", "false"));
                 var addDeckList = effect.hudOptionDict.Get("token", string.Empty).ToIntList('/');
-                Anim.AddDeckAnim(1, addDeckList.Select(Card.Get).ToList(), hide, SetOpUnit);
+                Anim.AddDeckAnim(1, addDeckHide, addDeckList.Select(Card.Get).ToList(), SetOpUnit);
                 break;
 
             case EffectAbility.Bury:

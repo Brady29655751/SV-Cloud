@@ -82,11 +82,11 @@ public class PortalSearchController : IMonoBehaviour
     }
 
     public void SetTrait(string trait) {
-        searchModel.SetString("trait", trait);
+        searchModel.SelectInt("trait", (int)trait.ToCardTrait());
     }
 
     public void SetKeyword(string keyword) {
-        searchModel.SetString("keyword", keyword);
+        searchModel.SelectInt("keyword", (int)keyword.ToCardKeyword());
     }
 
     public void SetDescription(string description) {

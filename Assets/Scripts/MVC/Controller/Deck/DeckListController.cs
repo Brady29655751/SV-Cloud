@@ -91,7 +91,7 @@ public class DeckListController : IMonoBehaviour
 
     public void OnDeckListNextPage() {
         deckModel.NextPage();
-        OnDeckListNextPage();
+        OnDeckListSetPage();
     }
 }
 

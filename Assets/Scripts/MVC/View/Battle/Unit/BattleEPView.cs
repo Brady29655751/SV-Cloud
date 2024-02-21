@@ -14,12 +14,12 @@ public class BattleEPView : BattleBaseView
             SpriteResources.EPContainerUsed : SpriteResources.EPContainer);
 
         for (int i = 0; i < epTwoView.Count; i++) {
-            epTwoView[i].gameObject.SetActive(leader.EpMax == 2);
+            epTwoView[i].gameObject.SetActive(leader.EPMax == 2);
             epTwoView[i].SetSprite(i < leader.EP ? SpriteResources.EP : SpriteResources.EPUsed);
         }
         
         for (int i = 0; i < epThreeView.Count; i++) {
-            epThreeView[i].gameObject.SetActive(leader.EpMax == 3);
+            epThreeView[i].gameObject.SetActive(leader.EPMax == 3);
             epThreeView[i].SetSprite(i < leader.EP ? SpriteResources.EP : SpriteResources.EPUsed);
         }
     }

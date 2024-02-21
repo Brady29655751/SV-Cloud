@@ -141,6 +141,8 @@ public class Card : IIdentifyHandler
         if (id.TryTrimStart("trait", out trimId)) {
             while (trimId.TryTrimParentheses(out var traitId)) {
                 var checkTrait = traitId.Split('|').Select(x => (CardTrait)int.Parse(x));
+                Debug.Log(traitId);
+                Debug.Log("checkTrait: " + checkTrait.Select(x => x.ToString()).ConcatToString(" "));
                 if (!checkTrait.Any(traits.Contains))
                     return 0;
 
@@ -183,6 +185,7 @@ public class Card : IIdentifyHandler
             "hp" => hp,
             "hpMax" => hpMax,
             "countdown" => countdown,
+            "evolveCost" => float.Parse(options.Get("evolveCost", "1")),
             _ => float.Parse(options.Get(id, "0")),
         };
     }

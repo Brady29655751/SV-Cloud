@@ -15,10 +15,9 @@ public static class Utility {
     }
 
     public static void InitScreenSizeWithRatio(float widthRatio, float heightRatio) {
-        Resolution resolution = Screen.currentResolution;
-        var screen = new Vector2(resolution.width, resolution.height);
-        var width = (int)screen.x;
-        var height = (int)screen.y;
+        var screen = GetScreenSize();
+        var width = screen.x;
+        var height = screen.y;
         var screenRatio = screen.x / screen.y;
         var currentRatio = widthRatio / heightRatio;
         if (screenRatio > currentRatio) {

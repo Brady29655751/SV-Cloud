@@ -12,15 +12,17 @@ public class BattleTokenView : BattleBaseView
     [SerializeField] private RectTransform rectTransform;
     [SerializeField] private HorizontalLayoutGroup layoutGroup;
     [SerializeField] private List<CardView> cardViews;
+    [SerializeField] private List<Image> sleeves;
 
-    public void GetTokenAnim(bool isMe, List<Card> tokens, Action callback) {
-        StartCoroutine(GetTokenCoroutine(isMe, tokens, callback));
+    public void GetTokenAnim(bool isMe, bool hide, List<Card> tokens, Action callback) {
+        var tokenCoroutine = hide ? GetHideTokenCoroutine(isMe, tokens, callback) : GetTokenCoroutine(isMe, tokens, callback);
+        StartCoroutine(tokenCoroutine);
     }
 
     private IEnumerator GetTokenCoroutine(bool isMe, List<Card> tokens, Action callback) {
         for (int i = 0; i < cardViews.Count; i++)
             cardViews[i].SetCard((i < tokens.Count) ? tokens[i] : null);
-        
+
         rectTransform.anchoredPosition = new Vector2(GetLayoutGroupPosition(415, tokens.Count), 140);
         layoutGroup.spacing = GetLayoutGroupSpacing(tokens.Count);
 
@@ -29,10 +31,33 @@ public class BattleTokenView : BattleBaseView
         float currentTime = 0, finishTime = getTokenSeconds, percent = 0;
         while (currentTime < finishTime) {
             percent = currentTime / finishTime;
-            rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, 140 + 320 * percent * (isMe ? -1 : 1));
+            rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, 140 + 360 * percent * (isMe ? -1 : 1));
             currentTime += Time.deltaTime;
             yield return null;
         }
+
+        rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, 140 + 360 * (isMe ? -1 : 1));
+        
+        callback?.Invoke();
+    }
+
+    private IEnumerator GetHideTokenCoroutine(bool isMe, List<Card> tokens, Action callback) {
+        for (int i = 0; i < sleeves.Count; i++)
+            sleeves[i].gameObject.SetActive(i < tokens.Count);
+
+        rectTransform.anchoredPosition = new Vector2(160, 150);
+
+        yield return new WaitForSeconds(waitSeconds);
+
+        float currentTime = 0, finishTime = getTokenSeconds, percent = 0;
+        while (currentTime < finishTime) {
+            percent = currentTime / finishTime;
+            rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, 150 + 360 * percent * (isMe ? -1 : 1));
+            currentTime += Time.deltaTime;
+            yield return null;
+        }
+
+        rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, 150 + 360 * (isMe ? -1 : 1));
 
         callback?.Invoke();
     }

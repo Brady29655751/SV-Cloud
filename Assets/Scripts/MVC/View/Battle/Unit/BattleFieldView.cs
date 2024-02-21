@@ -89,6 +89,9 @@ public class BattleFieldView : BattleBaseView
         var info = Hud.CurrentCardPlaceInfo;
         if (Hud.IsLocked || (info.unitId != 0) || (info.place != BattlePlaceId.Field))
             return;
+
+        if (!Battle.CurrentState.myUnit.isMyTurn)
+            return;
         
         var card = info.GetBattleCard(Battle.CurrentState);
         Anim.TargetAnim("on_this_evolve_with_ep", card, (target) => OnEvolveSuccess(info.index, target), null);

@@ -18,6 +18,11 @@ public static class EffectDatabase {
         {"fusion",          EffectAbility.Fusion        },
         {"act",             EffectAbility.Act           },
 
+        {"accelerate",      EffectAbility.Accelerate    },
+        {"crystalize",      EffectAbility.Crystalize    },   
+
+        {"random",          EffectAbility.Random        },
+
         {"set_keyword",     EffectAbility.SetKeyword    },
         {"draw",            EffectAbility.Draw          },
         {"summon",          EffectAbility.Summon        },
@@ -43,6 +48,8 @@ public static class EffectDatabase {
 
         {"bury",            EffectAbility.Bury          },
         {"reanimate",       EffectAbility.Reanimate     },
+        {"discard",         EffectAbility.Discard       },
+        {"travel",          EffectAbility.Travel        },
     };
 
     private static Dictionary<string, string> leaderInfoDict = new Dictionary<string, string>() {
@@ -106,6 +113,9 @@ public class EffectTargetInfo
 public enum EffectAbility {
     None = 0,   SetResult = 1,  KeepCard = 2,   TurnStart = 3,  TurnEnd = 4,
     Use = 5,    Cover = 6,  Attack = 7, Evolve = 8, Fusion = 9, Act = 10,
+    Accelerate = 11,    Crystalize = 12,
+
+    Random = 91,
 
     SetKeyword  = 100,   
     Draw        = 101, 
@@ -132,4 +142,6 @@ public enum EffectAbility {
 
     Bury        = 121,
     Reanimate   = 122,
+    Discard     = 123,
+    Travel      = 124,
 }

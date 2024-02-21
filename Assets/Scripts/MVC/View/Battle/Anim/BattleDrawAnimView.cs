@@ -9,7 +9,7 @@ public class BattleDrawAnimView : BattleBaseView
 {
     [SerializeField] private float drawSeconds;
     [SerializeField] private float waitSeconds = 0.5f;
-    [SerializeField] private BattleTokenView tokenView;
+    [SerializeField] private BattleTokenView tokenView, hideTokenView;
     [SerializeField] private Vector2 myDrawInitPos;
     [SerializeField] private Vector2 opDrawInitPos;
     [SerializeField] private List<Image> opSleeves;
@@ -46,22 +46,24 @@ public class BattleDrawAnimView : BattleBaseView
         callback?.Invoke();
     }
 
-    public void MyGetToken(List<Card> tokens, Action callback) {
-        tokenView?.GetTokenAnim(true, tokens, callback);
+    public void MyGetToken(bool hide, List<Card> tokens, Action callback) {
+        var getTokenView = hide ? hideTokenView : tokenView;
+        getTokenView?.GetTokenAnim(true, hide, tokens, callback);
     }
 
-    public void OpGetToken(List<Card> tokens, Action callback) {
-        tokenView?.GetTokenAnim(false, tokens, callback);
+    public void OpGetToken(bool hide, List<Card> tokens, Action callback) {
+        var getTokenView = hide ? hideTokenView : tokenView;
+        getTokenView?.GetTokenAnim(false, hide, tokens, callback);
     }
 
-    public void MyAddDeck(List<Card> tokens, bool hide, Action callback) {
+    public void MyAddDeck(bool hide, List<Card> tokens, Action callback) {
         if (hide)
             StartCoroutine(AddDeck(true, callback));
         else
             tokenView?.AddDeckAnim(true, tokens, () => StartCoroutine(AddDeck(true, callback)));
     }
 
-    public void OpAddDeck(List<Card> tokens, bool hide, Action callback) {
+    public void OpAddDeck(bool hide, List<Card> tokens, Action callback) {
         if (hide)
             StartCoroutine(AddDeck(false, callback));
         else

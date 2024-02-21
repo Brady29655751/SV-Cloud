@@ -102,6 +102,7 @@ public class Effect : IIdentifyHandler
 
         if (id.TryTrimStart("source.", out trimId)) {
             return trimId switch {
+                "isMe"  => (invokeUnit.GetBelongPlace(source) != null) ? 1 : 0,
                 "where" => (float)(invokeUnit.GetBelongPlace(source)?.PlaceId ?? BattlePlaceId.None),
                 _ => source.GetIdentifier(trimId),
             };
@@ -154,6 +155,14 @@ public class Effect : IIdentifyHandler
                     _       => float.MinValue,
                 };
             }
+        } else if (id.TryTrimStart("source.", out trimId)) {
+            var all = sourceEffect.source;
+
+            return trimId switch {
+                "isMe"  => (invokeUnit.GetBelongPlace(all) != null) ? 1 : 0,
+                "where" => (float)(invokeUnit.GetBelongPlace(all)?.PlaceId ?? BattlePlaceId.None),
+                _ => source.GetIdentifier(trimId),
+            };
         }
 
         return sourceEffect.GetIdentifier(id);
@@ -216,9 +225,12 @@ public class Effect : IIdentifyHandler
         } 
 
         if (info.unit.TryTrimStart("sourceEffect.", out var trimUnit)) {
+            var sourceEffectAllCards = (new List<BattleCard>(){ sourceEffect.source }).Concat(sourceEffect.invokeTarget);
             var effectCards = trimUnit switch {
                 "source" => new List<BattleCard>(){ sourceEffect.source },
                 "target" => sourceEffect.invokeTarget,
+                "me"     => sourceEffectAllCards.Where(x => state.GetBelongUnit(x).id == invokeUnit.id).ToList(),
+                "op"     => sourceEffectAllCards.Where(x => state.GetBelongUnit(x).id == rhsUnit.id).ToList(),
                 _ => new List<BattleCard>(),
             };
 

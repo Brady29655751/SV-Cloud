@@ -9,25 +9,35 @@ public class Leader : BattlePlace
     public CardCraft Craft => leaderCard.CurrentCard.Craft;
     public BattleCard leaderCard => cards[0];
 
-    public int HpInit => Card.GetLeaderCard(CraftId).hp;
-    public int Hp => leaderCard.CurrentCard.hp;
-    public int HpMax => leaderCard.CurrentCard.hpMax;
+    public int HPInit => Card.GetLeaderCard(CraftId).hp;
+    public int HP => leaderCard.CurrentCard.hp;
+    public int HPMax => leaderCard.CurrentCard.hpMax;
 
-    private int pp, ep;
-    public int PPMax, EpMax;
+    private int pp, ppMax, ep, epMax;
+    public int PPMax {
+        get => ppMax;
+        set => ppMax = Mathf.Clamp(value, 0, 10);
+    }
+
     public int PP {
         get => pp;
         set => pp = Mathf.Clamp(value, 0, PPMax);
     }
+
+    public int EPMax {
+        get => epMax;
+        set => epMax = Mathf.Clamp(value, 0, 3);
+    }
+
     public int EP {
         get => ep;
-        set => ep = Mathf.Clamp(value, 0, EpMax);
+        set => ep = Mathf.Clamp(value, 0, EPMax);
     }
     public bool isEpUsed;
 
     public Leader(bool isFirst, int craftId) : base(new List<BattleCard>() { BattleCard.Get(Card.GetLeaderCard(craftId)) }) {
         ep = pp = PPMax = 0;
-        EpMax = isFirst ? 2 : 3;
+        EPMax = isFirst ? 2 : 3;
         isEpUsed = false;
     }
 
@@ -35,7 +45,7 @@ public class Leader : BattlePlace
         pp = rhs.pp;
         PPMax = rhs.PPMax;
         ep = rhs.ep;
-        EpMax = rhs.EpMax;
+        EPMax = rhs.EPMax;
         isEpUsed = rhs.isEpUsed;
     }
 
@@ -60,16 +70,17 @@ public class Leader : BattlePlace
     public override float GetIdentifier(string id) 
     {
         return id switch {
-            "hp" => Hp,
-            "hpMax" => HpMax,
-            "hpInit" => HpInit,
-            "pp" => pp,
+            "craft" => CraftId,
+            "hp" => HP,
+            "hpMax" => HPMax,
+            "hpInit" => HPInit,
+            "pp" => PP,
             "ppMax" => PPMax,
-            "ep" => ep,
-            "epMax" => EpMax,
+            "ep" => EP,
+            "epMax" => EPMax,
             "isEpUsed" => isEpUsed ? 1 : 0,
             "isAwake"  => ((options.Get("lockAwake") <= 0) && ((PPMax >= 7) || (options.Get("forceAwake") > 0)))  ? 1 : 0,
-            "isVenge"  => ((options.Get("lockVenge") <= 0) && ((Hp <= 10) || (options.Get("forceVenge") > 0)))  ? 1 : 0,
+            "isVenge"  => ((options.Get("lockVenge") <= 0) && ((HP <= 10) || (options.Get("forceVenge") > 0)))  ? 1 : 0,
             _ => base.GetIdentifier(id),
         };
     }
@@ -83,13 +94,13 @@ public class Leader : BattlePlace
                 PP = (int)num;
                 return;
             case "ppMax":
-                PPMax = Mathf.Max((int)num, 0);
+                PPMax = (int)num;
                 return;
             case "ep":
                 EP = (int)num;
                 return;
             case "epMax":
-                EpMax = Mathf.Max((int)num, 0);
+                EPMax = (int)num;
                 return;
             case "isEpUsed":
                 isEpUsed = num != 0;

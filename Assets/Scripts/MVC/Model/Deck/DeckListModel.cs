@@ -16,9 +16,16 @@ public class DeckListModel : SelectModel<Deck>
         return (mode switch {
             DeckListMode.Normal => Player.gameData.decks.Concat(defaultDeckList),
             DeckListMode.Topic  => GameManager.versionData.topicDecks,
-            DeckListMode.Battle => Player.gameData.decks.Where(x => x.IsBattleAvailable(Zone, Format)),
+            DeckListMode.Battle => GetBattleDeck(),
             _ => defaultDeckList,
         }).ToList();
+    }
+
+    private IEnumerable<Deck> GetBattleDeck() {
+        return Format switch {
+            GameFormat.GemOfFortune => Enumerable.Range(0, 9).Select(x => Deck.GetGemDeck(Zone, (CardCraft)x)),
+            _ => Player.gameData.decks.Where(x => x.IsBattleAvailable(Zone, Format)),
+        };
     }
 
     public void SetZone(int zoneId) {

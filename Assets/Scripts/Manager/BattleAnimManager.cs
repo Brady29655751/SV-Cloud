@@ -46,7 +46,7 @@ public class BattleAnimManager : Manager<BattleAnimManager>
         targetView?.StartSelectTarget(timing, card, onSuccess, onFail);
     }
 
-    public void UseAnim(int unitId, BattleCard card, Action callback) {
+    public void UseAnim(int unitId, Card card, Action callback) {
         if (unitId == 0)
             useView?.MeUseCard(card, callback);
         else
@@ -110,18 +110,18 @@ public class BattleAnimManager : Manager<BattleAnimManager>
         damageView?.ShowLeaveField(info, type, callback);
     }
 
-    public void GetTokenAnim(int unitId, List<Card> tokens, Action callback) {
+    public void GetTokenAnim(int unitId, bool hide, List<Card> tokens, Action callback) {
         if (unitId == 0)
-            drawView?.MyGetToken(tokens, callback);
+            drawView?.MyGetToken(hide, tokens, callback);
         else
-            drawView?.OpGetToken(tokens, callback);
+            drawView?.OpGetToken(hide, tokens, callback);
     }
 
-    public void AddDeckAnim(int unitId, List<Card> tokens, bool hide, Action callback) {
+    public void AddDeckAnim(int unitId, bool hide, List<Card> tokens, Action callback) {
         if (unitId == 0)
-            drawView?.MyAddDeck(tokens, hide, callback);
+            drawView?.MyAddDeck(hide, tokens, callback);
         else
-            drawView?.OpAddDeck(tokens, hide, callback);
+            drawView?.OpAddDeck(hide, tokens, callback);
     }
 
     public void BuryAnim(Action callback) {

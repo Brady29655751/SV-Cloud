@@ -198,6 +198,33 @@ public class ResourceManager : Singleton<ResourceManager>
             entry.Value.SetEffects(entry.Value.effectIds, GetEffect);
             entry.Value.SetDescription(descInfoDict[entry.Key]);
         }
+
+        foreach (var entry in cardInfoDict) {
+            var card = entry.Value;
+            if (!card.keywords.Exists(x => (x == CardKeyword.Accelerate) || (x == CardKeyword.Crystalize)))
+                continue;
+
+            var specialDescription = string.Empty;
+            for (int i = 0; i < card.effects.Count; i++) {
+                var effect = card.effects[i];
+                var isAccel = effect.ability == EffectAbility.Accelerate;
+                var isCrystal = effect.ability == EffectAbility.Crystalize;
+                if (isAccel || isCrystal) {
+                    var specialType = effect.ability switch {
+                        EffectAbility.Accelerate => "激奏",
+                        EffectAbility.Crystalize => "結晶",
+                        _ => string.Empty,
+                    };
+                    var specialCard = cardInfoDict.Get(int.Parse(effect.abilityOptionDict.Get("id", "-1")));
+                    if (specialCard == null)
+                        continue;
+
+                    var header = "[ffbb00]" + specialType + "[-] " + specialCard.cost + "；";
+                    specialDescription += (header + specialCard.description).GetDescription() + "\n------\n";
+                }
+            }
+            card.description = specialDescription + card.description;
+        }
         return cardInfoDict;
     }
 

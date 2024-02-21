@@ -14,18 +14,18 @@ public class BattleUseAnimView : BattleBaseView
     [SerializeField] private List<Image> opSleeves;
     [SerializeField] private CardView cardView;
     
-    public void MeUseCard(BattleCard card, Action callback) {
+    public void MeUseCard(Card card, Action callback) {
         StartCoroutine(ShowMyUsedCard(card, callback));
     }
 
-    public void OpUseCard(BattleCard card, Action callback) {
+    public void OpUseCard(Card card, Action callback) {
         StartCoroutine(ShowOpUsedCard(card, callback));
     }
 
-    private IEnumerator ShowMyUsedCard(BattleCard card, Action callback) {
+    private IEnumerator ShowMyUsedCard(Card card, Action callback) {
         cardView.rectTransform.anchoredPosition = exhibitPos;
         cardView.rectTransform.localScale = exhibitScale * Vector3.one;
-        cardView.SetCard(card.CurrentCard);
+        cardView.SetCard(card);
         
         yield return new WaitForSeconds(exhibitSeconds);
 
@@ -34,7 +34,7 @@ public class BattleUseAnimView : BattleBaseView
         callback?.Invoke();
     }
 
-    private IEnumerator ShowOpUsedCard(BattleCard card, Action callback) {
+    private IEnumerator ShowOpUsedCard(Card card, Action callback) {
         float currentTime = 0, finishTime = useSeconds, percent = 0;
         var lastSleeve = opSleeves.Find(x => x.gameObject.activeSelf);
         var x = lastSleeve.rectTransform.anchoredPosition.x + 60;
@@ -42,7 +42,7 @@ public class BattleUseAnimView : BattleBaseView
 
         cardView.rectTransform.anchoredPosition = initPos;
         cardView.rectTransform.localScale = 0.3f * Vector3.one;
-        cardView.SetCard(card.CurrentCard);
+        cardView.SetCard(card);
 
         while (currentTime < finishTime) {
             percent = currentTime / finishTime;

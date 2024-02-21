@@ -25,3 +25,6 @@ id,name,englishName,description
 23,葬送,bury,-
 24,亡者召還,reanimate,-
 25,靈氣,aura,表示敵方的能力無法指定此卡片。
+26,激奏,accelerate,-
+27,結晶,crystalize,-
+28,漫遊,travel,從符合漫遊後方敘述條件的卡片之中，隨機1張增加到手牌中。除非特別說明，否則不會出現特殊卡。

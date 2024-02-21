@@ -38,4 +38,5 @@ public enum BattleCardGraveReason {
     Destroy = 2,
     Vanish = 3,
     Return = 4,
+    Discard = 5,
 }

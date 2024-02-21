@@ -6,16 +6,16 @@ using UnityEngine;
 
 public class CardFilter
 {
-    public virtual string[] GetSetStringType() => new string[] { "name", "description", "trait", "keyword" };
+    public virtual string[] GetSetStringType() => new string[] { "name", "description" };
     public virtual string[] GetSetIntType() => new string[] { "format", "zone" };
     public virtual string[] GetSelectIntType() => new string[] { 
-        "uid", "id", "craft", "pack", "type", "rarity",
+        "uid", "id", "craft", "pack", "type", "rarity", "trait", "keyword",
         "cost", "atk", "hp", "countdown" };
     public virtual string[] GetSetBoolType() => new string[] { "token" };
 
     public int format, zone;
-    public string name, traitName, keywordName, description;
-    public List<int> uidList, idList, craftList, packList, typeList, rarityList, 
+    public string name, description;
+    public List<int> uidList, idList, craftList, packList, typeList, rarityList, traitList, keywordList,
         costList, atkList, hpList, countdownList;
     public bool isWithToken;
 
@@ -26,18 +26,39 @@ public class CardFilter
     public CardFilter(int formatId) {
         format = formatId;
         zone = -1;
-        name = traitName = keywordName = description = string.Empty;
+        name = description = string.Empty;
         uidList = new List<int>();
         idList = new List<int>();
         craftList = new List<int>();
         packList = new List<int>();
         typeList = new List<int>();
         rarityList = new List<int>();
+        traitList = new List<int>();
+        keywordList = new List<int>();
         costList = new List<int>();
         atkList = new List<int>();
         hpList = new List<int>();
         countdownList = new List<int>();
         isWithToken = false;
+    }
+
+    public static CardFilter Parse(string options, Func<string, string, string> transformFunc = null) {
+        var filter = new CardFilter(-1);
+        if (string.IsNullOrEmpty(options) || (options == "none"))
+            return filter;
+
+        transformFunc ??= ((x, y) => y);
+
+        while (options.TryTrimParentheses(out string trimOptions)) {
+            var split = trimOptions.Split(':');
+            var type = split[0];
+            var items = split[1].Split('|');
+            for (int i = 0; i < items.Length; i++) {
+                filter.SetParam(type, transformFunc.Invoke(type, items[i]));
+            }
+            options = options.TrimStart("[" + trimOptions + "]");
+        }
+        return filter;
     }
 
     public virtual void SetParam(string which, string param) {
@@ -57,12 +78,6 @@ public class CardFilter
                 return;
             case "name": 
                 name = input;
-                return;
-            case "trait":
-                traitName = input;
-                return;
-            case "keyword":
-                keywordName = input;
                 return;
             case "description":
                 description = input;
@@ -101,6 +116,8 @@ public class CardFilter
             "pack"      => packList,
             "type"      => typeList,
             "rarity"    => rarityList,
+            "trait"     => traitList,
+            "keyword"   => keywordList,
             "cost"      => costList,
             "atk"       => atkList,
             "hp"        => hpList,
@@ -150,8 +167,8 @@ public class CardFilter
     public virtual bool PackFilter(Card card) => List.IsNullOrEmpty(packList) || packList.Contains(card.PackId);
     public virtual bool TypeFilter(Card card) => (card.Type != CardType.Leader) && (card.Type != CardType.Evolved) && (List.IsNullOrEmpty(typeList) || typeList.Contains(card.TypeId));
     public virtual bool RarityFilter(Card card) => List.IsNullOrEmpty(rarityList) || rarityList.Contains(card.RarityId);
-    public virtual bool TraitFilter(Card card) => string.IsNullOrEmpty(traitName) || card.traits.Contains(CardTrait.All) || card.traits.Select(x => x.GetTraitName()).Contains(traitName);
-    public virtual bool KeywordFilter(Card card) => string.IsNullOrEmpty(keywordName) || card.keywords.Select(x => x.GetKeywordName()).Contains(keywordName);
+    public virtual bool TraitFilter(Card card) => List.IsNullOrEmpty(traitList) || card.traits.Contains(CardTrait.All) || traitList.Select(x => (CardTrait)x).Intersect(card.traits).Any();
+    public virtual bool KeywordFilter(Card card) => List.IsNullOrEmpty(keywordList) || keywordList.Select(x => (CardKeyword)x).Intersect(card.keywords).Any();
     public virtual bool DescriptionFilter(Card card) => string.IsNullOrEmpty(description) || card.description.Contains(description);
     public virtual bool TokenFilter(Card card) => (card.Group == CardGroup.Normal) || (isWithToken && (card.Group == CardGroup.Token));
 
@@ -163,20 +180,29 @@ public class CardFilter
 
 public class BattleCardFilter : CardFilter {
     public override string[] GetSetStringType() => new string[] { "name", "description" };
-    public override string[] GetSelectIntType() => base.GetSelectIntType().Concat(new string[] { "trait", "keyword" }).ToArray();
+    public override string[] GetSelectIntType() => base.GetSelectIntType().Concat(new string[] { "initCost", "initAtk", "initHp" }).ToArray();
+    public override string[] GetSetIntType() => base.GetSetIntType().Concat(new string[] { "isAttackFinished" }).ToArray();
 
-    public List<int> traitList, keywordList;
+    public Dictionary<string, float> options;
+    public int isAttackFinished = -1;
+    public bool isInitStatus = false;
+
     public BattleCardFilter(int formatId) : base(formatId) {
         traitList = new List<int>();
         keywordList = new List<int>();
+        options = new Dictionary<string, float>();
 
         isWithToken = true;
+        isAttackFinished = -1;
+        isInitStatus = false;
     }
 
-    public static BattleCardFilter Parse(string options) {
+    public static new BattleCardFilter Parse(string options, Func<string, string, string> transformFunc = null) {
         var filter = new BattleCardFilter(-1);
         if (string.IsNullOrEmpty(options) || (options == "none"))
             return filter;
+
+        transformFunc ??= ((x, y) => y);
 
         while (options.TryTrimParentheses(out string trimOptions)) {
             var split = trimOptions.Split(':');
@@ -184,7 +210,7 @@ public class BattleCardFilter : CardFilter {
             var items = split[1].Split('|');
 
             for (int i = 0; i < items.Length; i++) {
-                filter.SetParam(type, items[i]);
+                filter.SetParam(type, transformFunc.Invoke(type, items[i]));
             }
 
             options = options.TrimStart("[" + trimOptions + "]");
@@ -192,8 +218,25 @@ public class BattleCardFilter : CardFilter {
         return filter;
     }
 
+    public override void SetInt(string which, int item)
+    {
+        switch (which) {
+            default:
+                base.SetInt(which, item);
+                return;
+            case "isAttackFinished":
+                isAttackFinished = item;
+                return;
+        }
+    }
+
     public override void SelectInt(string which, int item)
     {
+        if (which.ToLower().TryTrimStart("init", out var initWhich) && Card.StatusNames.Contains(initWhich)) {
+            isInitStatus = true;
+            which = initWhich;
+        }
+
         var list = which switch {
             "trait"     => traitList,
             "keyword"   => keywordList,
@@ -229,12 +272,23 @@ public class BattleCardFilter : CardFilter {
 
     public bool FilterWithCurrentCard(BattleCard battleCard) {
         var card = battleCard.CurrentCard;
-        return base.Filter(card);
+        return base.Filter(card) && AttackFinishFilter(battleCard);
     }
 
     public override bool TypeFilter(Card card) => List.IsNullOrEmpty(typeList) || typeList.Contains(card.TypeId);
-    public override bool TraitFilter(Card card) => List.IsNullOrEmpty(traitList) || card.traits.Contains(CardTrait.All) || traitList.Select(x => (CardTrait)x).Intersect(card.traits).Any();
-    public override bool KeywordFilter(Card card) => List.IsNullOrEmpty(keywordList) || keywordList.Select(x => (CardKeyword)x).Intersect(card.keywords).Any();
-    
+    public override bool TokenFilter(Card card) => (card.Group == CardGroup.Normal) || isWithToken;
 
+    public override bool CostFilter(Card card) {
+        var filterCard = isInitStatus ? card.BaseCard : card;
+        return List.IsNullOrEmpty(costList) || costList.Contains(Mathf.Min(filterCard.cost, 10));
+    } 
+    public override bool AtkFilter(Card card) {
+        var filterCard = isInitStatus ? card.BaseCard : card;
+        return List.IsNullOrEmpty(atkList) || atkList.Contains(Mathf.Min(filterCard.atk, 10));
+    } 
+    public override bool HpFilter(Card card) {
+        var filterCard = isInitStatus ? card.BaseCard : card;
+        return List.IsNullOrEmpty(hpList) || hpList.Contains(Mathf.Min(filterCard.hp, 10));
+    } 
+    public bool AttackFinishFilter(BattleCard card) => (isAttackFinished == -1) || (card.actionController.GetIdentifier("isAttackFinished") == isAttackFinished);
 }
