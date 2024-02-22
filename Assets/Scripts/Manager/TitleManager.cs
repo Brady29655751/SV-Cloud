@@ -77,7 +77,7 @@ public class TitleManager : Manager<TitleManager>
 
     private void OpenSaveFileBrowser() {
         var downloadUrl = GameManager.gameDownloadUrl;
-        var filter = new FileBrowser.Filter("Game", ".zip");
+        var filter = new FileBrowser.Filter("Game", ".apk");
         FileBrowser.SetFilters(false, filter);
         FileBrowser.ShowSaveDialog(OnSuccess, OnCancel, FileBrowser.PickMode.Files, initialFilename: "SVCloud");
     }

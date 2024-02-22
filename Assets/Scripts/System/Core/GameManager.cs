@@ -6,11 +6,11 @@ using System;
 public class GameManager : Singleton<GameManager>
 {
     public bool debugMode = false;
-    public static string serverUrl => instance.debugMode ? "Data/" : "https://raw.githubusercontent.com/Brady29655751/SV-Cloud/main/";
-    public static string gameUrl => "https://media.githubusercontent.com/media/Brady29655751/SV-Cloud/main/";
+    public static string serverUrl => instance.debugMode ? "Data/" : "https://raw.githubusercontent.com/Brady29655751/SV-Cloud/android/";
+    public static string gameUrl => "https://media.githubusercontent.com/media/Brady29655751/SV-Cloud/android/";
 
     public static string versionDataUrl => serverUrl + "System/version.xml";
-    public static string gameDownloadUrl => gameUrl + "Release/SVCloud_Windows.zip";
+    public static string gameDownloadUrl => gameUrl + "Release/SVCloud_Android.apk";
     
     public static VersionData versionData { get; private set; } = null;
 
