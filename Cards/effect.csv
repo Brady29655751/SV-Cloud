@@ -84,8 +84,8 @@ id,timing,target,condition,cond_option,ability,ability_option
 1067,on_this_use,self,none,none,set_keyword,enhance=7&keyword=1
 1068,on_this_destroy,none,none,none,set_grave,add=1
 1069,on_this_destroy,none,none,none,draw,count=1
-1070,on_this_use,me_field_1_index+other_[type:1|9],none,me.field.count>0,destroy,none
-1071,on_this_use,none,none,me.field.count>0,draw,count=2
+1070,on_this_use,me_field_1_index+other_[type:1|9],none,me.field[type:1|9].count>0,destroy,none
+1071,on_this_use,none,none,me.field[type:1|9].count>0,draw,count=2
 1072,on_this_use,me_hand_1_index+other_[type:1|9],none,me.field.availableCount[GTE]2,bury,appendix=1073
 1073,on_this_use,none,none,none,draw,count=1
 1074,on_this_destroy,op_leader_0_all_[type:0],none,none,damage,damage=2
@@ -98,8 +98,8 @@ id,timing,target,condition,cond_option,ability,ability_option
 1081,on_this_use,none,none,necromance[4]=1,summon,necromance=4&id=910051104&count=1
 1082,on_this_destroy,none,none,none,summon,id=910051102&count=2
 1083,on_this_destroy,none,none,none,summon,id=910051104&count=1
-1084,on_this_use,me_field_1_index+other_[type:1|9],none,me.field.count>0,destroy,none
-1085,on_this_use,op_field_1_random_[type:1|9],none,me.field.count>0,destroy,none
+1084,on_this_use,me_field_1_index+other_[type:1|9],none,me.field[type:1|9].count>0,destroy,none
+1085,on_this_use,op_field_1_random_[type:1|9],none,me.field[type:1|9].count>0,destroy,none
 1086,on_this_use,all_leader_0_all_[type:0],none,none,damage,damage=1
 1087,on_this_use,none,none,none,summon,id=910061101&count=1
 1088,on_this_destroy,me_leader_0_all_[type:0],none,none,heal,heal=2
@@ -160,7 +160,7 @@ id,timing,target,condition,cond_option,ability,ability_option
 1143,on_this_use,sourceEffect.target_field_0_all_[type:1|9],none,none,damage,damage=1
 1144,on_this_use,op_field_1_random_[type:1|9],none,none,damage,appendix=1145&damage=2
 1145,on_this_use,none,none,op.field[type:1|9].count>me.field[type:1|9].count,summon,id=110001101&count=1
-1146,on_this_use,me_field_1_random_[type:1|9],none,none,buff,add=1/1
+1146,on_this_use,none,none,none,draw,count=1
 1147,on_turn_start,me_field_1_random_[type:1|9],none,me.isMyTurn=1&effect.source.where=5,buff,add=1/1
 1148,on_this_evolve_with_ep,op_field_1_index_[type:1|9],none,none,damage,damage=1
 1149,on_this_evolve_with_ep,op_leader_0_all_[type:0],none,me.hand.count>op.hand.count,damage,damage=1
@@ -173,7 +173,7 @@ id,timing,target,condition,cond_option,ability,ability_option
 1156,on_this_use,none,none,none,summon,id=110102104&count=1
 1157,on_this_use,none,none,none,summon,id=110001101&count=2
 1158,on_this_use,none,none,none,accelerate,accelerate=3&id=810102201
-1159,on_this_use,op_leader+field_1_index_[type:0|1|9],none,none,damage,damage=6
+1159,on_this_use,op_field_1_index_[type:1|9],none,none,damage,damage=6
 1160,on_this_use,none,none,none,random,pdf=1/1&effect=1161/1162
 1161,on_this_use,none,none,none,draw,count=3
 1162,on_this_use,me_field_1_random_[type:1],none,none,evolve,none
@@ -189,7 +189,7 @@ id,timing,target,condition,cond_option,ability,ability_option
 1172,on_turn_end,self,none,me.isMyTurn=1,return,none
 1173,on_this_destroy,me_leader_0_all_[type:0],none,me.hand.count>op.hand.count,heal,heal=4
 1174,on_this_destroy,none,none,me.hand.count<op.hand.count,draw,count=2
-1175,on_this_use,op_leader+field_0_all_[type:0|1|9],none,none,damage,damage=4
+1175,on_this_use,op_field_0_all_[type:1|9],none,none,damage,damage=4
 1176,on_this_use,me_field_1_index_[type:9],none,none,add_effect,appendix=1177&id=1178&keyword=10&description=[ffbb00]交戰時[-] 抽取1張卡片。回復自己的主戰者1點生命值。
 1177,on_this_use,sourceEffect.target_field_0_all_[type:9],none,none,add_effect,id=1179&keyword=10
 1178,on_this_defense,me_leader_0_all_[type:0],none,none,heal,heal=1
