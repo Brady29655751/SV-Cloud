@@ -7,7 +7,7 @@ public class GameManager : Singleton<GameManager>
 {
     public bool debugMode = false; 
     
-    public static string branch => "main";
+    public static string branch => "windows";
     public static string gamePlatform => "Windows";
     public static string fileType => ".zip";
 
