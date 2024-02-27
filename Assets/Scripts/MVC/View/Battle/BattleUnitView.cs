@@ -184,6 +184,13 @@ public class BattleUnitView : BattleBaseView
 
                 Anim.BuryAnim(SetMyUnit);
                 break;
+
+            case EffectAbility.Reveal:
+            if (invokeUnit.id != unit.id)
+                goto default;
+
+            Anim.RevealAnim(0, effect.invokeTarget.Select(x => x.CurrentCard).ToList(), SetMyUnit);
+            break;
         };
     }
 
@@ -328,6 +335,13 @@ public class BattleUnitView : BattleBaseView
                     goto default;
 
                 Anim.BuryAnim(SetOpUnit);
+                break;
+            
+            case EffectAbility.Reveal:
+                if (invokeUnit.id != unit.id)
+                    goto default;
+
+                Anim.RevealAnim(1, effect.invokeTarget.Select(x => x.CurrentCard).ToList(), SetOpUnit);
                 break;
         };
     }

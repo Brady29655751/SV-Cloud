@@ -1,12 +1,12 @@
 <versionData>
-    <gameVersion>0.2</gameVersion>
-    <buildVersion>0.3</buildVersion>
-    <releaseDate>2023-02-21+08:00</releaseDate>
+    <gameVersion>0.4</gameVersion>
+    <buildVersion>0.4</buildVersion>
+    <releaseDate>2023-02-27+08:00</releaseDate>
     <releaseNote>
-    【當前版本】0.3
-    【版本日期】2023/02/21
-    【更新內容】《新界基石》中立卡片、寶石賽制。
-    【修復錯誤】牌組無法翻頁、使用卡片時錯誤顯示使用時的費用和體質、跳費可以超過10費等等。
+    【當前版本】0.4
+    【版本日期】2023/02/27
+    【更新內容】《新界基石》巫師卡片、刷新按鈕、牌組勝率與勝場統計。
+    【修復錯誤】敵方從者攻擊有必殺能力的從者不會被破壞。
 
     【1】當前版本為測試版本，流量達到上限後無法進行私人對戰。
     【2】初次加載資源會非常慢，請耐心等待並確保網路連線環境順暢。
@@ -15,15 +15,59 @@
     【5】進化請直接點擊場上從者並按下進化按鈕。目前無法透過拖曳EP到從者身上進化。
     </releaseNote>
     
-    <keywordCount>29</keywordCount>
-    <traitCount>8</traitCount>
-    <cardCount>282</cardCount>
-    <cardPack>0/1/0</cardPack>
+    <keywordCount>30</keywordCount>
+    <traitCount>9</traitCount>
+    <cardCount>353</cardCount>
+    <cardPack>0/1/0/0</cardPack>
     <topicDeck>
+        <deck>
+          <name>增幅法（新界基石）</name>
+          <zone>1</zone>
+          <format>1</format>
+          <craft>3</craft>
+          <cards>
+            <id>110031205</id><id>110031205</id><id>110031205</id>
+            <id>110101202</id><id>110101202</id><id>110101202</id>
+            <id>110132101</id><id>110132101</id><id>110132101</id>
+            <id>110031201</id><id>110031201</id><id>110031201</id>
+            <id>110132202</id><id>110132202</id><id>110132202</id>
+            <id>110133201</id><id>110133201</id><id>110133201</id>
+            <id>110032202</id><id>110032202</id><id>110032202</id>
+            <id>110131104</id><id>110131104</id><id>110132104</id>
+            <id>110132104</id><id>110132104</id>
+            <id>110131207</id><id>110131207</id><id>110131207</id>
+            <id>110131209</id><id>110131209</id><id>110131209</id>
+            <id>110132106</id><id>110132106</id><id>110132106</id>
+            <id>110032101</id><id>110032101</id>
+            <id>110133105</id><id>110133105</id><id>110133105</id>
+          </cards>
+        </deck>
+        <deck>
+          <name>土法（新界基石）</name>
+          <zone>1</zone>
+          <format>1</format>
+          <craft>3</craft>
+          <cards>
+            <id>110131201</id><id>110131201</id>
+            <id>110031301</id><id>110031301</id><id>110031301</id>
+            <id>110131301</id><id>110131301</id><id>110131301</id>
+            <id>110131101</id><id>110131101</id><id>110131101</id>
+            <id>110131102</id><id>110131102</id><id>110131102</id>
+            <id>110131203</id><id>110131203</id><id>110131203</id>
+            <id>110132201</id><id>110132201</id><id>110132201</id>
+            <id>110132103</id><id>110132103</id><id>110132103</id>
+            <id>110133101</id><id>110133101</id><id>110133101</id>
+            <id>110133102</id><id>110133102</id><id>110133102</id>
+            <id>110134101</id><id>110134101</id><id>110134101</id>
+            <id>110132206</id><id>110132206</id><id>110132206</id>
+            <id>110131106</id><id>110131106</id>
+            <id>110133104</id><id>110133104</id><id>110133104</id>
+          </cards>
+        </deck>
         <deck>
           <name>預設牌組（精靈）</name>
           <zone>1</zone>
-          <format>1</format>
+          <format>0</format>
           <craft>1</craft>
           <cards>
             <id>110001101</id><id>110001101</id><id>110001101</id>
@@ -45,7 +89,7 @@
         <deck>
           <name>預設牌組（皇家護衛）</name>
           <zone>1</zone>
-          <format>1</format>
+          <format>0</format>
           <craft>2</craft>
           <cards>
             <id>110001101</id><id>110001101</id><id>110001101</id>
@@ -67,7 +111,7 @@
         <deck>
           <name>預設牌組（巫師）</name>
           <zone>1</zone>
-          <format>1</format>
+          <format>0</format>
           <craft>3</craft>
           <cards>
             <id>110001101</id><id>110001101</id>
@@ -89,7 +133,7 @@
         <deck>
           <name>預設牌組（龍族）</name>
           <zone>1</zone>
-          <format>1</format>
+          <format>0</format>
           <craft>4</craft>
           <cards>
             <id>110001101</id><id>110001101</id><id>110001101</id>
@@ -111,7 +155,7 @@
         <deck>
           <name>預設牌組（死靈法師）</name>
           <zone>1</zone>
-          <format>1</format>
+          <format>0</format>
           <craft>5</craft>
           <cards>
             <id>110001101</id><id>110001101</id><id>110001101</id>
@@ -133,7 +177,7 @@
         <deck>
           <name>預設牌組（吸血鬼）</name>
           <zone>1</zone>
-          <format>1</format>
+          <format>0</format>
           <craft>6</craft>
           <cards>
             <id>110001101</id><id>110001101</id><id>110001101</id>
@@ -155,7 +199,7 @@
         <deck>
           <name>預設牌組（主教）</name>
           <zone>1</zone>
-          <format>1</format>
+          <format>0</format>
           <craft>7</craft>
           <cards>
             <id>110071301</id><id>110071301</id><id>110071301</id>
@@ -177,7 +221,7 @@
         <deck>
           <name>預設牌組（復仇者）</name>
           <zone>1</zone>
-          <format>1</format>
+          <format>0</format>
           <craft>8</craft>
           <cards>
             <id>110082201</id><id>110082201</id><id>110082201</id>

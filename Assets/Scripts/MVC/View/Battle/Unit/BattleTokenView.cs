@@ -96,6 +96,36 @@ public class BattleTokenView : BattleBaseView
         callback?.Invoke();
     }
 
+    public void RevealAnim(bool isMe, List<Card> tokens, Action callback) {
+        StartCoroutine(RevealCoroutine(isMe, tokens, callback));
+    }
+
+    private IEnumerator RevealCoroutine(bool isMe, List<Card> tokens, Action callback) {
+        for (int i = 0; i < cardViews.Count; i++)
+            cardViews[i].SetCard((i < tokens.Count) ? tokens[i] : null);
+
+        var initY = 140 + 360 * (isMe ? -1 : 1);
+
+        rectTransform.anchoredPosition = new Vector2(GetLayoutGroupPosition(415, tokens.Count), initY);
+        layoutGroup.spacing = GetLayoutGroupSpacing(tokens.Count);
+
+        float currentTime = 0, finishTime = getTokenSeconds, percent = 0;
+        while (currentTime < finishTime) {
+            percent = currentTime / finishTime;
+            rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, initY + (140 - initY) * percent);
+            currentTime += Time.deltaTime;
+            yield return null;
+        }
+
+        rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, 140);
+
+        yield return new WaitForSeconds(waitSeconds + 0.5f);
+
+        rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, initY);
+
+        callback?.Invoke();
+    }
+
     private float GetLayoutGroupPosition(float emptyPos, int count) {
         if (count < 4)
             return emptyPos - count * 50;

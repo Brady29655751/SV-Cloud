@@ -195,7 +195,7 @@ public class Effect : IIdentifyHandler
         state.currentEffect = this;
 
         var result = true;
-        var repeat = int.Parse(abilityOptionDict.Get("repeat", "1"));
+        var repeat = Parser.ParseEffectExpression(abilityOptionDict.Get("repeat", "1"), this, state);
         var abilityFunc = EffectAbilityHandler.GetAbilityFunc(ability);
 
         for (int i = 0; i < repeat; i++) {

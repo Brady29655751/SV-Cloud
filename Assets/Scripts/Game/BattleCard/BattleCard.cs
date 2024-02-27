@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using ExitGames.Client.Photon.StructWrapping;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -126,6 +127,8 @@ public class BattleCard : IIdentifyHandler
         return BattleCard.Get(int.Parse(effect.abilityOptionDict.Get("id", "-1"))) ?? this;
     }
 
+    #region card-description
+
     public string GetConditionDescription() {
         var card = CurrentCard;
         var description = string.Empty;
@@ -181,22 +184,28 @@ public class BattleCard : IIdentifyHandler
             }
         }
 
-        if ((keywordCount > 0) && (newEffects.Count > 0))
-            description += "------\n";
-
+        var newEffectDescription = string.Empty;
         for (int i = 0; i < newEffects.Count; i++) {
             if (newEffects[i].Value.hudOptionDict.TryGetValue("description", out var effectDesc) && (!string.IsNullOrEmpty(effectDesc)))
-                description += effectDesc + "\n";
+                newEffectDescription += effectDesc + "\n";
         }
+
+        if (!string.IsNullOrEmpty(newEffectDescription))
+            description += ((keywordCount > 0) ? "------\n" : string.Empty) + newEffectDescription;
 
         return (description.Count(x => x == '\n') == 1) ? string.Empty : description.TrimEnd('\n');
     }
+
+    #endregion
+
+    #region target-effects
 
     public void GetTargetEffectWithTiming(string timing, out Queue<Effect> targetEffectQueue, out Queue<EffectTargetInfo> targetInfoQueue, out Queue<List<short>> selectableTargetQueue) {
         bool isEvolveTiming = timing == "on_this_evolve_with_ep";
 
         var nowCost = GetUseCost(Hud.CurrentState.myUnit.leader, out var situation);
-        var nowCard = GetCurrentBattleCard(nowCost, situation).CurrentCard;
+        var nowBattleCard = GetCurrentBattleCard(nowCost, situation);
+        var nowCard = GetCurrentCard(isEvolveTiming ? nowBattleCard.evolveCard : nowBattleCard.OriginalCard);
 
         targetEffectQueue = new Queue<Effect>();
         targetInfoQueue = new Queue<EffectTargetInfo>();
@@ -287,6 +296,10 @@ public class BattleCard : IIdentifyHandler
         return currentSelectableList;
     }
 
+    #endregion
+
+    #region  is-condition
+
     public int GetUseCost(Leader leader, out string situation) {
         var card = CurrentCard;
         var effects = card.effects;
@@ -365,7 +378,7 @@ public class BattleCard : IIdentifyHandler
     }
 
     public bool IsLeaderAttackable(BattleUnit sourceUnit) {
-        var isAttackChanceLegal = actionController.CurrentAttackChance > 0;
+        var isAttackChanceLegal = (actionController.CurrentAttackChance > 0) && (!actionController.IsKeywordAvailable(CardKeyword.Freeze));
         var isStayTurnLegal = actionController.StayFieldTurn > 0;
         var isKeywordLegal = actionController.IsKeywordAvailable(CardKeyword.Storm);
 
@@ -373,7 +386,7 @@ public class BattleCard : IIdentifyHandler
     }
 
     public bool IsFollowerAttackable(BattleUnit sourceUnit) {
-        var isAttackChanceLegal = actionController.CurrentAttackChance > 0;
+        var isAttackChanceLegal = (actionController.CurrentAttackChance > 0) && (!actionController.IsKeywordAvailable(CardKeyword.Freeze));
         var isStayTurnLegal = actionController.StayFieldTurn > 0;
         var isKeywordLegal = actionController.IsKeywordAvailable(CardKeyword.Storm) || actionController.IsKeywordAvailable(CardKeyword.Rush);
 
@@ -386,33 +399,81 @@ public class BattleCard : IIdentifyHandler
         return (!isAmbush) && (!isAura);
     }
 
-    public void RemoveUntilEffect() {
-        newEffects.RemoveAll(x => (x.Key != null) && (x.Key.Invoke()));
-        buffController.RemoveUntilEffect();    
-    }
+    #endregion
 
     // Evolve this follower. You should check IsEvolvable() before calling this if you use EP evolve.
     public void Evolve() {
         IsEvolved = true;
     }
 
-    public void SetKeyword(CardKeyword keyword, ModifyOption option) {
+    public void SetKeyword(Func<bool> untilFunc, CardKeyword keyword, ModifyOption option) {
         if (option == ModifyOption.Add) {
             baseCard.keywords.Add(keyword);
             evolveCard?.keywords.Add(keyword);
-            actionController.AddIdentifier(keyword.GetKeywordEnglishName(), 1);
+            actionController.SetKeyword(untilFunc, keyword);
         } else if (option == ModifyOption.Remove) {
             baseCard.keywords.RemoveAll(x => x == keyword);
             evolveCard?.keywords.RemoveAll(x => x == keyword);
-            actionController.SetIdentifier(keyword.GetKeywordEnglishName(), 0);
+            actionController.RemoveKeyword(keyword);
         }
     }
 
-    public int TakeDamage(int damage) {
+    #region take-effects
+    private List<Effect> GetValidTakeEffects(List<Effect> originalEffects, Effect effect, BattleState state, string originalId, int replaceId) {
+        List<Effect> validEffects = new List<Effect>();
+
+        if (originalEffects.Count <= 0)
+            return validEffects;
+        
+        for (int i = 0; i < originalEffects.Count; i++) {
+            originalEffects[i].source = effect.source;
+            originalEffects[i].invokeUnit = state.GetBelongUnit(this);
+            originalEffects[i].condOptionDictList.ForEach(x => x.ForEach(y => {
+                if (y.lhs == originalId)
+                    y.lhs = "[num]" + replaceId.ToString();
+            }));
+
+            if (originalEffects[i].Condition(state))
+                validEffects.Add(originalEffects[i]);
+
+            originalEffects[i].source = null;
+            originalEffects[i].invokeUnit = null;
+            originalEffects[i].condOptionDictList.ForEach(x => x.ForEach(y => {
+                if (y.lhs.StartsWith("[num]"))
+                    y.lhs = originalId;
+            }));
+        }
+
+        return validEffects;
+    }
+
+    public int TakeDamage(int damage, Effect effect, BattleState state) {
+        var damageEffects = CurrentCard.effects.Where(x => x.ability == EffectAbility.SetDamage);
+        var addEffects = damageEffects.Where(x => x.abilityOptionDict.ContainsKey("add")).ToList();
+        var setEffects = damageEffects.Where(x => x.abilityOptionDict.ContainsKey("set")).ToList();
+
+        addEffects = GetValidTakeEffects(addEffects, effect, state, "damage", damage);
+        addEffects.ForEach(x => damage += Parser.ParseEffectExpression(x.abilityOptionDict.Get("add"), effect, state));
+
+        setEffects = GetValidTakeEffects(setEffects, effect, state, "damage", damage);
+        if (setEffects.Count > 0)
+            damage = setEffects.Select(x => Parser.ParseEffectExpression(x.abilityOptionDict.Get("set"), effect, state)).Min();
+
         return buffController.TakeDamage(damage);
     }
 
-    public int TakeHeal(int heal) {
+    public int TakeHeal(int heal, Effect effect, BattleState state) {
+        var healEffects = CurrentCard.effects.Where(x => x.ability == EffectAbility.SetHeal);
+        var addEffects = healEffects.Where(x => x.abilityOptionDict.ContainsKey("add")).ToList();
+        var setEffects = healEffects.Where(x => x.abilityOptionDict.ContainsKey("set")).ToList();
+        
+        addEffects = GetValidTakeEffects(addEffects, effect, state, "heal", heal);
+        addEffects.ForEach(x => heal += Parser.ParseEffectExpression(x.abilityOptionDict.Get("add"), effect, state));
+
+        setEffects = GetValidTakeEffects(setEffects, effect, state, "heal", heal);
+        if (setEffects.Count > 0)
+            heal = setEffects.Select(x => Parser.ParseEffectExpression(x.abilityOptionDict.Get("set"), effect, state)).Min();
+
         return buffController.TakeHeal(heal);
     }
 
@@ -427,6 +488,26 @@ public class BattleCard : IIdentifyHandler
         return add;
     }
 
+    #endregion
+
+    #region remove-effects
+
+    public void RemoveUntilEffect() {
+        newEffects.RemoveAll(x => (x.Key != null) && (x.Key.Invoke()));
+        buffController.RemoveUntilEffect();    
+        actionController.RemoveUntilEffect();
+    }
+
+    public void RemoveEffect(Effect effect) {
+        if (effect.id == 0) {
+            newEffects.RemoveAll(x => x.Value == effect);
+            return;
+        }
+
+        baseCard.ClearEffect(effect.id);
+        evolveCard.ClearEffect(effect.id);
+    }
+
     public void RemoveEffectWithTiming(string timing = "all") {
         baseCard.ClearEffects(timing);
         evolveCard.ClearEffects(timing);
@@ -434,8 +515,9 @@ public class BattleCard : IIdentifyHandler
 
         if (timing == "all") {    
             foreach (var keyword in CardDatabase.KeywordEffects)
-                SetKeyword(keyword, ModifyOption.Remove);
+                SetKeyword(null, keyword, ModifyOption.Remove);
         }
     }
 
+    #endregion
 }

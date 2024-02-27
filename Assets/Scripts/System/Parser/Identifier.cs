@@ -47,6 +47,8 @@ public static class Identifier {
         string trimId;
         float num = 0;
 
+        id = id.TrimStart("[num]");
+
         if (id.TryTrimStart("random", out trimId)) {
             if (trimId == string.Empty)
                 return Random.Range(0, 100);

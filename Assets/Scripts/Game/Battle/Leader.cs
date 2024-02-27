@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Leader : BattlePlace
@@ -59,12 +60,9 @@ public class Leader : BattlePlace
         
         SetIdentifier("combo", 0);
 
-        foreach (var entry in options) {
-            if (!entry.Key.StartsWith("turn"))
-                continue;
-
-            SetIdentifier(entry.Key, 0);
-        }
+        var turnKeys = new List<string>(options.Keys.Where(x => x.StartsWith("turn")));
+        for (int i = 0; i < turnKeys.Count; i++)
+            SetIdentifier(turnKeys[i], 0);
     }
 
     public override float GetIdentifier(string id) 
@@ -81,6 +79,8 @@ public class Leader : BattlePlace
             "isEpUsed" => isEpUsed ? 1 : 0,
             "isAwake"  => ((options.Get("lockAwake") <= 0) && ((PPMax >= 7) || (options.Get("forceAwake") > 0)))  ? 1 : 0,
             "isVenge"  => ((options.Get("lockVenge") <= 0) && ((HP <= 10) || (options.Get("forceVenge") > 0)))  ? 1 : 0,
+            "isEager"  => ((options.Get("lockEager") <= 0) && ((options.Get("turn_draw_cards") >= 2) || (options.Get("forceEager") > 0)))  ? 1 : 0,
+            "isChase"  => ((options.Get("lockChase") <= 0) && ((options.Get("turn_give_op_leader_damage") >= 1) || (options.Get("forceChase") > 0)))  ? 1 : 0,
             _ => base.GetIdentifier(id),
         };
     }

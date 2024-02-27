@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -71,7 +72,11 @@ public class DeckInfoPanel : Panel
     }
 
     public void CopyDeck() {
-        currentDeck = new Deck(currentDeck) { name = string.Empty };
+        currentDeck = new Deck(currentDeck) { 
+            name = string.Empty,
+            battles = Enumerable.Repeat(0, 9).ToList(),
+            wins = Enumerable.Repeat(0, 9).ToList(),
+        };
         EditDeck();
     }
 

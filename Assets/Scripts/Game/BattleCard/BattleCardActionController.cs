@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,6 +23,7 @@ public class BattleCardActionController
 
     public bool IsAttackFinished => CurrentAttackChance == 0;
 
+    public List<KeyValuePair<Func<bool>, CardKeyword>> keywordList = new List<KeyValuePair<Func<bool>, CardKeyword>>();
     public Dictionary<string, float> options = new Dictionary<string, float>();
 
     public BattleCardActionController() {
@@ -29,11 +32,16 @@ public class BattleCardActionController
     }
 
     public BattleCardActionController(BattleCardActionController rhs) {
+        keywordList = new List<KeyValuePair<Func<bool>, CardKeyword>>(rhs.keywordList);
         options = new Dictionary<string, float>(rhs.options);
     }
 
     public float GetIdentifier(string id) 
     {
+        var keyword = id.ToCardKeyword();
+        if (keyword != CardKeyword.None)
+            return keywordList.Count(x => x.Value == keyword);
+
         return id switch {
             "isAttackFinished" => IsAttackFinished ? 1 : 0,
             _ => options.Get(id, 0),
@@ -52,12 +60,24 @@ public class BattleCardActionController
         SetIdentifier(id, GetIdentifier(id) + num);
     }
 
+    public void RemoveUntilEffect() {
+        keywordList.RemoveAll(x => x.Key?.Invoke() ?? false);
+    }
+
     public void OnTurnStartInField() {
         StayFieldTurn += 1;
         CurrentAttackChance = MaxAttackChance;
     }
 
     public bool IsKeywordAvailable(CardKeyword keyword) {
-        return GetIdentifier(keyword.GetKeywordEnglishName()) > 0;
+        return keywordList.Count(x => x.Value == keyword) > 0;
+    }
+
+    public void SetKeyword(Func<bool> untilFunc, CardKeyword keyword) {
+        keywordList.Add(new KeyValuePair<Func<bool>, CardKeyword>(untilFunc, keyword));
+    }
+
+    public void RemoveKeyword(CardKeyword keyword) {
+        keywordList.RemoveAll(x => x.Value == keyword);
     }
 }
