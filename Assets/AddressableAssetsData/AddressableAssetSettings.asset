@@ -60,7 +60,7 @@ MonoBehaviour:
       - m_Id: df40ce22e78d9ed47a0f3aed31157ec8
         m_Value: ServerData/[BuildTarget]
       - m_Id: 76636c5a94870bf4aab7206b981c12ac
-        m_Value: https://raw.githubusercontent.com/Brady29655751/SV-Cloud/main/ServerData/[BuildTarget]
+        m_Value: https://raw.githubusercontent.com/Brady29655751/SV-Cloud/windows/ServerData/[BuildTarget]
     m_ProfileEntryNames:
     - m_Id: 6bdd2ca5c76250641847b79d48ac1cc1
       m_Name: BuildTarget
