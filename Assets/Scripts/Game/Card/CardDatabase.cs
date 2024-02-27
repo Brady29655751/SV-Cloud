@@ -84,7 +84,7 @@ public static class CardDatabase
     public static CardKeyword[] KeywordEffects => new CardKeyword[] { 
         CardKeyword.Storm, CardKeyword.Ward, CardKeyword.Bane,
         CardKeyword.Rush, CardKeyword.Ambush, CardKeyword.Drain,
-        CardKeyword.Pressure, CardKeyword.Aura,
+        CardKeyword.Pressure, CardKeyword.Aura, CardKeyword.Freeze,
     };
 
     public static string GetPackName(this CardPack pack) => packNameDict.Get(pack, "-");
@@ -127,15 +127,17 @@ public static class CardDatabase
     }
 
     public static CardTrait ToCardTrait(this string trait) {
-        return DatabaseManager.instance.traitNameDict.FirstOrDefault(x => x.Value == trait).Key;
+        var dict = DatabaseManager.instance.traitNameDict;
+        return dict.ContainsValue(trait) ? dict.First(x => x.Value == trait).Key : CardTrait.All;
     }
 
-    public static CardKeyword ToCardKeyword(this string keyword) {
-        return DatabaseManager.instance.keywordNameDict.FirstOrDefault(x => x.Value == keyword).Key;
+    public static CardKeyword ToCardKeyword(this string keyword, bool isEnglish = false) {
+        var dict = isEnglish ? DatabaseManager.instance.keywordEnglishNameDict : DatabaseManager.instance.keywordNameDict;
+        return dict.ContainsValue(keyword) ? dict.First(x => x.Value == keyword).Key : CardKeyword.None;
     }
 
     public static BattlePlaceId ToBattlePlace(this string place) {
-        if (!placeNameDict.Values.Contains(place))
+        if (!placeNameDict.ContainsValue(place))
             return BattlePlaceId.None;
 
         return placeNameDict.FirstOrDefault(x => x.Value == place).Key;
@@ -193,7 +195,7 @@ public enum CardTrait
 {
     All = 0,
     Soldier = 1, Commander = 2, Earth = 3, Artifact = 4, Golem = 5,
-    Light = 6, Dark = 7,
+    Light = 6, Dark = 7, Manaria = 8,
 }
 
 public enum CardKeyword 
@@ -203,7 +205,7 @@ public enum CardKeyword
     Combo = 12, Rally = 13, SpellBoost = 14, Awake = 15, Necromance = 16,
     Venge = 17, Countdown = 18, Reson = 19, EarthRitual = 20, Enhance = 21,
     Pressure = 22, Bury = 23, Reanimate = 24, Aura = 25, Accelerate = 26,
-    Crystalize = 27, Travel = 28,
+    Crystalize = 27, Travel = 28, Freeze = 29,
 }
 
 public enum BattlePlaceId 

@@ -6,11 +6,16 @@ using System;
 public class GameManager : Singleton<GameManager>
 {
     public bool debugMode = false;
-    public static string serverUrl => instance.debugMode ? "Data/" : "https://raw.githubusercontent.com/Brady29655751/SV-Cloud/android/";
-    public static string gameUrl => "https://media.githubusercontent.com/media/Brady29655751/SV-Cloud/android/";
+    
+    public static string branch => "main";
+    public static string gamePlatform => "Windows";
+    public static string fileType => ".zip";
+
+    public static string serverUrl => instance.debugMode ? "Data/" : "https://raw.githubusercontent.com/Brady29655751/SV-Cloud/" + branch + "/";
+    public static string gameUrl => "https://media.githubusercontent.com/media/Brady29655751/SV-Cloud/" + branch + "/";
 
     public static string versionDataUrl => serverUrl + "System/version.xml";
-    public static string gameDownloadUrl => gameUrl + "Release/SVCloud_Android.apk";
+    public static string gameDownloadUrl => gameUrl + "Release/SVCloud_" + gamePlatform + fileType;
     
     public static VersionData versionData { get; private set; } = null;
 
@@ -52,7 +57,7 @@ public class GameManager : Singleton<GameManager>
                 OnRequestFail(null);
                 return;
             }
-            versionData = data;
+            versionData = data.Verify();
             DatabaseManager.instance.Init();
         }
         void OnRequestFail(string error) {

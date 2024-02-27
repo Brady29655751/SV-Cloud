@@ -14,13 +14,15 @@ public static class SaveSystem
 
     public static GameData LoadData() {
         GameData data = LoadXML<GameData>(SavePath);
-        if (data == null) {
-            Player.gameData = data = GameData.GetDefaultData();
-            SaveData();
-            
-            Debug.Log("Save file not found in " + SavePath);
-            Debug.Log("Using default data.");
-        }
+        if (data != null)
+            return data.Verify();
+        
+        Player.gameData = data = GameData.GetDefaultData();
+        SaveData();
+
+        Debug.Log("Save file not found in " + SavePath);
+        Debug.Log("Using default data.");
+
         return data;
     }
 

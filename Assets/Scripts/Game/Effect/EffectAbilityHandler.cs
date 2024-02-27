@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using ExitGames.Client.Photon.StructWrapping;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -31,6 +30,7 @@ public static class EffectAbilityHandler
             EffectAbility.Destroy       => Destroy,
             EffectAbility.Vanish        => Vanish,
             EffectAbility.Return        => Return,
+            EffectAbility.Transform     => Transform,
             EffectAbility.Buff          => Buff,
             EffectAbility.Debuff        => Debuff,
 
@@ -49,7 +49,8 @@ public static class EffectAbilityHandler
             EffectAbility.Reanimate     => Reanimate,
             EffectAbility.Discard       => Discard,
             EffectAbility.Travel        => Travel,
-
+            EffectAbility.Reveal        => Reveal,
+            EffectAbility.SetPP         => SetPP,
             _ => (e, s) => true,
         };
     }
@@ -191,6 +192,9 @@ public static class EffectAbilityHandler
 
         state.currentEffect = effect;
         state.RemoveUntilEffect();
+
+        if (bool.Parse(effect.abilityOptionDict.Get("autoRemove", "false")))
+            effect.source.RemoveEffect(effect);
 
         return true;
     }
@@ -335,6 +339,24 @@ public static class EffectAbilityHandler
             invokeUnit = unit
         };
         Battle.EnqueueEffect(draw);
+
+        /*
+        if (GameManager.instance.debugMode && (!unit.IsMasterUnit)) {
+            Effect use = new Effect("none", "none", null, null, EffectAbility.Use, new Dictionary<string, string>() { {"index", "0"} })
+            {
+                source = unit.leader.leaderCard,
+                invokeUnit = unit,
+            };
+            Effect turnEnd = new Effect(new int[] { (int)EffectAbility.TurnEnd })
+            {
+                source = unit.leader.leaderCard,
+                invokeUnit = unit,
+            };
+            Battle.EnqueueEffect(use);
+            Battle.EnqueueEffect(turnEnd);
+        }
+        */
+
         return true;
     }
 
@@ -518,12 +540,20 @@ public static class EffectAbilityHandler
             invokeTarget = new List<BattleCard>(){ sourceCard },
         };
 
-        Effect destroyEffect = new Effect("none", "none", null, null, EffectAbility.Destroy, null)
+        Effect destroyTargetEffect = new Effect("none", "none", null, null, EffectAbility.Destroy, null)
         {
             source = sourceCard,
             sourceEffect = effect,
             invokeUnit = unit,
             invokeTarget = new List<BattleCard>() { targetCard },
+        };
+
+        Effect destroySourceEffect = new Effect("none", "none", null, null, EffectAbility.Destroy, null)
+        {
+            source = targetCard,
+            sourceEffect = effect,
+            invokeUnit = targetUnit,
+            invokeTarget = new List<BattleCard>() { sourceCard },
         };
 
         attackEffect.Apply(state);
@@ -532,7 +562,10 @@ public static class EffectAbilityHandler
             defenseEffect.Apply(state);
 
         if ((!isTargetLeader) && (sourceCard.actionController.IsKeywordAvailable(CardKeyword.Bane)))
-            destroyEffect.Apply(state);
+            destroyTargetEffect.Apply(state);
+
+        if ((!isSourceLeader) && (targetCard.actionController.IsKeywordAvailable(CardKeyword.Bane)))
+            destroySourceEffect.Apply(state);        
 
         return true;
     }
@@ -611,13 +644,14 @@ public static class EffectAbilityHandler
     public static bool SetKeyword(this Effect effect, BattleState state) {
         var modify = effect.abilityOptionDict.Get("modify", "add");
         var modifyOption = (modify == "add") ? ModifyOption.Add : ModifyOption.Remove;
+        var untilFunc = effect.GetCheckCondition(effect.abilityOptionDict.Get("until", "none"), state);
         var keywordId = int.Parse(effect.abilityOptionDict.Get("keyword", "1"));
         var keyword = (CardKeyword)keywordId;
         var keywordName = keyword.GetKeywordName();
         var keywordEnglishName = keyword.GetKeywordEnglishName();
 
         for (int i = 0; i < effect.invokeTarget.Count; i++) {
-            effect.invokeTarget[i].SetKeyword(keyword, modifyOption);
+            effect.invokeTarget[i].SetKeyword(untilFunc, keyword, modifyOption);
         }
 
         var modifyLog = (modifyOption == ModifyOption.Add) ? "獲得" : "失去";
@@ -699,11 +733,12 @@ public static class EffectAbilityHandler
 
     public static bool Summon(this Effect effect, BattleState state) {
         var unit = effect.invokeUnit;
+        var rhsUnit = state.GetRhsUnitById(unit.id);
         
         var who = effect.abilityOptionDict.Get("who", "me");
-        var summonUnit = (who == "me") ? unit : state.GetRhsUnitById(unit.id);
+        var summonUnit = (who == "me") ? unit : rhsUnit;
         var field = effect.abilityOptionDict.Get("field", "me");
-        var fieldUnit = (field == "me") ? unit : state.GetRhsUnitById(unit.id);
+        var fieldUnit = (field == "me") ? unit : rhsUnit;
         var where = effect.abilityOptionDict.Get("where", "token");
         var id = effect.abilityOptionDict.Get("id", "none").ToIntList('/');
         var count = effect.abilityOptionDict.Get("count", "0").Split('/').Select(x => Parser.ParseEffectExpression(x, effect, state)).ToList();
@@ -712,10 +747,28 @@ public static class EffectAbilityHandler
         if (availableCount <= 0)
             return false;
 
-        if (where == "token") {
-            effect.invokeTarget = new List<BattleCard>();
-            id.Select((x, i) => Enumerable.Repeat(x, count[i]).Select(BattleCard.Get)).ToList()
-                .ForEach(effect.invokeTarget.AddRange);
+        switch (where) {
+            default:
+                break;
+
+            case "token":
+                effect.invokeTarget = new List<BattleCard>();
+                id.Select((x, i) => Enumerable.Repeat(x, count[i]).Select(BattleCard.Get)).ToList()
+                    .ForEach(effect.invokeTarget.AddRange);
+                break;
+
+            case "grave":
+                var grave = summonUnit.grave;
+                var graveTargetInfo = effect.GetEffectTargetInfo(state);
+                var gravePoolId = effect.abilityOptionDict.Get("pool", "all");
+                var gravePool = gravePoolId switch {
+                    "distinct_destroy_card"     => grave.DistinctDestroyedCards,
+                    "distinct_destroy_follower" => grave.DistinctDestroyedFollowers,
+                    "distinct_destroy_amulet"   => grave.DistinctDestroyedAmulets,
+                    _ => grave.DestroyedCards,
+                };
+                effect.invokeTarget = gravePool.Select(BattleCard.Get).Where(graveTargetInfo.filter.FilterWithCurrentCard).ToList().Random(graveTargetInfo.num, false);
+                break;
         }
 
         var target = effect.invokeTarget.Take(availableCount).ToList();
@@ -752,6 +805,7 @@ public static class EffectAbilityHandler
 
     public static bool Damage(this Effect effect, BattleState state) {
         var situation = effect.abilityOptionDict.Get("situation", "none");
+        var giveType = effect.abilityOptionDict.Get("giveType", "none");
         var damage = Parser.ParseEffectExpression(effect.abilityOptionDict.Get("damage", "0"), effect, state);
 
         // Remove ambush.        
@@ -775,11 +829,32 @@ public static class EffectAbilityHandler
         state.currentEffect = effect;
 
         // Take damage and Set UI.
-        List<int> damageAllList = effect.invokeTarget.Select(x => x.TakeDamage(damage)).ToList();
+        List<int> damageAllList = new List<int>();
         List<int> myIndexList = new List<int>();
         List<int> myDamageList = new List<int>();
         List<int> opIndexList = new List<int>();
         List<int> opDamageList = new List<int>();
+
+        switch (giveType) {
+            default:
+                damageAllList = effect.invokeTarget.Select(x => x.TakeDamage(damage, effect, state)).ToList();
+                break;
+            case "takeTurn":
+                for (int i = 0; i < effect.invokeTarget.Count; i++) {
+                    var target = effect.invokeTarget[i];
+                    var targetDamage = (i == effect.invokeTarget.Count - 1) ? damage : Mathf.Min(damage, target.CurrentCard.hp);
+                    
+                    effect.invokeTarget[i].TakeDamage(targetDamage, effect, state);
+                    damageAllList.Add(targetDamage);
+                    damage -= targetDamage;
+
+                    if (damage <= 0) {
+                        effect.invokeTarget = effect.invokeTarget.Take(i + 1).ToList();
+                        break;
+                    }
+                }
+                break;
+        }
 
         for (int i = 0; i < effect.invokeTarget.Count; i++) {
             var belongUnit = state.GetBelongUnit(effect.invokeTarget[i]);
@@ -818,6 +893,15 @@ public static class EffectAbilityHandler
 
         state.currentEffect = effect;
 
+        if (effect.invokeUnit.isMyTurn) {
+            var indexList = (effect.invokeUnit.id == state.myUnit.id) ? opIndexList : myIndexList;
+            var damageList = (effect.invokeUnit.id == state.myUnit.id) ? opDamageList : myDamageList;
+            var leaderIndex = indexList.IndexOf(-1);
+
+            if (leaderIndex != -1)
+                effect.invokeUnit.leader.AddIdentifier("turn_give_op_leader_damage", damageList[leaderIndex]);
+        }
+
         // If hp <= 0, destroy.
         for (int i = 0; i < effect.invokeTarget.Count; i++) {
             if (effect.invokeTarget[i].CurrentCard.hp <= 0) {
@@ -850,7 +934,7 @@ public static class EffectAbilityHandler
         var heal = Parser.ParseEffectExpression(effect.abilityOptionDict.Get("heal", "0"), effect, state);
 
         // Take damage and Set UI.
-        List<int> healAllList = effect.invokeTarget.Select(x => x.TakeHeal(heal)).ToList();
+        List<int> healAllList = effect.invokeTarget.Select(x => x.TakeHeal(heal, effect, state)).ToList();
         List<int> myIndexList = new List<int>();
         List<int> myHealList = new List<int>();
         List<int> opIndexList = new List<int>();
@@ -920,8 +1004,10 @@ public static class EffectAbilityHandler
 
             // Special handle: Vanish when destroyed.
             if ((target[i].GetIdentifier("current.leaveVanish") > 0) ||  (target[i].GetIdentifier("current.destroyVanish") > 0)) {
-
+                
                 target[i].SetIdentifier("graveReason", (float)BattleCardGraveReason.Vanish);
+                target[i].SetIdentifier("graveIsMyTurn", belongUnit.isMyTurn ? 1 : 0);
+                target[i].SetIdentifier("graveTurn", state.currentUnit.turn);
                 belongUnit.grave.cards.Add(target[i]);
                 vanishedTarget.Add(target[i]);
 
@@ -941,6 +1027,8 @@ public static class EffectAbilityHandler
 
             // Remove and grave++;
             target[i].SetIdentifier("graveReason", (float)BattleCardGraveReason.Destroy);
+            target[i].SetIdentifier("graveIsMyTurn", belongUnit.isMyTurn ? 1 : 0);
+            target[i].SetIdentifier("graveTurn", state.currentUnit.turn);
             belongUnit.grave.cards.Add(target[i]);
             destroyedTarget.Add(target[i]);
 
@@ -1020,6 +1108,8 @@ public static class EffectAbilityHandler
             var valueList = (targetInfos[i].unitId == 0) ? myValue : opValue;
 
             target[i].SetIdentifier("graveReason", (float)BattleCardGraveReason.Vanish);
+            target[i].SetIdentifier("graveIsMyTurn", belongUnit.isMyTurn ? 1 : 0);
+            target[i].SetIdentifier("graveTurn", state.currentUnit.turn);
             belongUnit.grave.cards.Add(target[i]);
             
             indexList.Add(targetInfos[i].index);
@@ -1080,6 +1170,8 @@ public static class EffectAbilityHandler
             if ((target[i].GetIdentifier("current.leaveVanish") > 0) ||  (target[i].GetIdentifier("current.returnVanish") > 0)) {
                 
                 target[i].SetIdentifier("graveReason", (float)BattleCardGraveReason.Vanish);
+                target[i].SetIdentifier("graveIsMyTurn", belongUnit.isMyTurn ? 1 : 0);
+                target[i].SetIdentifier("graveTurn", state.currentUnit.turn);
                 belongUnit.grave.cards.Add(target[i]);
                 vanishedTarget.Add(target[i]);
 
@@ -1099,6 +1191,8 @@ public static class EffectAbilityHandler
 
             // Return to hand.
             target[i].SetIdentifier("graveReason", (float)BattleCardGraveReason.Return);
+            target[i].SetIdentifier("graveIsMyTurn", belongUnit.isMyTurn ? 1 : 0);
+            target[i].SetIdentifier("graveTurn", state.currentUnit.turn);
             belongUnit.grave.cards.Add(target[i]);
             returnList.Add(target[i]);
 
@@ -1120,6 +1214,7 @@ public static class EffectAbilityHandler
             invokeUnit = effect.invokeUnit,
             source = effect.source,
             sourceEffect = effect,
+            invokeTarget = new List<BattleCard>(),
         };
 
         Effect opToken = new Effect("none", "none", null, null, 
@@ -1131,6 +1226,7 @@ public static class EffectAbilityHandler
             invokeUnit = state.GetRhsUnitById(effect.invokeUnit.id),
             source = effect.source,
             sourceEffect = effect,
+            invokeTarget = new List<BattleCard>(),
         };
 
         if (myReturn.Count > 0)
@@ -1146,6 +1242,10 @@ public static class EffectAbilityHandler
 
             EnqueueEffect("on_this_leave_field", effect.invokeTarget, state);
             OnPhaseChange("on_leave_field", state);
+        }
+
+        for (int i = 0; i < myToken.invokeTarget.Count; i++) {
+            effect.invokeTarget = new List<BattleCard>() { myToken.invokeTarget[i] };
 
             EnqueueEffect("on_this_return", effect.invokeTarget, state);
             OnPhaseChange("on_return", state);
@@ -1156,10 +1256,16 @@ public static class EffectAbilityHandler
 
             EnqueueEffect("on_this_leave_field", effect.invokeTarget, state);
             OnPhaseChange("on_leave_field", state);
+        }
+
+        for (int i = 0; i < opToken.invokeTarget.Count; i++) {
+            effect.invokeTarget = (i < opToken.invokeTarget.Count) ? new List<BattleCard>() { opToken.invokeTarget[i] } : new List<BattleCard>();
 
             EnqueueEffect("on_this_return", effect.invokeTarget, state);
             OnPhaseChange("on_return", state);
         }
+
+        effect.invokeTarget = myToken.invokeTarget.Concat(opToken.invokeTarget).ToList();
 
         effect.hudOptionDict.Set("myIndex", myIndex.Select(x => x.ToString()).ConcatToString("/"));
         effect.hudOptionDict.Set("myValue", myValue.ConcatToString("/"));
@@ -1167,7 +1273,30 @@ public static class EffectAbilityHandler
         effect.hudOptionDict.Set("opValue", opValue.ConcatToString("/"));
         effect.hudOptionDict.Set("log", log);
         Hud.SetState(state);
-        
+
+        return true;
+    }
+
+    public static bool Transform(this Effect effect, BattleState state) {
+        var id = int.Parse(effect.abilityOptionDict.Get("id", "0"));
+        var card = BattleCard.Get(id);
+
+        if (card == null)
+            return false;
+
+        effect.invokeTarget.RemoveAll(x => state.GetBelongUnit(x) == null);
+
+        for (int i = 0; i < effect.invokeTarget.Count; i++) {
+            var target = effect.invokeTarget[i];
+            var place = state.GetBelongUnit(target).GetBelongPlace(target);
+            var index = place.cards.IndexOf(target);
+
+            place.cards[index] = BattleCard.Get(id);
+        }
+
+        effect.hudOptionDict.Set("log", effect.invokeTarget.Select(x => "使 " + x.CurrentCard.name + " 變身為 " + card.CurrentCard.name).ConcatToString("\n"));
+        Hud.SetState(state);
+
         return true;
     }
 
@@ -1303,9 +1432,8 @@ public static class EffectAbilityHandler
             effect.invokeTarget[i].SetIdentifier("boost", boost * mult + add);
         }
 
-        string targetName = (effect.invokeTarget.Count == 1) ? effect.invokeTarget[0].CurrentCard.name : string.Empty;
-        string log = (mult == 1) ? string.Empty : (targetName + "發動 " + mult + " 倍魔力增幅\n");
-        log += targetName + "發動 " + add + " 次魔力增幅";
+        string log = (mult == 1) ? string.Empty : ("發動 " + mult + " 倍魔力增幅\n");
+        log += "發動 " + add + " 次魔力增幅";
 
         effect.hudOptionDict.Set("log", hide ? string.Empty : log);
         Hud.SetState(state);
@@ -1374,6 +1502,7 @@ public static class EffectAbilityHandler
             var addEffectDescription = string.IsNullOrEmpty(description) ? string.Empty :
                 ("[ffbb00]【" + effect.source.CurrentCard.name + "】[-][ENDL]" + description);
 
+            addEffect.id = 0;
             addEffect.source = effect.invokeTarget[i];
             addEffect.sourceEffect = effect;
             addEffect.invokeUnit = state.GetBelongUnit(effect.invokeTarget[i]);
@@ -1381,7 +1510,7 @@ public static class EffectAbilityHandler
             addEffect.hudOptionDict.Set("description", addEffectDescription.GetDescription());
 
             effect.invokeTarget[i].newEffects.Add(new KeyValuePair<Func<bool>, Effect>(untilFunc, addEffect));
-            keyword.ForEach(x => effect.invokeTarget[i].SetKeyword((CardKeyword)x, ModifyOption.Add));
+            keyword.ForEach(x => effect.invokeTarget[i].SetKeyword(untilFunc, (CardKeyword)x, ModifyOption.Add));
         }
 
         effect.hudOptionDict.Set("log", effect.source.CurrentCard.name + " 賦予目標效果");
@@ -1394,9 +1523,20 @@ public static class EffectAbilityHandler
     }
 
     public static bool RemoveEffect(this Effect effect, BattleState state) {
-        var timing = effect.abilityOptionDict.Get("timing", "all");
+        var type = effect.abilityOptionDict.Get("type", "timing");
 
-        effect.invokeTarget.ForEach(x => x.RemoveEffectWithTiming(timing));
+        switch (type) {
+            default:
+                break;
+            case "timing":
+                var timing = effect.abilityOptionDict.Get("timing", "all");
+                effect.invokeTarget.ForEach(x => x.RemoveEffectWithTiming(timing));
+                break;
+            case "id":
+                var idList = effect.abilityOptionDict.Get("id", string.Empty).ToIntList('/');
+                effect.invokeTarget.ForEach(x => idList.ForEach(id => x.RemoveEffect(Effect.Get(id))));
+                break;
+        }
 
         effect.hudOptionDict.Set("log", effect.source.CurrentCard.name + " 使目標失去能力");
         Hud.SetState(state);
@@ -1458,13 +1598,9 @@ public static class EffectAbilityHandler
         var who = effect.abilityOptionDict.Get("who", "me");
         var hide = bool.Parse(effect.abilityOptionDict.Get("hide", "false")) && (effect.invokeUnit.id != state.myUnit.id);
         var tokenIdExpr = effect.abilityOptionDict.Get("id", string.Empty);
-        var tokenIds = tokenIdExpr switch {
-            "sourceEffect.target.first.current.uid" => new List<int>(){ effect.sourceEffect.invokeTarget.FirstOrDefault()?.CurrentCard.id ?? 0 },
-            "sourceEffect.target.all.current.uid" => effect.sourceEffect.invokeTarget.Select(x => x.CurrentCard.id).DefaultIfEmpty().ToList(),
-            _ => tokenIdExpr.ToIntList('/'),
-        };
-        var tokenCountExpr = effect.abilityOptionDict.Get("count", string.Empty).Split('/');
-        var tokenCounts = tokenCountExpr.Select(x => Parser.ParseEffectExpression(x, effect, state)).ToList(); 
+        var tokenIds = string.IsNullOrEmpty(tokenIdExpr) ? effect.invokeTarget.Select(x => x.baseCard.id).ToList() : tokenIdExpr.ToIntList('/');
+        var tokenCountExpr = effect.abilityOptionDict.Get("count", string.Empty);
+        var tokenCounts = string.IsNullOrEmpty(tokenCountExpr) ? Enumerable.Repeat(1, effect.invokeTarget.Count).ToList() : tokenCountExpr.Split('/').Select(x => Parser.ParseEffectExpression(x, effect, state)).ToList(); 
 
         var tokenUnit = (who == "me") ? effect.invokeUnit : state.GetRhsUnitById(effect.invokeUnit.id);
         var isMyUnit = tokenUnit.id == state.myUnit.id;
@@ -1591,7 +1727,7 @@ public static class EffectAbilityHandler
         var filter = BattleCardFilter.Parse(effect.abilityOptionDict.Get("filter", "none"));
 
         var unit = (who == "me") ? effect.invokeUnit : state.GetRhsUnitById(effect.invokeUnit.id);
-        var pool = unit.grave.destroyedFollowers;
+        var pool = unit.grave.DestroyedFollowers;
         int maxCost = (pool.Count == 0) ? -1 : pool.Max(x => x.cost);
 
         effect.invokeTarget = new List<BattleCard>();
@@ -1650,6 +1786,8 @@ public static class EffectAbilityHandler
 
             // Remove and grave++;
             target[i].SetIdentifier("graveReason", (float)BattleCardGraveReason.Discard);
+            target[i].SetIdentifier("graveIsMyTurn", unit.isMyTurn ? 1 : 0);
+            target[i].SetIdentifier("graveTurn", unit.turn);
             unit.grave.cards.Add(target[i]);
 
             EnqueueEffect("on_this_discard_" + type, effect.invokeTarget, state);
@@ -1696,12 +1834,32 @@ public static class EffectAbilityHandler
         effect.invokeTarget = tokenEffect.invokeTarget.ToList();
         OnPhaseChange("on_travel", state);
 
-        string log = isMyUnit ? effect.invokeTarget.Select(x => "漫遊 " + x.CurrentCard.name).ConcatToString("\n") :
-            ("漫遊 " + effect.invokeTarget.Count + " 張卡片");
-
-        effect.hudOptionDict.Set("log", log);
+        effect.hudOptionDict.Set("log", string.Empty);
         Hud.SetState(state);
 
+        return true;
+    }
+
+    public static bool Reveal(this Effect effect, BattleState state) {
+        effect.hudOptionDict.Set("log", effect.invokeTarget.Select(x => "公開 " +  x.CurrentCard.name).ConcatToString("\n"));
+        Hud.SetState(state);
+
+        EnqueueEffect("on_this_reveal", effect.invokeTarget, state);
+        OnPhaseChange("on_reveal", state);
+        return true;
+    }
+
+    public static bool SetPP(this Effect effect, BattleState state) {
+        var add = Parser.ParseEffectExpression(effect.abilityOptionDict.Get("add", "0"), effect, state);
+
+        effect.invokeTarget = new List<BattleCard>() { effect.invokeUnit.leader.leaderCard };
+        effect.invokeUnit.leader.PP += add;
+
+        effect.hudOptionDict.Set("log", "回復自己的PP " + add + " 點");
+        Hud.SetState(state);
+
+        EnqueueEffect("on_this_set_pp", effect.invokeTarget, state);
+        OnPhaseChange("on_set_pp", state);
         return true;
     }
 }

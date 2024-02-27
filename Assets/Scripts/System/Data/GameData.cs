@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 [XmlRoot("gameData")]
 public class GameData
@@ -26,6 +27,17 @@ public class GameData
         nickname = string.Empty;
         decks = new List<Deck>();
         BGMVolume = SEVolume = 10f;
+    }
+
+    public GameData Verify() {
+        for (int i = 0; i < decks.Count; i++) {
+            if ((decks[i].battles == null) || (decks[i].battles.Count != 9))
+                decks[i].battles = Enumerable.Repeat(0, 9).ToList();
+
+            if ((decks[i].wins == null) || (decks[i].wins.Count != 9))
+                decks[i].wins = Enumerable.Repeat(0, 9).ToList();
+        }
+        return this;
     }
 
     public bool IsEmpty() {

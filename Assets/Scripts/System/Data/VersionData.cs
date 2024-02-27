@@ -22,6 +22,14 @@ public class VersionData
     [XmlArray("topicDeck"), XmlArrayItem(typeof(Deck), ElementName = "deck")]
     public List<Deck> topicDecks = new List<Deck>();
 
+    public VersionData Verify() {
+        topicDecks.ForEach(x => {
+            x.battles = Enumerable.Repeat(0, 9).ToList();
+            x.wins = Enumerable.Repeat(0, 9).ToList();
+        });
+        return this;
+    }
+
     public bool IsEmpty() {
         return string.IsNullOrEmpty(gameVersion);
     }

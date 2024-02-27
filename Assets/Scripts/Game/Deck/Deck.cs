@@ -20,6 +20,12 @@ public class Deck
     [XmlArray("cards"), XmlArrayItem(typeof(int), ElementName = "id")] 
     public List<int> cardIds;
 
+    [XmlArray("battle"), XmlArrayItem(typeof(int), ElementName = "craft")] 
+    public List<int> battles;
+
+    [XmlArray("win"), XmlArrayItem(typeof(int), ElementName = "craft")] 
+    public List<int> wins;
+
     [XmlIgnore] public int CardCount => cardIds.Count;
     [XmlIgnore] public int MaxCardCount => ((GameFormat)format).GetMaxCardCountInDeck();
     [XmlIgnore] public List<Card> Cards => cardIds.Select(Card.Get).ToList();
@@ -28,6 +34,9 @@ public class Deck
     [XmlIgnore] public Dictionary<int, int> CardIdDistribution => GetCardIdDistribution();
     [XmlIgnore] public Dictionary<int, int> CardNameIdDistribution => GetCardNameIdDistribution();
     [XmlIgnore] public List<int> CostDistribution => GetCostDistribution();
+    [XmlIgnore] public int TotalBattles => battles.Sum();
+    [XmlIgnore] public int TotalWins => wins.Sum();
+    [XmlIgnore] public float WinRate => (TotalBattles == 0) ? 0f : (TotalWins * 1f / TotalBattles);
 
     public Deck() {}
 
@@ -36,6 +45,8 @@ public class Deck
         format = (int)formatId;
         craft = (int)craftId;
         cardIds = new List<int>();
+        battles = Enumerable.Repeat(0, 9).ToList();
+        wins = Enumerable.Repeat(0, 9).ToList();
     }
 
     public Deck(Deck rhs) {
@@ -44,6 +55,8 @@ public class Deck
         format = rhs.format;
         craft = rhs.craft;
         cardIds = new List<int>(rhs.cardIds);
+        battles = new List<int>(rhs.battles);
+        wins = new List<int>(rhs.wins);
     }
     public override string ToString()
     {
@@ -61,7 +74,8 @@ public class Deck
 
     public bool IsBattleAvailable(CardZone battleZone, GameFormat gameFormat) {
         return (!IsDefault()) && (!IsEmpty()) && (CardCount == MaxCardCount)
-            && (battleZone == (CardZone)zone) && (gameFormat == (GameFormat)format);
+            && (battleZone == (CardZone)zone) && (gameFormat == (GameFormat)format)
+            && DistinctCards.All(x => (x != null) && (x.IsFormat(gameFormat)));
     }
 
     public Dictionary<int, int> GetCardIdDistribution() {

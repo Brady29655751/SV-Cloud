@@ -86,10 +86,14 @@ public class BattleUnit : IIdentifyHandler
         }
 
         inGrave.ForEach(x => x.SetIdentifier("graveReason", (float)BattleCardGraveReason.DrawTooMuch));
+        inGrave.ForEach(x => x.SetIdentifier("graveIsMyTurn", isMyTurn ? 1 : 0));
+        inGrave.ForEach(x => x.SetIdentifier("graveTurn", turn));
 
         hand.cards.AddRange(inHand);
         grave.cards.AddRange(inGrave);
         deck.cards.RemoveAll(result.Contains);
+
+        leader.AddIdentifier("turn_draw_cards", inHand.Count);
 
         return result;
     }
@@ -114,6 +118,9 @@ public class BattleUnit : IIdentifyHandler
             "isDone"    => isDone ? 1 : 0,
             "isAwake"  => leader.GetIdentifier("isAwake"),
             "isVenge"  => leader.GetIdentifier("isVenge"),
+            "isEager"  => leader.GetIdentifier("isEager"),
+            "isChase"  => leader.GetIdentifier("isChase"),
+            "isGreedy" => (hand.Count >= 7) ? 1 : 0,
             "isReson"  => 1 - (deck.Count % 2),
             _ => float.MinValue,
         };

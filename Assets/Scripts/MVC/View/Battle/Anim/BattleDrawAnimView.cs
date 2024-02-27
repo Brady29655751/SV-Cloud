@@ -102,4 +102,12 @@ public class BattleDrawAnimView : BattleBaseView
 
         callback?.Invoke();
     }
+
+    public void MyReveal(List<Card> tokens, Action callback) {
+        tokenView?.RevealAnim(true, tokens, callback);
+    }
+
+    public void OpReveal(List<Card> tokens, Action callback) {
+        tokenView?.RevealAnim(false, tokens, callback);
+    }
 }

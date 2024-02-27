@@ -116,6 +116,11 @@ public class Card : IIdentifyHandler
         effects = effectIds.Select(effectFunc).Where(x => x != null).ToList();
     }
 
+    public void ClearEffect(int clearId) {
+        effectIds.RemoveAll(x => x == clearId);
+        effects.RemoveAll(x => x.id == clearId);
+    }
+
     public void ClearEffects(string timing = "all") {
         if (timing == "all") {
             effectIds.Clear();

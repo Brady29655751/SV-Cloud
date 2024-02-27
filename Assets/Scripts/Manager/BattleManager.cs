@@ -79,12 +79,27 @@ public class BattleManager : Manager<BattleManager>
         var hashtable = PhotonNetwork.LocalPlayer.CustomProperties;
         hashtable["win"] = (int)hashtable["win"] + addWin;
         PhotonNetwork.LocalPlayer.SetCustomProperties(hashtable);
+
+        var opCraftId = Battle.CurrentState.opUnit.leader.CraftId;
+        if (((CardCraft)opCraftId) != CardCraft.Neutral) {
+            Player.currentDeck.battles[opCraftId] += 1;
+            Player.currentDeck.wins[opCraftId] += addWin;
+            SaveSystem.SaveData();
+        }
     }
 
     public void BackToScene() {
         bool isLocal = Battle.Settings.isLocal;
         var scene = isLocal ? SceneId.Main : SceneId.Room;
         SceneLoader.instance.ChangeScene(scene);
+    }
+
+    public void Refresh() {
+        StopAllCoroutines();
+        hudQueue.Clear();
+        CurrentState = new BattleState(Battle.CurrentState) { currentEffect = Effect.None };
+        SetState(CurrentState);
+        ProcessQueue();
     }
 
     public void SetState(BattleState state) {

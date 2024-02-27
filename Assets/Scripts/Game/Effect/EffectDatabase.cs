@@ -50,6 +50,10 @@ public static class EffectDatabase {
         {"reanimate",       EffectAbility.Reanimate     },
         {"discard",         EffectAbility.Discard       },
         {"travel",          EffectAbility.Travel        },
+        {"reveal",          EffectAbility.Reveal        },
+        {"set_damage",      EffectAbility.SetDamage     },
+        {"set_heal",        EffectAbility.SetHeal       },
+        {"set_pp",          EffectAbility.SetPP         },
     };
 
     private static Dictionary<string, string> leaderInfoDict = new Dictionary<string, string>() {
@@ -144,4 +148,8 @@ public enum EffectAbility {
     Reanimate   = 122,
     Discard     = 123,
     Travel      = 124,
+    Reveal      = 125,
+    SetDamage   = 126,
+    SetHeal     = 127,
+    SetPP       = 128,
 }

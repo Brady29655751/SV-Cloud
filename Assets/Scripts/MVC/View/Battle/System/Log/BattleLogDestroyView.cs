@@ -23,7 +23,7 @@ public class BattleLogDestroyView : BattleBaseView
 
     private void SetDestroyFollowers(BattleState state, BattleUnit unit) {
         bool isMyUnit = unit.id == state.myUnit.id;
-        var destroyedFollowers = unit.grave.destroyedFollowers;
+        var destroyedFollowers = unit.grave.DestroyedFollowers;
         var distinctFollowers = unit.grave.DistinctDestroyedFollowers;
         var battleLogs = isMyUnit ? myBattleLogs : opBattleLogs;
         var color = isMyUnit ? Color.cyan : Color.red;

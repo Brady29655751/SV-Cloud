@@ -124,6 +124,13 @@ public class BattleAnimManager : Manager<BattleAnimManager>
             drawView?.OpAddDeck(hide, tokens, callback);
     }
 
+    public void RevealAnim(int unitId, List<Card> tokens, Action callback) {
+        if (unitId == 0)
+            drawView?.MyReveal(tokens, callback);
+        else
+            drawView?.OpReveal(tokens, callback);
+    }
+
     public void BuryAnim(Action callback) {
         StartCoroutine(WaitForSeconds(0.75f, callback));
     }

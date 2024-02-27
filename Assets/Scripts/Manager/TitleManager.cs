@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using SimpleFileBrowser;
-using Unity.IO.LowLevel.Unsafe;
 
 public class TitleManager : Manager<TitleManager>
 {
@@ -77,7 +76,7 @@ public class TitleManager : Manager<TitleManager>
 
     private void OpenSaveFileBrowser() {
         var downloadUrl = GameManager.gameDownloadUrl;
-        var filter = new FileBrowser.Filter("Game", ".apk");
+        var filter = new FileBrowser.Filter("Game", GameManager.fileType);
         FileBrowser.SetFilters(false, filter);
         FileBrowser.ShowSaveDialog(OnSuccess, OnCancel, FileBrowser.PickMode.Files, initialFilename: "SVCloud");
     }
