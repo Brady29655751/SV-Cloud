@@ -5,7 +5,7 @@ using System;
 
 public class GameManager : Singleton<GameManager>
 {
-    public bool debugMode = false;
+    public bool debugMode = false; 
     
     public static string branch => "main";
     public static string gamePlatform => "Windows";
