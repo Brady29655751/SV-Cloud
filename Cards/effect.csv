@@ -256,7 +256,7 @@ id,timing,target,condition,cond_option,ability,ability_option
 1239,on_this_use,none,source.boost,effect.source.boost[GTE]10,get_token,id=910031202&count=2
 1240,on_this_boost,self,source.boost,effect.source.where[NOT]5,set_cost,add=-1
 1241,on_this_use,op_field_1_index_[type:1|9],none,none,set_keyword,appendix=1242&until=op_turn_end&keyword=29
-1242,on_this_use,sourceEffect.target_field_0_all_[type:1|9],none,none,add_effect,id=1243&description=自己的回合結束時，給予這個從者3點傷害。
+1242,on_this_use,sourceEffect.target_field_0_all_[type:1|9],none,none,add_effect,id=1243&description=自己的回合結束時，給予這個從者1點傷害。
 1243,on_turn_end,self,none,me.isMyTurn=1&effect.source.where=5,damage,damage=1
 1244,on_this_use,none,none,earth[1]=1&me.deck.count[LTE]20,draw,earth=1&count=2
 1245,on_this_destroy,me_field_1_random_[type:1|9],none,me.deck.count>20,buff,add=1/1
