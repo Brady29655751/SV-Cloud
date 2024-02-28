@@ -240,7 +240,7 @@ id,timing,target,condition,cond_option,ability,ability_option
 1223,on_this_use,op_field_0_all_[type:1|9],none,me.deck.count>20,damage,damage=3&giveType=takeTurn
 1224,on_this_use,op_field_0_all_[type:1|9],none,me.deck.count[LTE]20,damage,damage=7&giveType=takeTurn
 1225,on_this_use,op_field_1_index_[type:1|9],none,none,damage,appendix=1226&damage=2
-1226,on_this_use,op_field_1_random_[type:1|9],none,sourceEffect.target.first.current[IF][type:9]=1,damage,damage=2
+1226,on_this_use,op_field_1_random_[type:9],none,none,damage,damage=2
 1227,on_this_use,op_leader_0_all_[type:0],none,op.field[type:1|9].count=0,damage,damage=me.field[trait:5].count
 1228,on_this_use,none,none,none,get_token,id=910131202&count=1
 1229,on_this_use,op_field_1_index_[type:1|9],none,none,damage,damage=2
