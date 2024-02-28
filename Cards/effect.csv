@@ -189,7 +189,7 @@ id,timing,target,condition,cond_option,ability,ability_option
 1172,on_turn_end,self,none,me.isMyTurn=1,return,none
 1173,on_this_destroy,me_leader_0_all_[type:0],none,me.hand.count>op.hand.count,heal,heal=4
 1174,on_this_destroy,none,none,me.hand.count<op.hand.count,draw,count=2
-1175,on_this_use,op_leader+field_0_all_[type:1|9],none,none,damage,damage=4
+1175,on_this_use,op_leader+field_0_all_[type:0|1|9],none,none,damage,damage=4
 1176,on_this_use,me_field_1_index_[type:9],none,none,add_effect,appendix=1177&id=1178&keyword=10&description=[ffbb00]交戰時[-] 回復自己的主戰者1點生命值。抽取1張卡片。
 1177,on_this_use,sourceEffect.target_field_0_all_[type:9],none,none,add_effect,id=1179&keyword=10
 1178,on_this_defense,me_leader_0_all_[type:0],none,none,heal,heal=1
