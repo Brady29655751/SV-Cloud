@@ -54,6 +54,8 @@ public static class EffectDatabase {
         {"set_damage",      EffectAbility.SetDamage     },
         {"set_heal",        EffectAbility.SetHeal       },
         {"set_pp",          EffectAbility.SetPP         },
+        {"choose",          EffectAbility.Choose        },
+        {"set_value",       EffectAbility.SetValue      },
     };
 
     private static Dictionary<string, string> leaderInfoDict = new Dictionary<string, string>() {
@@ -61,6 +63,9 @@ public static class EffectDatabase {
         {"rally", "協作數" },
         {"destroyedFollowerCount", "已被破壞的從者數" },
         {"destroyedAmuletCount",   "已被破壞的護符數" },
+        {"turn_draw_cards", "本回合自己抽取的卡片數" },
+        {"turn_give_op_leader_damage", "追擊" },
+        {"abuse", "凌虐" },
     };
 
     private static Dictionary<string, string> sourceInfoDict = new Dictionary<string, string>() {
@@ -81,37 +86,6 @@ public static class EffectDatabase {
     public static string[] GetSourceInfoKeys() => sourceInfoDict.Keys.ToArray();
     public static string[] GetSourceInfoValues() => sourceInfoDict.Values.ToArray();
     public static string ToSourceInfoValue(this string key) => sourceInfoDict.Get(key, string.Empty);
-}
-
-public class EffectTargetInfo 
-{
-    public Effect effect;
-    public string unit;
-    public List<BattlePlaceId> places;
-    public int num;
-    public List<string> mode;
-    public BattleCardFilter filter = new BattleCardFilter(-1);
-    public List<string> options;
-
-    public static EffectTargetInfo Parse(Effect effect, BattleState state) {
-        var info = new EffectTargetInfo();
-        var options = effect.target.Split('_');
-
-        info.unit = options[0];
-        if ((info.unit == "none") || (info.unit == "self"))
-            return info;
-
-        info.places = options[1].Split('+').Select(x => x.ToBattlePlace()).ToList();
-        info.num = Parser.ParseEffectExpression(options[2], effect, state);
-        info.mode = options[3].Split('+').ToList();
-
-        if (options.Length <= 4)
-            return info;
-
-        info.filter = BattleCardFilter.Parse(options[4]);
-        info.options = options.SubArray(5).ToList();
-        return info;
-    }
 }
 
 public enum EffectAbility {
@@ -152,4 +126,6 @@ public enum EffectAbility {
     SetDamage   = 126,
     SetHeal     = 127,
     SetPP       = 128,
+    Choose      = 129,
+    SetValue    = 130,
 }

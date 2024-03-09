@@ -52,7 +52,7 @@ public class BattleManager : Manager<BattleManager>
         NetworkManager.instance.onOtherPlayerLeftRoomEvent -= OnOtherPlayerDisconnect;
     }
 
-    public void EnemyPlayerAction(short[] data) {
+    public void EnemyPlayerAction(int[] data) {
         if (Battle.Settings.isLocal)
             return;
 

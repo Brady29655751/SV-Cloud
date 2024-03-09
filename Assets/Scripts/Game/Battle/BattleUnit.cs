@@ -81,7 +81,7 @@ public class BattleUnit : IIdentifyHandler
             inHand = result.GetRange(0, availableCount);
             inGrave = result.GetRange(availableCount, result.Count - availableCount);
         } else {
-            inHand = result.GetRange(0, result.Count);
+            inHand = (result.Count == 0) ? new List<BattleCard>() : result.GetRange(0, result.Count);
             inGrave = new List<BattleCard>();
         }
 
@@ -116,12 +116,13 @@ public class BattleUnit : IIdentifyHandler
             "isFirst"   => isFirst ? 1 : 0,
             "isMyTurn"  => isMyTurn ? 1 : 0,
             "isDone"    => isDone ? 1 : 0,
-            "isAwake"  => leader.GetIdentifier("isAwake"),
-            "isVenge"  => leader.GetIdentifier("isVenge"),
-            "isEager"  => leader.GetIdentifier("isEager"),
-            "isChase"  => leader.GetIdentifier("isChase"),
-            "isGreedy" => (hand.Count >= 7) ? 1 : 0,
-            "isReson"  => 1 - (deck.Count % 2),
+            "isAwake"   => leader.GetIdentifier("isAwake"),
+            "isVenge"   => leader.GetIdentifier("isVenge"),
+            "isEager"   => leader.GetIdentifier("isEager"),
+            "isChase"   => leader.GetIdentifier("isChase"),
+            "isRed"     => leader.GetIdentifier("isRed"),
+            "isGreedy"  => (hand.Count >= 7) ? 1 : 0,
+            "isReson"   => 1 - (deck.Count % 2),
             _ => float.MinValue,
         };
     }

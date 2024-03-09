@@ -126,6 +126,7 @@ public class Card : IIdentifyHandler
             effectIds.Clear();
             effects.Clear();
 
+            SetIdentifier("evolveCost", 1);
             foreach (var property in CardDatabase.PropertyEffects)
                 SetIdentifier(property, 0);
         } else {
@@ -191,6 +192,7 @@ public class Card : IIdentifyHandler
             "hpMax" => hpMax,
             "countdown" => countdown,
             "evolveCost" => float.Parse(options.Get("evolveCost", "1")),
+            "maxAttackChance" => float.Parse(options.Get("maxAttackChance", "1")),
             _ => float.Parse(options.Get(id, "0")),
         };
     }

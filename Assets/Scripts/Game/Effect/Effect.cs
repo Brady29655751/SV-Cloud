@@ -137,24 +137,32 @@ public class Effect : IIdentifyHandler
                     "where" => (float)(invokeUnit.GetBelongPlace(source)?.PlaceId ?? BattlePlaceId.None),
                     _       => card.GetIdentifier(trimId),
                 };
-            } else if (trimId.TryTrimStart("all.", out trimId)) {
+            } else {
+                var prefix = trimId.Split('.')[0];
+                var trimPrefix = string.Empty;
+                var cards = all;
+
+                if (prefix.TryTrimStart("me", out trimPrefix))
+                    cards = me;
+                else if (prefix.TryTrimStart("op", out trimPrefix))
+                    cards = op;
+                else    
+                    trimPrefix = prefix.TrimStart("all");
+
+                if (trimPrefix.StartsWith("[")) {
+                    var filter = BattleCardFilter.Parse(trimPrefix);
+                    cards = cards.Where(filter.FilterWithCurrentCard).ToList();
+                } 
+
+                trimId = trimId.TrimStart(prefix).TrimStart('.');
+
                 return trimId switch {
-                    "count" => all.Count,
-                    "isMe"  => (all.Count == me.Count) ? 1 : 0,
-                    "isOp"  => (all.Count == op.Count) ? 1 : 0,
+                    "count" => cards.Count,
+                    "isMe"  => (cards.Count == me.Count) ? 1 : 0,
+                    "isOp"  => (cards.Count == op.Count) ? 1 : 0,
                     _       => float.MinValue,
                 };
-            } else if (trimId.TryTrimStart("me.", out trimId)) {
-                return trimId switch {
-                    "count" => me.Count,
-                    _       => float.MinValue,
-                };
-            } else if (trimId.TryTrimStart("op.", out trimId)) {
-                return trimId switch {
-                    "count" => op.Count,
-                    _       => float.MinValue,
-                };
-            }
+            } 
         } else if (id.TryTrimStart("source.", out trimId)) {
             var all = sourceEffect.source;
 
@@ -170,7 +178,35 @@ public class Effect : IIdentifyHandler
 
     public void SetIdentifier(string id, float value)
     {
-        
+        var trimId = string.Empty;
+
+        if (id.TryTrimStart("source.", out trimId))
+            source?.SetIdentifier(trimId, value); 
+
+        else if (id.TryTrimStart("target.", out trimId)) {
+            var all = invokeTarget;
+            var me = all.Where(x => Battle.CurrentState.GetBelongUnit(x).id == invokeUnit.id).ToList();
+            var op = all.Where(x => Battle.CurrentState.GetBelongUnit(x).id == Battle.CurrentState.GetRhsUnitById(invokeUnit.id).id).ToList();
+
+            var prefix = trimId.Split('.')[0];
+            var trimPrefix = string.Empty;
+            var cards = all;
+
+            if (prefix.TryTrimStart("me", out trimPrefix))
+                cards = me;
+            else if (prefix.TryTrimStart("op", out trimPrefix))
+                cards = op;
+            else    
+                trimPrefix = prefix.TrimStart("all");
+
+            if (trimPrefix.StartsWith("[")) {
+                var filter = BattleCardFilter.Parse(trimPrefix);
+                cards = cards.Where(filter.FilterWithCurrentCard).ToList();
+            } 
+
+            trimId = trimId.TrimStart(prefix).TrimStart('.');
+            cards.ForEach(x => x.SetIdentifier(trimId, value));
+        }
     }
 
     public EffectTargetInfo GetEffectTargetInfo(BattleState state) {
@@ -225,69 +261,11 @@ public class Effect : IIdentifyHandler
         } 
 
         if (info.unit.TryTrimStart("sourceEffect.", out var trimUnit)) {
-            var sourceEffectAllCards = (new List<BattleCard>(){ sourceEffect.source }).Concat(sourceEffect.invokeTarget);
-            var effectCards = trimUnit switch {
-                "source" => new List<BattleCard>(){ sourceEffect.source },
-                "target" => sourceEffect.invokeTarget,
-                "me"     => sourceEffectAllCards.Where(x => state.GetBelongUnit(x).id == invokeUnit.id).ToList(),
-                "op"     => sourceEffectAllCards.Where(x => state.GetBelongUnit(x).id == rhsUnit.id).ToList(),
-                _ => new List<BattleCard>(),
-            };
-
-            if (!info.places.Contains(BattlePlaceId.None))
-                effectCards.RemoveAll(x => !info.places.Contains(state.GetBelongUnit(x).GetBelongPlace(x).PlaceId));
-
-            invokeTarget = info.mode[0] switch {
-                "all"       => effectCards,
-                "random"    => effectCards.Random(info.num, false),
-                "first"     => effectCards.Take(info.num).ToList(),
-                _           => invokeTarget,
-            };
-
+            invokeTarget = info.GetSourceEffectTarget(this, state);                                                                                                                                                                        
             return;
         }
 
-        var allUnit = info.unit switch {
-            "all"   =>  new List<BattleUnit>() { invokeUnit, rhsUnit },
-            "me"    =>  new List<BattleUnit>() { invokeUnit },
-            "op"    =>  new List<BattleUnit>() { rhsUnit },
-            _       =>  new List<BattleUnit>(),
-        };
-
-        var allPlace = new List<BattlePlace>();
-        for (int i = 0; i < info.places.Count; i++)
-            allUnit.ForEach(unit => allPlace.Add(unit.GetPlace(info.places[i])));
-
-        var allCards = new List<BattleCard>();
-        allPlace.ForEach(x => allCards.AddRange(x.cards.Where(info.filter.FilterWithCurrentCard)));
-
-        if (info.mode.Contains("other"))
-            allCards.RemoveAll(x => x == source);
-
-        switch (info.mode[0]) {
-            default:
-                break;
-            case "all":
-                invokeTarget = allCards;
-                break;
-            case "random":
-                invokeTarget = allCards.Random(info.num, false);
-                break;
-            case "first":
-                invokeTarget = allCards.Take(info.num).ToList();
-                break;
-            case "index":
-                invokeTarget = new List<BattleCard>();
-                for (int i = 0; i <= info.num; i++) {
-                    var target = invokeUnit.targetQueue.Dequeue();
-                    if (target == null)
-                        break;
-
-                    if (allCards.Contains(target))
-                        invokeTarget.Add(target);
-                }
-                break;
-        }
+        invokeTarget = info.GetTarget(this, state);
     }
 
     public Func<bool> GetCheckCondition(string checkTiming, BattleState state) {

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class BattleBaseView : IMonoBehaviour
@@ -38,20 +39,28 @@ public class BattleCardPlaceInfo {
             BattlePlaceId.Leader => unit.leader.leaderCard,
             // BattlePlaceId.Territory => unit.territory,
             BattlePlaceId.Field => unit.field.cards[index],
+            BattlePlaceId.Token => BattleCard.Get(index),
             _ => null,
         };
     }
 
-    public static BattleCardPlaceInfo Parse(short code) {
-        return new BattleCardPlaceInfo() {
-            unitId = code / 100,
-            place = (BattlePlaceId)(code % 100 / 10),
-            index = code % 10,
-        };
+    public static BattleCardPlaceInfo Parse(int code) {
+        if (code < 1000)
+            return new BattleCardPlaceInfo() {
+                unitId = code / 100,
+                place = (BattlePlaceId)(code % 100 / 10),
+                index = code % 10,
+            }; 
+        else   
+            return new BattleCardPlaceInfo() {
+                unitId = 0,
+                place = BattlePlaceId.Token,
+                index = code,
+            };
     }
 
-    public short ToShortCode() {
-        return (short)(unitId * 100 + (int)place * 10 + index);
+    public int ToIntCode() {
+        return (index > 10) ? index : (unitId * 100 + (int)place * 10 + index);
     }
 
 }

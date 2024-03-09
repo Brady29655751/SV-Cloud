@@ -67,4 +67,23 @@ public static class Identifier {
         return float.TryParse(id, out num) ? num : 0;
     }
 
+    public static void SetIdentifier(string id, string value, Effect effect, BattleState state) {
+        var trimId = string.Empty;
+        var lhsUnit = effect.invokeUnit;
+        var rhsUnit = state.GetRhsUnitById(lhsUnit.id);
+        var num = Parser.ParseEffectExpression(value, effect, state);
+
+        if (id.TryTrimStart("sourceEffect.", out trimId))
+            effect.sourceEffect?.SetIdentifier(trimId, num);
+
+        else if (id.TryTrimStart("effect.", out trimId))
+            effect.SetIdentifier(trimId, num);
+
+        else if (id.TryTrimStart("me.", out trimId))
+            lhsUnit.SetIdentifier(trimId, num);
+
+        else if (id.TryTrimStart("op.", out trimId))
+            rhsUnit.SetIdentifier(trimId, num);
+    }
+
 }

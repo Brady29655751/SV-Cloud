@@ -71,12 +71,12 @@ public class Battle
         }
 
         if (isMe) {
-            short[] enemyData = data.Select(x => (short)x).ToArray();
+            int[] enemyData = data.ToArray();
             var ability = (EffectAbility)data[0];
 
             if (ability.IsTargetSelectableAbility()) {
                 for (int i = 2; i < data.Length; i++)
-                    enemyData[i] = (short)((data[i] == 0) ? 0 : ((1 - (data[i] / 100)) * 100 + data[i] % 100));
+                    enemyData[i] = data[i].IsWithin(1, 999) ? ((1 - (data[i] / 100)) * 100 + data[i] % 100) : data[i];
             }
             Hud.EnemyPlayerAction(enemyData);
         }

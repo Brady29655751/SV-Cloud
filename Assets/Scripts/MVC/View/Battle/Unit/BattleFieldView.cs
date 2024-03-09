@@ -37,7 +37,7 @@ public class BattleFieldView : BattleBaseView
             if (id != 0)
                 return;
 
-            cardInfoView?.buttonView?.SetEvolvable(card?.IsEvolvable(unit) ?? false);
+            cardInfoView?.buttonView?.SetEvolvable((card?.IsEvolvable(unit) ?? false) && unit.isMyTurn);
         });
     }
 
@@ -97,8 +97,8 @@ public class BattleFieldView : BattleBaseView
         Anim.TargetAnim("on_this_evolve_with_ep", card, (target) => OnEvolveSuccess(info.index, target), null);
     }
 
-    private void OnEvolveSuccess(int index, List<short> target) {
-        int[] data = (new int[] { (int)EffectAbility.Evolve, index }).Concat(target.Select(x => (int)x)).ToArray();
+    private void OnEvolveSuccess(int index, List<int> target) {
+        int[] data = (new int[] { (int)EffectAbility.Evolve, index }).Concat(target).ToArray();
         Battle.PlayerAction(data, true);
     }
 

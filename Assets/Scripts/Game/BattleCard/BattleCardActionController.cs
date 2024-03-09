@@ -26,9 +26,9 @@ public class BattleCardActionController
     public List<KeyValuePair<Func<bool>, CardKeyword>> keywordList = new List<KeyValuePair<Func<bool>, CardKeyword>>();
     public Dictionary<string, float> options = new Dictionary<string, float>();
 
-    public BattleCardActionController() {
-        MaxAttackChance = 1;
-        CurrentAttackChance = 1;
+    public BattleCardActionController(int maxAttackChance) {
+        MaxAttackChance = maxAttackChance;
+        CurrentAttackChance = MaxAttackChance;
     }
 
     public BattleCardActionController(BattleCardActionController rhs) {

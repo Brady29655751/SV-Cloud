@@ -40,6 +40,10 @@ public class BattleCardBuffController
         };
     }
 
+    public void SetIdentifier(string id, float num) {
+        options.Set(id, num);
+    }
+
     public void RemoveUntilEffect() {
         tmpBuff.RemoveAll(x => x.Key.Invoke());
     }

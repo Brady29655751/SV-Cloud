@@ -22,14 +22,14 @@ public class BattleTargetView : BattleBaseView
 
     private Queue<Effect> targetEffectQueue = new Queue<Effect>();
     private Queue<EffectTargetInfo> infoQueue = new Queue<EffectTargetInfo>();
-    private Queue<List<short>> selectableQueue = new Queue<List<short>>();
+    private Queue<List<int>> selectableQueue = new Queue<List<int>>();
 
     private EffectTargetInfo currentInfo;
 
-    private List<short> currentSelectableList = new List<short>();
-    private List<short> selectedTargetList = new List<short>();
+    private List<int> currentSelectableList = new List<int>();
+    private List<int> selectedTargetList = new List<int>();
 
-    private Action<List<short>> onSuccessTarget;
+    private Action<List<int>> onSuccessTarget;
     private Action onFailTarget;
     private int selectNum = 0;
 
@@ -43,7 +43,7 @@ public class BattleTargetView : BattleBaseView
         selectableQueue.Clear();
     }
 
-    public void StartSelectTarget(string timing, BattleCard sourceCard, Action<List<short>> onSuccess, Action onFail) {
+    public void StartSelectTarget(string timing, BattleCard sourceCard, Action<List<int>> onSuccess, Action onFail) {
         Clear();
 
         sourceCard.GetTargetEffectWithTiming(timing, out targetEffectQueue, out infoQueue, out var selectableQueue);
@@ -73,6 +73,7 @@ public class BattleTargetView : BattleBaseView
 
     private void ShowTargetSelections() {
         var cardPlaceInfos = currentSelectableList.Select(BattleCardPlaceInfo.Parse);
+        var tokenInfos = cardPlaceInfos.Where(x => x.place == BattlePlaceId.Token).ToList();
         var myHandIndex = cardPlaceInfos.Where(x => (x.unitId == 0) && (x.place == BattlePlaceId.Hand)).Select(x => x.index).ToList();
         var myLeaderIndex = cardPlaceInfos.Where(x => (x.unitId == 0) && (x.place == BattlePlaceId.Leader)).Select(x => x.index).ToList();
         var opLeaderIndex = cardPlaceInfos.Where(x => (x.unitId == 1) && (x.place == BattlePlaceId.Leader)).Select(x => x.index).ToList();
@@ -94,24 +95,41 @@ public class BattleTargetView : BattleBaseView
         }
 
         selectHandBackground.gameObject.SetActive(true);
-        gridLayoutGroup.spacing = new Vector2(Mathf.Max(150 - 25 * myHandIndex.Count, 50), gridLayoutGroup.spacing.y);
 
         if (myHandIndex.Count > 0) {
+            gridLayoutGroup.spacing = new Vector2(Mathf.Max(150 - 25 * myHandIndex.Count, 50), gridLayoutGroup.spacing.y);
             for (int i = 0; i < selectHandViews.Count; i++) {
                 int copy = i;
                 var card = myHandIndex.Contains(copy) ? Hud.CurrentState.myUnit.hand.cards[copy].CurrentCard : null;
                 selectHandViews[i].SetCard(card);
                 selectHandViews[i].SetCallback(() => myHandView.ShowHandInfo(copy));
                 selectHandButtons[i].gameObject.SetActive(card != null);
+                selectHandButtons[i].onPointerClickEvent.SetListener(() => {
+                    selectHandButtons[copy].gameObject.SetActive(false);
+                    OnSelectTarget((int)BattlePlaceId.Hand * 10 + copy);
+                });
             }
             return;
+        }
+
+        if (tokenInfos.Count > 0) {
+            gridLayoutGroup.spacing = new Vector2(Mathf.Max(150 - 25 * tokenInfos.Count, 50), gridLayoutGroup.spacing.y);
+            for (int i = 0; i < selectHandViews.Count; i++) {
+                int copy = i;
+                var card = (copy < tokenInfos.Count) ? tokenInfos[copy].GetBattleCard(Hud.CurrentState).CurrentCard : null;
+                selectHandViews[i].SetCard(card);
+                selectHandViews[i].SetCallback(() => cardInfoView.SetCard(card));
+                selectHandButtons[i].gameObject.SetActive(card != null);
+                selectHandButtons[i].onPointerClickEvent.SetListener(() => {
+                    selectHandButtons[copy].gameObject.SetActive(false);
+                    OnSelectTarget(card?.id ?? 0);
+                });
+            }
         }
         
     }
 
-    public void OnSelectTarget(int infoCode) {
-        var code = (short)infoCode;
-
+    public void OnSelectTarget(int code) {
         if ((code != 0) && (!currentSelectableList.Contains(code)))
             return;
 
@@ -129,9 +147,6 @@ public class BattleTargetView : BattleBaseView
                 case BattlePlaceId.Field:
                     fieldCardView[info.index].SetOutlineColor(Color.cyan);
                     break;
-                case BattlePlaceId.Hand:
-                    selectHandButtons[info.index].gameObject.SetActive(false);
-                    break;   
             }
         }
 

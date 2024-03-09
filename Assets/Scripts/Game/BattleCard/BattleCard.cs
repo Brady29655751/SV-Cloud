@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using ExitGames.Client.Photon.StructWrapping;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -34,7 +33,7 @@ public class BattleCard : IIdentifyHandler
         evolveCard?.effects.ForEach(x => x.source = this);
 
         buffController = new BattleCardBuffController();
-        actionController = new BattleCardActionController();
+        actionController = new BattleCardActionController(Mathf.RoundToInt(baseCard.GetIdentifier("maxAttackChance")));
     }
 
     public BattleCard(BattleCard rhs) {
@@ -85,6 +84,15 @@ public class BattleCard : IIdentifyHandler
             return CurrentCard.GetIdentifier(trimId.TrimStart('.'));
         }
 
+        if (id.TryTrimStart("base.", out trimId))
+            return baseCard.GetIdentifier(trimId);
+
+        if (id.TryTrimStart("evolve.", out trimId))
+            return evolveCard.GetIdentifier(trimId);
+
+        if (id.TryTrimStart("buff.", out trimId))
+            return buffController.GetIdentifier(trimId);
+
         if (id.TryTrimStart("action.", out trimId))
             return actionController.GetIdentifier(trimId);
 
@@ -95,8 +103,20 @@ public class BattleCard : IIdentifyHandler
 
     public void SetIdentifier(string id, float value)
     {
-        if (id.StartsWith("action."))
-            actionController.SetIdentifier(id.TrimStart("action."), value);
+        var trimId = string.Empty;
+        
+        if (id.TryTrimStart("base.", out trimId))
+            baseCard.SetIdentifier(trimId, value);
+
+        else if (id.TryTrimStart("evolve.", out trimId))
+            evolveCard.SetIdentifier(trimId, value);
+        
+        else if (id.TryTrimStart("buff.", out trimId))
+            buffController.SetIdentifier(trimId, value);
+
+        else if (id.TryTrimStart("action.", out trimId))
+            actionController.SetIdentifier(trimId, value);
+
         else 
             options.Set(id, value);
     }
@@ -184,6 +204,12 @@ public class BattleCard : IIdentifyHandler
             }
         }
 
+        var evolveCost = GetEvolveCost();
+        if (evolveCost != BattleCard.Get(CurrentCard.id).GetEvolveCost()) {
+            description += ((evolveCost == 0) ? "不消費EP即可進化" : ("消費 " + evolveCost + " EP才可進化" )) + "。\n";
+            keywordCount++;
+        }
+
         var newEffectDescription = string.Empty;
         for (int i = 0; i < newEffects.Count; i++) {
             if (newEffects[i].Value.hudOptionDict.TryGetValue("description", out var effectDesc) && (!string.IsNullOrEmpty(effectDesc)))
@@ -200,7 +226,7 @@ public class BattleCard : IIdentifyHandler
 
     #region target-effects
 
-    public void GetTargetEffectWithTiming(string timing, out Queue<Effect> targetEffectQueue, out Queue<EffectTargetInfo> targetInfoQueue, out Queue<List<short>> selectableTargetQueue) {
+    public void GetTargetEffectWithTiming(string timing, out Queue<Effect> targetEffectQueue, out Queue<EffectTargetInfo> targetInfoQueue, out Queue<List<int>> selectableTargetQueue) {
         bool isEvolveTiming = timing == "on_this_evolve_with_ep";
 
         var nowCost = GetUseCost(Hud.CurrentState.myUnit.leader, out var situation);
@@ -209,7 +235,7 @@ public class BattleCard : IIdentifyHandler
 
         targetEffectQueue = new Queue<Effect>();
         targetInfoQueue = new Queue<EffectTargetInfo>();
-        selectableTargetQueue = new Queue<List<short>>();
+        selectableTargetQueue = new Queue<List<int>>();
 
         for (int i = 0; i < nowCard.effects.Count; i++) {
             var currentEffect = nowCard.effects[i];
@@ -249,8 +275,8 @@ public class BattleCard : IIdentifyHandler
         }
     }
 
-    public List<short> GetCurrentSelectableTarget(EffectTargetInfo currentInfo) {
-        List<short> currentSelectableList = new List<short>();
+    public List<int> GetCurrentSelectableTarget(EffectTargetInfo currentInfo) {
+        List<int> currentSelectableList = new List<int>();
 
         if (currentInfo.places.Contains(BattlePlaceId.Hand)) {
             var myHand = Hud.CurrentState.myUnit.hand;
@@ -263,8 +289,8 @@ public class BattleCard : IIdentifyHandler
                 Enumerable.Range(0, opHand.Count).Where(x => opHand.cards[x].IsTargetSelectable() && 
                     currentInfo.filter.FilterWithCurrentCard(opHand.cards[x])).ToList();
             
-            myIndex.ForEach(x => currentSelectableList.Add((short)((short)BattlePlaceId.Hand * 10 + x)));
-            opIndex.ForEach(x => currentSelectableList.Add((short)(100 + (short)BattlePlaceId.Hand * 10 + x)));
+            myIndex.ForEach(x => currentSelectableList.Add((int)BattlePlaceId.Hand * 10 + x));
+            opIndex.ForEach(x => currentSelectableList.Add(100 + (int)BattlePlaceId.Hand * 10 + x));
         }
 
         if (currentInfo.places.Contains(BattlePlaceId.Field)) {
@@ -278,20 +304,23 @@ public class BattleCard : IIdentifyHandler
                 Enumerable.Range(0, opField.Count).Where(x => opField.cards[x].IsTargetSelectable() && 
                     currentInfo.filter.FilterWithCurrentCard(opField.cards[x])).ToList();
 
-            myIndex.ForEach(x => currentSelectableList.Add((short)((short)BattlePlaceId.Field * 10 + x)));
-            opIndex.ForEach(x => currentSelectableList.Add((short)(100 + (short)BattlePlaceId.Field * 10 + x)));
+            myIndex.ForEach(x => currentSelectableList.Add((int)BattlePlaceId.Field * 10 + x));
+            opIndex.ForEach(x => currentSelectableList.Add(100 + (int)BattlePlaceId.Field * 10 + x));
         }
 
         if (currentInfo.places.Contains(BattlePlaceId.Leader)) {
             if (currentInfo.unit != "op")
-                currentSelectableList.Add((short)BattlePlaceId.Leader * 10);
+                currentSelectableList.Add((int)BattlePlaceId.Leader * 10);
 
             if (currentInfo.unit != "me")
                 currentSelectableList.Add(100 + (short)BattlePlaceId.Leader * 10);
         }
 
+        if (currentInfo.places.Contains(BattlePlaceId.Token))
+            currentSelectableList.AddRange(currentInfo.effect.abilityOptionDict.Get("token", string.Empty).ToIntList('/'));
+
         if (currentInfo.mode.Contains("other"))
-            currentSelectableList.Remove(Hud.CurrentState.GetCardPlaceInfo(this).ToShortCode());
+            currentSelectableList.Remove(Hud.CurrentState.GetCardPlaceInfo(this).ToIntCode());
 
         return currentSelectableList;
     }

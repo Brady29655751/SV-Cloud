@@ -22,8 +22,10 @@ public class BattleCardEffectView : IMonoBehaviour
         effectObjects[1]?.SetActive(card.actionController.IsKeywordAvailable(CardKeyword.Ambush));
         effectObjects[2]?.SetActive(card.actionController.IsKeywordAvailable(CardKeyword.Pressure));
         effectObjects[3]?.SetActive(card.CurrentCard.effects.Exists(x => x.ability == EffectAbility.SetDamage));
-        effectObjects[4]?.SetActive(card.actionController.IsKeywordAvailable(CardKeyword.Aura));
-        effectObjects[5]?.SetActive(card.actionController.IsKeywordAvailable(CardKeyword.Freeze));
+        effectObjects[4]?.SetActive(card.actionController.IsKeywordAvailable(CardKeyword.Undestroyable) 
+            || card.actionController.IsKeywordAvailable(CardKeyword.Unvanishable));
+        effectObjects[5]?.SetActive(card.actionController.IsKeywordAvailable(CardKeyword.Aura));
+        effectObjects[6]?.SetActive(card.actionController.IsKeywordAvailable(CardKeyword.Freeze));
     }
 
     public void SetTargeting(bool isTargeting) {

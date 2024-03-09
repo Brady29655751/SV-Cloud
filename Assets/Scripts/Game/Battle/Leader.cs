@@ -81,6 +81,7 @@ public class Leader : BattlePlace
             "isVenge"  => ((options.Get("lockVenge") <= 0) && ((HP <= 10) || (options.Get("forceVenge") > 0)))  ? 1 : 0,
             "isEager"  => ((options.Get("lockEager") <= 0) && ((options.Get("turn_draw_cards") >= 2) || (options.Get("forceEager") > 0)))  ? 1 : 0,
             "isChase"  => ((options.Get("lockChase") <= 0) && ((options.Get("turn_give_op_leader_damage") >= 1) || (options.Get("forceChase") > 0)))  ? 1 : 0,
+            "isRed"    => ((options.Get("lockRed") <= 0) && ((options.Get("turn_give_me_leader_damage") >= 1) || (options.Get("forceRed") > 0)))  ? 1 : 0,
             _ => base.GetIdentifier(id),
         };
     }

@@ -139,8 +139,8 @@ public class BattleHandView : BattleBaseView
         OnUseFail(index);
     }
 
-    private void OnUseSuccess(int index, List<short> target) {
-        int[] data = (new int[] { (int)EffectAbility.Use, index }).Concat(target.Select(x => (int)x)).ToArray();
+    private void OnUseSuccess(int index, List<int> target) {
+        int[] data = (new int[] { (int)EffectAbility.Use, index }).Concat(target).ToArray();
         Battle.PlayerAction(data, true);
     }
 

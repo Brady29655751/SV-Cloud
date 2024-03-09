@@ -26,8 +26,8 @@ public class BattleUnitView : BattleBaseView
     }
 
     [PunRPC]
-    private void RPCPlayerAction(short[] data) {
-        Battle.PlayerAction(data.Select(x => (int)x).ToArray(), false);
+    private void RPCPlayerAction(int[] data) {
+        Battle.PlayerAction(data, false);
     }
 
     public void SetLock(bool isLocked) {

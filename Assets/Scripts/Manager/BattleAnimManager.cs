@@ -42,7 +42,7 @@ public class BattleAnimManager : Manager<BattleAnimManager>
         turnView?.ShowTurnInfo(whosTurn, description, callback);
     }
 
-    public void TargetAnim(string timing, BattleCard card, Action<List<short>> onSuccess, Action onFail) {
+    public void TargetAnim(string timing, BattleCard card, Action<List<int>> onSuccess, Action onFail) {
         targetView?.StartSelectTarget(timing, card, onSuccess, onFail);
     }
 
