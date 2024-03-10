@@ -372,7 +372,7 @@ id,timing,target,condition,cond_option,ability,ability_option
 1352,on_this_destroy,none,none,none,draw,count=1
 1353,on_turn_end,self,none,effect.source.where=5&me.isVenge=1,remove_effect,timing=all
 1354,on_turn_end,self,none,effect.source.where=5&me.isVenge=1,remove_effect,timing=all
-1355,on_this_use,none,none,me.field[id:910061101].count>0,set_keyword,keyword=1
+1355,on_this_use,self,none,me.field[id:910061101].count>0,set_keyword,keyword=1
 1356,on_this_use,none,leader.turn_give_op_leader_damage,me.isChase=1,get_token,id=110061203&count=1
 1357,on_this_use,none,none,none,draw,count=1&filter=[craft:6][type:1|9]
 1358,on_this_use,self,leader.turn_give_op_leader_damage,me.isChase=1,set_value,id=effect.target.all.base.evolveCost&value=0
