@@ -345,9 +345,9 @@ id,timing,target,condition,cond_option,ability,ability_option
 1325,on_this_use,me_leader+field_1_index_[type:0|1|9],none,none,damage,damage=3
 1326,on_this_attack,none,leader.turn_give_op_leader_damage,me.isChase=1,draw,count=1
 1327,on_damage,self,none,effect.source.where=5&sourceEffect.target.me[type:0].count>0&me.isVenge=1,remove_effect,timing=all
-1328,on_turn_end,me_leader_0_all_[type:0],none,me.isMyTurn=1&effect.source.where=5,damage,appendix=1354&damage=6
+1328,on_this_use,me_leader_0_all_[type:0],none,none,damage,damage=2
 1329,on_this_use,me_field_1_index_[type:1|9],none,me.field[type:1|9].count>0,damage,damage=3
-1330,on_this_use,me_leader_0_all_[type:0],none,me.field[type:1|9].count=0,damage,damage=3
+1330,on_this_use,me_leader_0_all_[type:0],none,none,damage,damage=4
 1331,on_this_use,me_hand_2_random,none,none,discard,none
 1332,on_this_use,self,none,me.isVenge=1,buff,add=2/2
 1333,on_this_use,none,none,me.isVenge=1,draw,count=2
@@ -372,9 +372,9 @@ id,timing,target,condition,cond_option,ability,ability_option
 1352,on_this_destroy,none,none,none,draw,count=1
 1353,on_turn_end,self,none,effect.source.where=5&me.isVenge=1,remove_effect,timing=all
 1354,on_turn_end,self,none,effect.source.where=5&me.isVenge=1,remove_effect,timing=all
-1355,on_this_use,none,none,me.field[id:910061101].count>0,draw,count=1
+1355,on_this_use,none,none,me.field[id:910061101].count>0,set_keyword,keyword=1
 1356,on_this_use,none,leader.turn_give_op_leader_damage,me.isChase=1,get_token,id=110061203&count=1
-1357,on_this_use,none,none,none,draw,count=1&filter=[craft:6]
+1357,on_this_use,none,none,none,draw,count=1&filter=[craft:6][type:1|9]
 1358,on_this_use,self,leader.turn_give_op_leader_damage,me.isChase=1,set_value,id=effect.target.all.base.evolveCost&value=0
 1359,on_this_evolve_with_ep,me_leader_0_all_[type:0],none,none,damage,damage=2
 1360,on_this_evolve_with_ep,op_field_1_index_[type:1|9],none,none,damage,damage=2
@@ -425,7 +425,7 @@ id,timing,target,condition,cond_option,ability,ability_option
 1405,on_this_use,none,leader.turn_draw_cards,me.isEager=1\me.isGreedy=1,draw,count=2
 1406,on_this_use,none,none,none,get_token,id=110161201&count=2
 1407,on_this_use,me_leader_0_all_[type:0],none,none,damage,damage=5
-1408,on_this_use,self,none,none,damage,damage=3
+1408,on_this_use,self,none,me.isVenge=0,damage,damage=3
 1409,on_this_use,op_field_1_index_[type:1|9],none,none,damage,damage=3
 1410,on_this_destroy,op_leader_0_all_[type:0],none,me.isVenge=1,damage,damage=3
 1411,on_this_use,none,none,none,accelerate,accelerate=3&id=810163201
