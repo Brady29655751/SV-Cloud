@@ -186,6 +186,10 @@ public class Card : IIdentifyHandler
             "rarity" => RarityId,
             "serial" => SerialNum,
 
+            "initCost" => Card.Get(this.id).cost,
+            "initAtk" => Card.Get(this.id).atk,
+            "initHp" => Card.Get(this.id).hp,
+
             "cost" => cost,
             "atk" => atk,
             "hp" => hp,

@@ -188,8 +188,6 @@ public class BattleCardFilter : CardFilter {
     public bool isInitStatus = false;
 
     public BattleCardFilter(int formatId) : base(formatId) {
-        traitList = new List<int>();
-        keywordList = new List<int>();
         options = new Dictionary<string, float>();
 
         isWithToken = true;
@@ -237,37 +235,7 @@ public class BattleCardFilter : CardFilter {
             which = initWhich;
         }
 
-        var list = which switch {
-            "trait"     => traitList,
-            "keyword"   => keywordList,
-            _           => null,
-        };
-
-        if (list == null) {
-            base.SelectInt(which, item);
-            return;
-        }
-
-        if (item == -1) {
-            list?.Clear();
-            return;
-        }
-
-        if (Card.StatusNames.Contains(which.ToLower().TrimStart("init")) && (item < 0)) {
-            if (list.Count <= 0)
-                return;
-            var below = Enumerable.Range(0, list.Max() + 1);
-            var above = Enumerable.Range(list.Min(), 10 - list.Min() + 1);
-            var result = item switch {
-                -2 => below,
-                -3 => above,
-                _ => list,
-            };
-            list.Clear();
-            list.AddRange(result);
-            return;
-        }
-        list?.Fluctuate(item);
+        base.SelectInt(which, item);
     }
 
     public bool FilterWithCurrentCard(BattleCard battleCard) {

@@ -1,12 +1,12 @@
 <versionData>
-    <gameVersion>0.5</gameVersion>
-    <buildVersion>0.5</buildVersion>
-    <releaseDate>2023-03-09+08:00</releaseDate>
+    <gameVersion>0.6</gameVersion>
+    <buildVersion>0.6</buildVersion>
+    <releaseDate>2023-03-23+08:00</releaseDate>
     <releaseNote>
-    【當前版本】0.5
-    【版本日期】2023/03/09
-    【更新內容】《新界基石》吸血鬼卡片、更換威壓特效。
-    【修復錯誤】無法指定第9張手牌。
+    【當前版本】0.6
+    【版本日期】2023/03/23
+    【更新內容】《新界基石》主教卡片。
+    【修復錯誤】無。
 
     【1】當前版本為測試版本，流量達到上限後無法進行私人對戰。
     【2】初次加載資源會非常慢，請耐心等待並確保網路連線環境順暢。
@@ -16,8 +16,8 @@
     </releaseNote>
     
     <keywordCount>38</keywordCount>
-    <traitCount>10</traitCount>
-    <cardCount>430</cardCount>
+    <traitCount>11</traitCount>
+    <cardCount>515</cardCount>
     <cardPack>0/1/0/0</cardPack>
     <topicDeck>
         <deck>

@@ -55,8 +55,9 @@ public class Leader : BattlePlace
         return BattlePlaceId.Leader;
     }
 
-    public void ClearTurnIdentifier() {
-        isEpUsed = false;
+    public void ClearTurnIdentifier(bool isMyTurnStart) {
+        if (isMyTurnStart)
+            isEpUsed = false;
         
         SetIdentifier("combo", 0);
 

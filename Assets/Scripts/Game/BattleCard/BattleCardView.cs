@@ -11,6 +11,8 @@ public class BattleCardView : IMonoBehaviour
     [SerializeField] private BattleCardEffectView effectView;
 
     private BattleCard currentCard;
+    public Color lastOutlineColor { get; private set; } = Color.clear;
+    public Color currentOutlineColor { get; private set; } = Color.clear;
 
     public void SetBattleCard(BattleCard card) {
         currentCard = card;
@@ -44,6 +46,20 @@ public class BattleCardView : IMonoBehaviour
         normalView?.SetOutlineColor(color);
         evolveView?.SetOutlineColor(color);
         amuletView?.SetOutlineColor(color);
+
+        lastOutlineColor = currentOutlineColor;
+        currentOutlineColor = color;
+    }
+
+    /// <summary>
+    /// If current outline color is not "exceptColor", restore outline color to the color last set.
+    /// </summary>
+    /// <param name="exceptColor">Except color</param>
+    public void RestoreOutlineColor(Color exceptColor) {
+        if (currentOutlineColor == exceptColor)
+            return;
+        
+        SetOutlineColor(lastOutlineColor);
     }
 
     public void SetTargeting(bool isTargeting) {

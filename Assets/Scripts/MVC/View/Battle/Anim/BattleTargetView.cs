@@ -24,8 +24,8 @@ public class BattleTargetView : BattleBaseView
     private Queue<EffectTargetInfo> infoQueue = new Queue<EffectTargetInfo>();
     private Queue<List<int>> selectableQueue = new Queue<List<int>>();
 
+    private Effect currentTargetEffect;
     private EffectTargetInfo currentInfo;
-
     private List<int> currentSelectableList = new List<int>();
     private List<int> selectedTargetList = new List<int>();
 
@@ -46,7 +46,7 @@ public class BattleTargetView : BattleBaseView
     public void StartSelectTarget(string timing, BattleCard sourceCard, Action<List<int>> onSuccess, Action onFail) {
         Clear();
 
-        sourceCard.GetTargetEffectWithTiming(timing, out targetEffectQueue, out infoQueue, out var selectableQueue);
+        sourceCard.GetTargetEffectWithTiming(timing, out targetEffectQueue, out infoQueue, out selectableQueue);
 
         if (infoQueue.Count <= 0) {
             onSuccess?.Invoke(selectedTargetList);
@@ -62,16 +62,30 @@ public class BattleTargetView : BattleBaseView
             cardView.SetCard(sourceCard.CurrentCard);
         }
 
-        currentInfo = infoQueue.Dequeue();
-        currentSelectableList = selectableQueue.Dequeue();
-        
         onSuccessTarget = onSuccess;
         onFailTarget = onFail;
 
-        ShowTargetSelections();
+        NextSelectTarget(true);
     }
 
-    private void ShowTargetSelections() {
+    private void NextSelectTarget(bool isStartSelect) {
+        selectNum = 0;
+        currentTargetEffect = targetEffectQueue.Dequeue();
+        currentInfo = infoQueue.Dequeue();
+        currentSelectableList = selectableQueue.Dequeue();
+        
+        void NextOutlineColor(BattleCardView cardView) {
+            if (isStartSelect || (cardView.currentOutlineColor != Color.cyan))
+                cardView.SetOutlineColor(Color.clear);
+        }
+
+        myFieldCardViews.ForEach(NextOutlineColor);
+        opFieldCardViews.ForEach(NextOutlineColor);
+
+        ShowSelectableTargets();
+    }
+
+    private void ShowSelectableTargets() {
         var cardPlaceInfos = currentSelectableList.Select(BattleCardPlaceInfo.Parse);
         var tokenInfos = cardPlaceInfos.Where(x => x.place == BattlePlaceId.Token).ToList();
         var myHandIndex = cardPlaceInfos.Where(x => (x.unitId == 0) && (x.place == BattlePlaceId.Hand)).Select(x => x.index).ToList();
@@ -159,14 +173,7 @@ public class BattleTargetView : BattleBaseView
                 return;
             }
 
-            selectNum = 0;
-            currentInfo = infoQueue.Dequeue();
-            currentSelectableList = selectableQueue.Dequeue();
-
-            selectedTargetList.Clear();
-            currentSelectableList.Clear();
-
-            ShowTargetSelections();
+            NextSelectTarget(false);
         }
 
     }

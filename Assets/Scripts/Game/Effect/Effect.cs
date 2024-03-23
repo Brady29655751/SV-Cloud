@@ -120,60 +120,70 @@ public class Effect : IIdentifyHandler
 
     public float GetSourceEffectIdentifier(string id, BattleState state) {
         var trimId = string.Empty;
+        var rhsUnit = state.GetRhsUnitById(invokeUnit.id);
 
-        if (id.TryTrimStart("target.", out trimId)) {
-            var all = sourceEffect.invokeTarget;
-            var me = all.Where(x => state.GetBelongUnit(x).id == invokeUnit.id).ToList();
-            var op = all.Where(x => state.GetBelongUnit(x).id == state.GetRhsUnitById(invokeUnit.id).id).ToList();
-
-            if (trimId.TryTrimStart("first.", out trimId)) {
-                var card = all.FirstOrDefault();
-                if (card == null)
-                    return 0;
-
-                return trimId switch {
-                    "isMe"  => me.Contains(card) ? 1 : 0,
-                    "isOp"  => op.Contains(card) ? 1 : 0,
-                    "where" => (float)(invokeUnit.GetBelongPlace(source)?.PlaceId ?? BattlePlaceId.None),
-                    _       => card.GetIdentifier(trimId),
-                };
-            } else {
-                var prefix = trimId.Split('.')[0];
-                var trimPrefix = string.Empty;
-                var cards = all;
-
-                if (prefix.TryTrimStart("me", out trimPrefix))
-                    cards = me;
-                else if (prefix.TryTrimStart("op", out trimPrefix))
-                    cards = op;
-                else    
-                    trimPrefix = prefix.TrimStart("all");
-
-                if (trimPrefix.StartsWith("[")) {
-                    var filter = BattleCardFilter.Parse(trimPrefix);
-                    cards = cards.Where(filter.FilterWithCurrentCard).ToList();
-                } 
-
-                trimId = trimId.TrimStart(prefix).TrimStart('.');
-
-                return trimId switch {
-                    "count" => cards.Count,
-                    "isMe"  => (cards.Count == me.Count) ? 1 : 0,
-                    "isOp"  => (cards.Count == op.Count) ? 1 : 0,
-                    _       => float.MinValue,
-                };
-            } 
-        } else if (id.TryTrimStart("source.", out trimId)) {
-            var all = sourceEffect.source;
+        if (id.TryTrimStart("source.", out trimId)) {
+            var sourceEffectSource = sourceEffect.source;
 
             return trimId switch {
-                "isMe"  => (invokeUnit.GetBelongPlace(all) != null) ? 1 : 0,
-                "where" => (float)(invokeUnit.GetBelongPlace(all)?.PlaceId ?? BattlePlaceId.None),
-                _ => source.GetIdentifier(trimId),
+                "isMe"  => (invokeUnit.GetBelongPlace(sourceEffectSource) != null) ? 1 : 0,
+                "isOp"  => (rhsUnit.GetBelongPlace(sourceEffectSource) != null) ? 1 : 0,
+                "where" => (float)(invokeUnit.GetBelongPlace(sourceEffectSource)?.PlaceId ?? BattlePlaceId.None),
+                _ => sourceEffectSource.GetIdentifier(trimId),
             };
         }
 
-        return sourceEffect.GetIdentifier(id);
+        var all = new List<BattleCard>();
+
+        if (id.TryTrimStart("target.", out trimId))
+            all = sourceEffect.invokeTarget;
+        else if (id.StartsWith("me") || id.StartsWith("op"))
+            all = (new List<BattleCard>() { sourceEffect.source }).Concat(sourceEffect.invokeTarget).ToList();
+        else
+            return sourceEffect.GetIdentifier(id); 
+
+        var me = all.Where(x => state.GetBelongUnit(x).id == invokeUnit.id).ToList();
+        var op = all.Where(x => state.GetBelongUnit(x).id == rhsUnit.id).ToList();
+
+        var prefix = trimId.Split('.')[0];
+        var trimPrefix = string.Empty;
+        var cards = all;
+
+        if (prefix.TryTrimStart("me", out trimPrefix))
+            cards = me;
+        else if (prefix.TryTrimStart("op", out trimPrefix))
+            cards = op;
+        else if (!prefix.TryTrimStart("all", out trimPrefix)) {
+            prefix = "all";
+            trimPrefix = string.Empty;
+        }
+
+        if (trimPrefix.StartsWith("[")) {
+            var filter = BattleCardFilter.Parse(trimPrefix);
+            cards = cards.Where(filter.FilterWithCurrentCard).ToList();
+        } 
+
+        trimId = trimId.TrimStart(prefix + ".");
+        
+        if (trimId.TryTrimStart("first.", out trimId)) {
+            var card = cards.FirstOrDefault();
+            if (card == null)
+                return 0;
+
+            return trimId switch {
+                "isMe"  => me.Contains(card) ? 1 : 0,
+                "isOp"  => op.Contains(card) ? 1 : 0,
+                "where" => (float)(invokeUnit.GetBelongPlace(source)?.PlaceId ?? BattlePlaceId.None),
+                _       => card.GetIdentifier(trimId),
+            };
+        }
+
+        return trimId switch {
+            "count" => cards.Count,
+            "isMe"  => (cards.Count == me.Count) ? 1 : 0,
+            "isOp"  => (cards.Count == op.Count) ? 1 : 0,
+            _       => float.MinValue,
+        };
     }
 
     public void SetIdentifier(string id, float value)

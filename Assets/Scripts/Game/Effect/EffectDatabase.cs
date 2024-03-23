@@ -22,6 +22,7 @@ public static class EffectDatabase {
         {"crystalize",      EffectAbility.Crystalize    },   
 
         {"random",          EffectAbility.Random        },
+        {"index",           EffectAbility.Index         },
 
         {"set_keyword",     EffectAbility.SetKeyword    },
         {"draw",            EffectAbility.Draw          },
@@ -94,6 +95,7 @@ public enum EffectAbility {
     Accelerate = 11,    Crystalize = 12,
 
     Random = 91,
+    Index = 92,
 
     SetKeyword  = 100,   
     Draw        = 101, 

@@ -287,8 +287,8 @@ public static class EffectAbilityHandler
 
         // Clear data and On turn start in field.
         unit.targetQueue.Clear();
-        unit.leader.ClearTurnIdentifier();
-        rhsUnit.leader.ClearTurnIdentifier();
+        unit.leader.ClearTurnIdentifier(true);
+        rhsUnit.leader.ClearTurnIdentifier(false);
         unit.field.cards.ForEach(x => x.actionController.OnTurnStartInField());
         
         // If specific turn comes, give player EP.
@@ -763,7 +763,7 @@ public static class EffectAbilityHandler
         switch (where) {
             default:
                 break;
-
+            
             case "token":
                 effect.invokeTarget = new List<BattleCard>();
                 id.Select((x, i) => Enumerable.Repeat(x, count[i]).Select(BattleCard.Get)).ToList()

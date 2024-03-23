@@ -196,7 +196,7 @@ public enum CardTrait
 {
     All = 0,
     Soldier = 1, Commander = 2, Earth = 3, Artifact = 4, Golem = 5,
-    Light = 6, Dark = 7, Manaria = 8, RedMoon = 9,
+    Light = 6, Dark = 7, Manaria = 8, RedMoon = 9, Sister = 10,
 }
 
 public enum CardKeyword 
