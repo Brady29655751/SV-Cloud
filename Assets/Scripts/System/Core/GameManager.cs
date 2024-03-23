@@ -7,9 +7,9 @@ public class GameManager : Singleton<GameManager>
 {
     public bool debugMode = false; 
     
-    public static string branch => "windows";
-    public static string gamePlatform => "Windows";
-    public static string fileType => ".zip";
+    public static string branch => "android";
+    public static string gamePlatform => "Android";
+    public static string fileType => ".apk";
 
     public static string serverUrl => instance.debugMode ? "Data/" : "https://raw.githubusercontent.com/Brady29655751/SV-Cloud/" + branch + "/";
     public static string gameUrl => "https://media.githubusercontent.com/media/Brady29655751/SV-Cloud/" + branch + "/";
