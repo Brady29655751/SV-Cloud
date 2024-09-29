@@ -5514,6 +5514,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10a96d3c233349442986bc35a334e7fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  normalObject:
+  - {fileID: 1853598614}
+  debugObject:
+  - {fileID: 366285280}
 --- !u!1 &586698598
 GameObject:
   m_ObjectHideFlags: 0
@@ -10903,6 +10907,8 @@ MonoBehaviour:
   m_Options:
     m_Options:
     - m_Text: "\u5DE5\u7A0B\u5340"
+      m_Image: {fileID: 0}
+    - m_Text: "\u51B0\u9BCA\u5340"
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
@@ -19550,6 +19556,8 @@ MonoBehaviour:
     - m_Text: "\u6307\u5B9A\u7CFB\u5217"
       m_Image: {fileID: 0}
     - m_Text: "\u5BF6\u77F3\u76C3"
+      m_Image: {fileID: 0}
+    - m_Text: 2 Pick
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:

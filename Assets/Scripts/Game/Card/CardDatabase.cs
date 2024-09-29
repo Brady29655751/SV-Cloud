@@ -14,13 +14,18 @@ public static class CardDatabase
 
     public static Dictionary<CardPack, string> packNameDict = new Dictionary<CardPack, string>() {
         { CardPack.Basic,               "基本卡包" },
+        
         { CardPack.EngineeringBasic,    "基本卡包" },
         { CardPack.NewWorldStone,       "新界基石" },
+
+        { CardPack.SharkBasic,          "基本卡包" },
+        { CardPack.SharkTrial,          "試行卡包" },
     };
 
     public static Dictionary<CardZone, string> zoneNameDict = new Dictionary<CardZone, string>() {
         { CardZone.Cygames, "官方卡包" },   { CardZone.Engineering, "工程區" },
         { CardZone.Art, "藝術園區" },
+        { CardZone.Shark, "冰鯊區" },
     };
 
     public static Dictionary<GameFormat, string> formatNameDict = new Dictionary<GameFormat, string>() {
@@ -158,7 +163,7 @@ public enum GameFormat
 
 public enum CardZone 
 {
-    Cygames = 0,   Engineering = 1, Art = 2,     
+    Cygames = 0,   Engineering = 1, Shark = 2, Art = 3,     
     Beyond = 8,    Custom = 9
 }
 
@@ -172,6 +177,7 @@ public enum CardPack
 {
     Basic = 0,
     EngineeringBasic = 100, NewWorldStone = 101,
+    SharkBasic = 200, SharkTrial = 201,
 }
 
 public enum CardCraft 

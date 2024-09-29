@@ -57,6 +57,8 @@ public static class EffectDatabase {
         {"set_pp",          EffectAbility.SetPP         },
         {"choose",          EffectAbility.Choose        },
         {"set_value",       EffectAbility.SetValue      },
+
+        {"set_ep",          EffectAbility.SetEP         },
     };
 
     private static Dictionary<string, string> leaderInfoDict = new Dictionary<string, string>() {
@@ -130,4 +132,6 @@ public enum EffectAbility {
     SetPP       = 128,
     Choose      = 129,
     SetValue    = 130,
+
+    SetEP       = 131,
 }

@@ -85,7 +85,7 @@ public class BattleUnit : IIdentifyHandler
             inGrave = new List<BattleCard>();
         }
 
-        inGrave.ForEach(x => x.SetIdentifier("graveReason", (float)BattleCardGraveReason.DrawTooMuch));
+        inGrave.ForEach(x => x.SetIdentifier("graveReason", (int)BattleCardGraveReason.DrawTooMuch));
         inGrave.ForEach(x => x.SetIdentifier("graveIsMyTurn", isMyTurn ? 1 : 0));
         inGrave.ForEach(x => x.SetIdentifier("graveTurn", turn));
 
@@ -98,13 +98,13 @@ public class BattleUnit : IIdentifyHandler
         return result;
     }
 
-    public bool TryGetIdenfier(string id, out float value)
+    public bool TryGetIdenfier(string id, out int value)
     {
         value = GetIdentifier(id);
-        return value == float.MinValue;
+        return value == int.MinValue;
     }
 
-    public float GetIdentifier(string id)
+    public int GetIdentifier(string id)
     {
         var prefix = id.Split('.', '[' );
         var place = GetPlace(prefix[0].ToBattlePlace());
@@ -123,11 +123,11 @@ public class BattleUnit : IIdentifyHandler
             "isRed"     => leader.GetIdentifier("isRed"),
             "isGreedy"  => (hand.Count >= 7) ? 1 : 0,
             "isReson"   => 1 - (deck.Count % 2),
-            _ => float.MinValue,
+            _ => int.MinValue,
         };
     }
 
-    public void SetIdentifier(string id, float value)
+    public void SetIdentifier(string id, int value)
     {
         var prefix = id.Split('.');
         var place = GetPlace(prefix[0].ToBattlePlace());

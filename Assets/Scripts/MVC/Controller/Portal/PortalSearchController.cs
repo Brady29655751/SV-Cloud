@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -42,13 +43,19 @@ public class PortalSearchController : IMonoBehaviour
         searchView.SetFormat(formatId);
     }
 
+    public void SetZone(int zoneId) {
+        searchModel.SetInt("zone", zoneId);
+        searchView.SetZone(zoneId);
+        SelectPack(-1);
+    }
+
     public void SelectCraft(int craft) {
         searchModel.SelectInt("craft", craft);
         searchView.SetImageList("craft", searchModel.filter.craftList, Color.white, Color.gray);
     }
 
     public void SelectPack(int pack) {
-        searchModel.SelectInt("pack", pack);
+        searchModel.SelectInt("pack", ((pack >= 0) ? (searchModel.filter.zone * 100) : 0) + pack);
         searchView.SetImageList("pack", searchModel.filter.packList, ColorHelper.chosen, Color.black);
     }
 

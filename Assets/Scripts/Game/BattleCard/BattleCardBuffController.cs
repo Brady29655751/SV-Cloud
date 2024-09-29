@@ -8,7 +8,7 @@ public class BattleCardBuffController
 {
     private int costBuff, atkBuff, hpBuff, damage;
     public List<KeyValuePair<Func<bool>, CardStatus>> tmpBuff = new List<KeyValuePair<Func<bool>, CardStatus>>();
-    public Dictionary<string, float> options = new Dictionary<string, float>();
+    public Dictionary<string, int> options = new Dictionary<string, int>();
 
     public int CostBuff => costBuff + tmpBuff.Sum(x => x.Value.cost);
     public int AtkBuff => atkBuff + tmpBuff.Sum(x => x.Value.atk);
@@ -21,7 +21,7 @@ public class BattleCardBuffController
     public BattleCardBuffController() {
         costBuff = atkBuff = hpBuff = damage = 0;
         tmpBuff = new List<KeyValuePair<Func<bool>, CardStatus>>();
-        options = new Dictionary<string, float>();
+        options = new Dictionary<string, int>();
     }
 
     public BattleCardBuffController(BattleCardBuffController rhs) {
@@ -30,17 +30,17 @@ public class BattleCardBuffController
         hpBuff = rhs.hpBuff;
         damage = rhs.damage;
         tmpBuff = rhs.tmpBuff.ToList();
-        options = new Dictionary<string, float>(rhs.options);
+        options = new Dictionary<string, int>(rhs.options);
     }
 
-    public float GetIdentifier(string id) {
+    public int GetIdentifier(string id) {
         return id switch {
             "isBuffed" => ((AtkBuff > 0) || (HpBuff > 0)) ? 1 : 0,
             _ => options.Get(id, 0),
         };
     }
 
-    public void SetIdentifier(string id, float num) {
+    public void SetIdentifier(string id, int num) {
         options.Set(id, num);
     }
 
@@ -49,7 +49,7 @@ public class BattleCardBuffController
     }
 
     public int TakeDamage(int dmg) {
-        damage += dmg;
+        damage += Mathf.Max(dmg, 0);
         return dmg;
     }
 

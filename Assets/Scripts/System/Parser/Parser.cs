@@ -109,10 +109,10 @@ public static class Parser {
         }
 
         string[] id = expr.Split(Operator.opDict.Keys.ToArray(), StringSplitOptions.RemoveEmptyEntries);
-        float value = Identifier.GetIdentifier(id[0], effect, state) * (negativeFirst ? -1 : 1);
+        int value = Identifier.GetIdentifier(id[0], effect, state) * (negativeFirst ? -1 : 1);
         
         if (id.Length == 1)
-            return Mathf.RoundToInt(value);
+            return value;
 
         for (int i = 1, opStartIdx = id[0].Length, opEndIdx = 0; i < id.Length; i++) {
             opEndIdx = expr.IndexOf(id[i], opStartIdx);
@@ -120,7 +120,7 @@ public static class Parser {
             value = Operator.Operate(op, value, Identifier.GetIdentifier(id[i], effect, state));
             opStartIdx = opEndIdx + id[i].Length;
         }
-        return Mathf.RoundToInt(value);
+        return value;
     }
     
 }

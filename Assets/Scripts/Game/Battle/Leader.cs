@@ -66,7 +66,7 @@ public class Leader : BattlePlace
             SetIdentifier(turnKeys[i], 0);
     }
 
-    public override float GetIdentifier(string id) 
+    public override int GetIdentifier(string id) 
     {
         return id switch {
             "craft" => CraftId,
@@ -87,7 +87,7 @@ public class Leader : BattlePlace
         };
     }
 
-    public override void SetIdentifier(string id, float num) {
+    public override void SetIdentifier(string id, int num) {
         switch (id) {
             default:
                 base.SetIdentifier(id, num);
@@ -110,7 +110,7 @@ public class Leader : BattlePlace
         }
     }
 
-    public override void AddIdentifier(string id, float num) {
+    public override void AddIdentifier(string id, int num) {
         SetIdentifier(id, GetIdentifier(id) + num);
     }
 }

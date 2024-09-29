@@ -7,24 +7,24 @@ using UnityEngine;
 public class BattleCardActionController
 {
     public int StayFieldTurn {
-        get => (int)GetIdentifier("stayFieldTurn");
+        get => GetIdentifier("stayFieldTurn");
         set => SetIdentifier("stayFieldTurn", value);
     }
 
     public int MaxAttackChance {
-        get => (int)GetIdentifier("maxAttackChance");
+        get => GetIdentifier("maxAttackChance");
         set => SetIdentifier("maxAttackChance", value); 
     }
 
     public int CurrentAttackChance {
-        get => Mathf.Clamp((int)GetIdentifier("attackChance"), 0, MaxAttackChance);
+        get => Mathf.Clamp(GetIdentifier("attackChance"), 0, MaxAttackChance);
         set => SetIdentifier("attackChance", Mathf.Clamp(value, 0, MaxAttackChance));
     }
 
     public bool IsAttackFinished => CurrentAttackChance == 0;
 
     public List<KeyValuePair<Func<bool>, CardKeyword>> keywordList = new List<KeyValuePair<Func<bool>, CardKeyword>>();
-    public Dictionary<string, float> options = new Dictionary<string, float>();
+    public Dictionary<string, int> options = new Dictionary<string, int>();
 
     public BattleCardActionController(int maxAttackChance) {
         MaxAttackChance = maxAttackChance;
@@ -33,10 +33,10 @@ public class BattleCardActionController
 
     public BattleCardActionController(BattleCardActionController rhs) {
         keywordList = new List<KeyValuePair<Func<bool>, CardKeyword>>(rhs.keywordList);
-        options = new Dictionary<string, float>(rhs.options);
+        options = new Dictionary<string, int>(rhs.options);
     }
 
-    public float GetIdentifier(string id) 
+    public int GetIdentifier(string id) 
     {
         var keyword = id.ToCardKeyword();
         if (keyword != CardKeyword.None)
@@ -48,7 +48,7 @@ public class BattleCardActionController
         };
     }
 
-    public void SetIdentifier(string id, float num) {
+    public void SetIdentifier(string id, int num) {
         switch (id) {
             default:
                 options.Set(id, num);
@@ -56,7 +56,7 @@ public class BattleCardActionController
         }
     }
 
-    public void AddIdentifier(string id, float num) {
+    public void AddIdentifier(string id, int num) {
         SetIdentifier(id, GetIdentifier(id) + num);
     }
 

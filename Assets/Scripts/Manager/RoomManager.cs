@@ -13,6 +13,10 @@ public class RoomManager : Manager<RoomManager>
     [SerializeField] private RoomPlayerView myView, opView;
     [SerializeField] private DeckListController deckListController;
 
+    private CardZone zone;
+    private GameFormat format;
+    private BestOf bestOf;
+
     protected override void Awake()
     {
         base.Awake();
@@ -64,8 +68,12 @@ public class RoomManager : Manager<RoomManager>
         opView.SetName((otherPlayer.Length == 0) ? string.Empty : otherPlayer[0].NickName);
         opView.SetVictory((otherPlayer.Length == 0) ? 0 : (int)otherPlayer[0].CustomProperties["win"]);
 
-        deckListController.SetZone(zfb / 100);
-        deckListController.SetFormat(zfb % 100 / 10);
+        zone = (CardZone)(zfb / 100);
+        format = (GameFormat)(zfb % 100 / 10);
+        bestOf = (BestOf)(zfb % 10);
+
+        deckListController.SetZone((int)zone);
+        deckListController.SetFormat((int)format);
     }
 
     public void LeaveRoom() {
@@ -139,6 +147,17 @@ public class RoomManager : Manager<RoomManager>
     }
 
     public void SetDeckListPanelActive(bool active) {
+        if (active && ((format == GameFormat.TwoPick) || (format == GameFormat.AllStarTwoPick))) {
+            var panel = Panel.OpenPanel<LeaderChoosePanel>();
+            panel.SetConfirmCallback(craft => {
+                var twoPickPanel = Panel.OpenPanel<TwoPickPanel>();
+                twoPickPanel.onCloseEvent += () => UseDeck(Player.currentDeck);
+                twoPickPanel.InitDeck(zone, format, craft);
+                panel.ClosePanel();
+            });
+            return;
+        }
+
         deckListController?.gameObject.SetActive(active);
     }
 

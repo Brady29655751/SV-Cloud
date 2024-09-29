@@ -21,7 +21,7 @@ public class BattleCard : IIdentifyHandler
     public BattleCardBuffController buffController;
     public BattleCardActionController actionController;
 
-    public Dictionary<string, float> options = new Dictionary<string, float>();
+    public Dictionary<string, int> options = new Dictionary<string, int>();
     
     public BattleCard(Card card) {
         IsEvolved = false;
@@ -53,7 +53,7 @@ public class BattleCard : IIdentifyHandler
         buffController = new BattleCardBuffController(rhs.buffController);
         actionController = new BattleCardActionController(rhs.actionController);
 
-        options = new Dictionary<string, float>(rhs.options);
+        options = new Dictionary<string, int>(rhs.options);
     }
 
     public static BattleCard Get(Card baseCard) {
@@ -64,13 +64,13 @@ public class BattleCard : IIdentifyHandler
         return BattleCard.Get(Card.Get(id));
     }
 
-    public bool TryGetIdenfier(string id, out float value)
+    public bool TryGetIdenfier(string id, out int value)
     {
         value = GetIdentifier(id);
-        return value != float.MinValue;
+        return value != int.MinValue;
     }
 
-    public float GetIdentifier(string id)
+    public int GetIdentifier(string id)
     {
         string trimId;
 
@@ -101,7 +101,7 @@ public class BattleCard : IIdentifyHandler
         };
     }
 
-    public void SetIdentifier(string id, float value)
+    public void SetIdentifier(string id, int value)
     {
         var trimId = string.Empty;
         

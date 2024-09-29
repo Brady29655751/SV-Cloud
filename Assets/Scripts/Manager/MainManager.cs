@@ -5,7 +5,10 @@ using UnityEngine.UI;
 
 public class MainManager : Manager<MainManager>
 {
+    [SerializeField] private List<GameObject> normalObject, debugObject;
     protected override void Start() {
+        normalObject.ForEach(x => x.SetActive(!GameManager.instance.debugMode));
+        debugObject.ForEach(x => x.SetActive(GameManager.instance.debugMode));
         AudioSystem.instance.PlayMusic(AudioResources.Main);
     }
 

@@ -6,7 +6,7 @@ public interface IIdentifyHandler
 {
     public int Id { get; }
 
-    public bool TryGetIdenfier(string id, out float value);
-    public float GetIdentifier(string id);
-    public void SetIdentifier(string id, float value);
+    public bool TryGetIdenfier(string id, out int value);
+    public int GetIdentifier(string id);
+    public void SetIdentifier(string id, int value);
 }

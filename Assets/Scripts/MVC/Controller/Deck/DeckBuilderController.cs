@@ -28,6 +28,7 @@ public class DeckBuilderController : IMonoBehaviour
     public void SetInitDeck(Deck deck) {
         deckBuilderModel.SetInitDeck(deck);
         resultController.SetStorage(deckBuilderModel.InitCardStorage);
+        searchController.SetZone(deck.zone);
         searchController.Search();   
         OnSetDeck();
     }

@@ -140,7 +140,7 @@ public class Card : IIdentifyHandler
         description = _data[1].GetDescription((Type == CardType.Leader) ? string.Empty : "（沒有卡片能力記敘）");
     }
 
-    public float GetIdentifier(string id) 
+    public int GetIdentifier(string id) 
     {
         string trimId;
 
@@ -195,19 +195,19 @@ public class Card : IIdentifyHandler
             "hp" => hp,
             "hpMax" => hpMax,
             "countdown" => countdown,
-            "evolveCost" => float.Parse(options.Get("evolveCost", "1")),
-            "maxAttackChance" => float.Parse(options.Get("maxAttackChance", "1")),
-            _ => float.Parse(options.Get(id, "0")),
+            "evolveCost" => int.Parse(options.Get("evolveCost", "1")),
+            "maxAttackChance" => int.Parse(options.Get("maxAttackChance", "1")),
+            _ => int.Parse(options.Get(id, "0")),
         };
     }
 
-    public bool TryGetIdenfier(string id, out float value)
+    public bool TryGetIdenfier(string id, out int value)
     {
         value = GetIdentifier(id);
         return true;
     }
 
-    public void SetIdentifier(string id, float value)
+    public void SetIdentifier(string id, int value)
     {
         options.Set(id, value.ToString());
     }
@@ -215,9 +215,12 @@ public class Card : IIdentifyHandler
     public bool IsFollower() => (Type == CardType.Follower) || (Type == CardType.Evolved);
     public bool IsFormat(GameFormat format) {
         int newPackId = GameManager.versionData.NewPackIds[ZoneId];
+        int zonePackId = PackId % 100;
         return format switch {
-            GameFormat.Rotation => (PackId == ZoneId * 100) ||
-                (PackId % 100).IsWithin(newPackId - 4, newPackId),
+            GameFormat.Rotation => (zonePackId == 0) ||
+                zonePackId.IsWithin(newPackId - 4, newPackId),
+            GameFormat.TwoPick => (zonePackId == 0) ||
+                zonePackId.IsWithin(newPackId - 3, newPackId),
             _ => true,
         };
     }

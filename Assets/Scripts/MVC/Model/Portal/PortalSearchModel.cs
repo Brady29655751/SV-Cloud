@@ -6,10 +6,10 @@ using UnityEngine;
 
 public class PortalSearchModel : IMonoBehaviour
 {
-    public CardFilter filter = new CardFilter(1);
+    public CardFilter filter = new CardFilter(1) { zone = (int)CardZone.Engineering };
 
     public void Clear() {
-        filter = new CardFilter(1);
+        filter = new CardFilter(1){ zone = (int)CardZone.Engineering };
     }
 
     public void SetBool(string which, bool item) {

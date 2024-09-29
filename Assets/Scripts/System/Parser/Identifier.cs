@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 
 public static class Identifier {
 
-    public static float GetIdentifier(string id, Effect effect, BattleState state) {
+    public static int GetIdentifier(string id, Effect effect, BattleState state) {
         var trimId = string.Empty;
         var lhsUnit = effect.invokeUnit;
         var rhsUnit = state.GetRhsUnitById(lhsUnit.id);
@@ -43,9 +43,9 @@ public static class Identifier {
         return GetNumIdentifier(id);
     }
 
-    public static float GetNumIdentifier(string id) {
+    public static int GetNumIdentifier(string id) {
         string trimId;
-        float num = 0;
+        int num = 0;
 
         id = id.TrimStart("[num]");
 
@@ -64,7 +64,7 @@ public static class Identifier {
             return Random.Range(startRange, endRange + 1);
         }
 
-        return float.TryParse(id, out num) ? num : 0;
+        return int.TryParse(id, out num) ? num : 0;
     }
 
     public static void SetIdentifier(string id, string value, Effect effect, BattleState state) {

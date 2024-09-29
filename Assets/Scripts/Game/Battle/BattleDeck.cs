@@ -26,4 +26,20 @@ public class BattleDeck : BattlePlace
         return BattlePlaceId.Deck;
     }
 
+    public override int GetIdentifier(string id) {
+        return id switch {
+            "zone"  => zone,
+            "format"=> format,
+            "craft" => craft,
+            _       => base.GetIdentifier(id)
+        };
+    }
+
+    public override void SetIdentifier(string id, int num) {
+        base.SetIdentifier(id, num);
+    }
+
+    public override void AddIdentifier(string id, int num) {
+        SetIdentifier(id, GetIdentifier(id) + num);
+    }
 }

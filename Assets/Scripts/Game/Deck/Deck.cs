@@ -8,9 +8,11 @@ using System.Linq;
 public class Deck
 {
     public static Deck GetGemDeck(CardZone zone, CardCraft craft) {
+        int gemId = 500001201;
+        // int crystalId = 500003201;
         return new Deck(zone, GameFormat.GemOfFortune, craft) {
             name = craft.GetCraftName(),
-            cardIds = Enumerable.Repeat(510101201, 30).ToList(),
+            cardIds = Enumerable.Repeat(gemId, 30).ToList(),
         };
     }
 

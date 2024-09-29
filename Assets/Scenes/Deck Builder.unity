@@ -3709,7 +3709,7 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 100
+          m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -4139,6 +4139,7 @@ MonoBehaviour:
   keywordInputField: {fileID: 333294114}
   descriptionInputField: {fileID: 247154892}
   formatOutlines: []
+  zoneOutlines: []
   craftImages:
   - {fileID: 1095428479}
   - {fileID: 185939641}
@@ -18249,7 +18250,7 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 101
+          m_IntArgument: 1
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0

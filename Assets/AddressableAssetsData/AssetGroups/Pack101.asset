@@ -18,12 +18,12 @@ MonoBehaviour:
   m_GUID: 6b37e3df71076484ebce0baf78ce4b7d
   m_SerializeEntries:
   - m_GUID: 469282c4c3ee0ab4f9483a5bbe242c12
-    m_Address: 510101201
+    m_Address: 500001201
     m_ReadOnly: 0
     m_SerializedLabels:
     - neutral
   - m_GUID: ebf88ae966ecfed45b55892e77a5dc12
-    m_Address: 510103201
+    m_Address: 500003201
     m_ReadOnly: 0
     m_SerializedLabels:
     - neutral

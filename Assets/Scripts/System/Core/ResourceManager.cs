@@ -225,6 +225,14 @@ public class ResourceManager : Singleton<ResourceManager>
             }
             card.description = specialDescription + card.description;
         }
+
+        var basicPack = cardInfoDict.Where(x => x.Value.PackId == 100).ToList();
+        foreach (var entry in basicPack) {
+            var newId = entry.Key + (int)1e7;
+            var newCard = new Card(entry.Value){ id = newId };
+            cardInfoDict.Set(newId, newCard);            
+        }
+
         return cardInfoDict;
     }
 

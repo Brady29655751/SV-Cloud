@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,7 +10,7 @@ public class PortalSearchView : IMonoBehaviour
 
     [SerializeField] private GameObject detailSearchPanel;
     [SerializeField] private IInputField nameInputField, traitInputField, keywordInputField, descriptionInputField;
-    [SerializeField] private List<Outline> formatOutlines;
+    [SerializeField] private List<Outline> formatOutlines, zoneOutlines;
     [SerializeField] private List<Image> craftImages, packImages, typeImages, rarityImages;
     [SerializeField] private List<Image> costImages, atkImages, hpImages;
 
@@ -29,6 +30,25 @@ public class PortalSearchView : IMonoBehaviour
             outline.effectColor = Color.clear;
 
         formatOutlines[format].effectColor = Color.cyan;
+    }
+
+    public void SetZone(int zone) {
+        for (int i = 0; i < packImages.Count; i++) {
+            var pack = (CardPack)(zone * 100 + i);
+            packImages[i].gameObject.SetActive(i <= GameManager.versionData.NewPackIds[zone]);
+            packImages[i].GetComponentInChildren<Text>()?.SetText(pack.GetPackName());
+        }
+        
+        if (List.IsNullOrEmpty(zoneOutlines))
+            return;
+
+        if (!(zone - 1).IsInRange(0, zoneOutlines.Count))
+            return;
+
+        foreach (var outline in zoneOutlines)
+            outline.effectColor = Color.clear;
+
+        zoneOutlines[zone - 1].effectColor = Color.cyan;
     }
 
     public void SetInputField(string which, string input) {
@@ -61,11 +81,11 @@ public class PortalSearchView : IMonoBehaviour
             "hp" => hpImages,
             _ => null,
         };
-        int indent = which switch {
-            "pack" => 100,
-            "type" => 1,
-            "rarity" => 1,
-            _ => 0,
+        Func<int, int> indent = which switch {
+            "pack" => (x) => x % 100,
+            "type" => (x) => x - 1,
+            "rarity" => (x) => x - 1,
+            _ => (x) => x,
         };
 
         for (int i = 0; i < list.Count; i++) {
@@ -73,9 +93,8 @@ public class PortalSearchView : IMonoBehaviour
         }
 
         for (int i = 0; i < items.Count; i++) {
-            int index = items[i] - indent;
+            int index = indent.Invoke(items[i]);
             list[index].color = chosen;
         }
     }
-    
 }

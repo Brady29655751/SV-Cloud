@@ -1,12 +1,12 @@
 <versionData>
-    <gameVersion>0.6</gameVersion>
-    <buildVersion>0.6</buildVersion>
-    <releaseDate>2023-03-23+08:00</releaseDate>
+    <gameVersion>0.7</gameVersion>
+    <buildVersion>0.7</buildVersion>
+    <releaseDate>2023-09-29+08:00</releaseDate>
     <releaseNote>
-    【當前版本】0.6
-    【版本日期】2023/03/23
-    【更新內容】《新界基石》主教卡片。
-    【修復錯誤】無。
+    【當前版本】0.7
+    【版本日期】2023/09/29
+    【更新內容】2Pick模式、《冰鯊區》試行卡包精靈卡片
+    【修復錯誤】具有受到傷害減少能力的從者受到0傷會提升體質之錯誤
 
     【1】當前版本為測試版本，流量達到上限後無法進行私人對戰。
     【2】初次加載資源會非常慢，請耐心等待並確保網路連線環境順暢。
@@ -17,8 +17,8 @@
     
     <keywordCount>38</keywordCount>
     <traitCount>11</traitCount>
-    <cardCount>515</cardCount>
-    <cardPack>0/1/0/0</cardPack>
+    <cardCount>776</cardCount>
+    <cardPack>0/1/1/0</cardPack>
     <topicDeck>
         <deck>
           <name>增幅法（新界基石）</name>

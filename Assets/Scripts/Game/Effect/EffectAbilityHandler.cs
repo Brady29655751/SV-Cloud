@@ -54,6 +54,8 @@ public static class EffectAbilityHandler
             EffectAbility.Choose        => Choose,
             EffectAbility.SetValue      => SetValue,
 
+            EffectAbility.SetEP         => SetEP,
+
             _ => (e, s) => true,
         };
     }
@@ -345,7 +347,7 @@ public static class EffectAbilityHandler
         };
         Battle.EnqueueEffect(draw);
 
-        /*
+        
         if (GameManager.instance.debugMode && (!unit.IsMasterUnit)) {
             Effect use = new Effect("none", "none", null, null, EffectAbility.Use, new Dictionary<string, string>() { {"index", "0"} })
             {
@@ -360,7 +362,7 @@ public static class EffectAbilityHandler
             Battle.EnqueueEffect(use);
             Battle.EnqueueEffect(turnEnd);
         }
-        */
+        
 
         return true;
     }
@@ -657,7 +659,7 @@ public static class EffectAbilityHandler
         var modify = effect.abilityOptionDict.Get("modify", "add");
         var modifyOption = (modify == "add") ? ModifyOption.Add : ModifyOption.Remove;
         var untilFunc = effect.GetCheckCondition(effect.abilityOptionDict.Get("until", "none"), state);
-        var keywordId = int.Parse(effect.abilityOptionDict.Get("keyword", "1"));
+        var keywordId = Identifier.GetNumIdentifier(effect.abilityOptionDict.Get("keyword", "1"));
         var keyword = (CardKeyword)keywordId;
         var keywordName = keyword.GetKeywordName();
         var keywordEnglishName = keyword.GetKeywordEnglishName();
@@ -780,7 +782,8 @@ public static class EffectAbilityHandler
                     "distinct_destroy_amulet"   => grave.DistinctDestroyedAmulets,
                     _ => grave.DestroyedCards,
                 };
-                effect.invokeTarget = gravePool.Select(BattleCard.Get).Where(graveTargetInfo.filter.FilterWithCurrentCard).ToList().Random(graveTargetInfo.num, false);
+                if (gravePoolId != "reanimate")
+                    effect.invokeTarget = gravePool.Select(BattleCard.Get).Where(graveTargetInfo.filter.FilterWithCurrentCard).ToList().Random(graveTargetInfo.num, false);
                 break;
         }
 
@@ -1034,7 +1037,7 @@ public static class EffectAbilityHandler
             // Special handle: Vanish when destroyed.
             if ((target[i].GetIdentifier("current.leaveVanish") > 0) ||  (target[i].GetIdentifier("current.destroyVanish") > 0)) {
                 
-                target[i].SetIdentifier("graveReason", (float)BattleCardGraveReason.Vanish);
+                target[i].SetIdentifier("graveReason", (int)BattleCardGraveReason.Vanish);
                 target[i].SetIdentifier("graveIsMyTurn", belongUnit.isMyTurn ? 1 : 0);
                 target[i].SetIdentifier("graveTurn", state.currentUnit.turn);
                 belongUnit.grave.cards.Add(target[i]);
@@ -1055,7 +1058,7 @@ public static class EffectAbilityHandler
             }
 
             // Remove and grave++;
-            target[i].SetIdentifier("graveReason", (float)BattleCardGraveReason.Destroy);
+            target[i].SetIdentifier("graveReason", (int)BattleCardGraveReason.Destroy);
             target[i].SetIdentifier("graveIsMyTurn", belongUnit.isMyTurn ? 1 : 0);
             target[i].SetIdentifier("graveTurn", state.currentUnit.turn);
             belongUnit.grave.cards.Add(target[i]);
@@ -1137,7 +1140,7 @@ public static class EffectAbilityHandler
             var indexList = (targetInfos[i].unitId == 0) ? myIndex : opIndex;
             var valueList = (targetInfos[i].unitId == 0) ? myValue : opValue;
 
-            target[i].SetIdentifier("graveReason", (float)BattleCardGraveReason.Vanish);
+            target[i].SetIdentifier("graveReason", (int)BattleCardGraveReason.Vanish);
             target[i].SetIdentifier("graveIsMyTurn", belongUnit.isMyTurn ? 1 : 0);
             target[i].SetIdentifier("graveTurn", state.currentUnit.turn);
             belongUnit.grave.cards.Add(target[i]);
@@ -1199,7 +1202,7 @@ public static class EffectAbilityHandler
 
             if ((target[i].GetIdentifier("current.leaveVanish") > 0) ||  (target[i].GetIdentifier("current.returnVanish") > 0)) {
                 
-                target[i].SetIdentifier("graveReason", (float)BattleCardGraveReason.Vanish);
+                target[i].SetIdentifier("graveReason", (int)BattleCardGraveReason.Vanish);
                 target[i].SetIdentifier("graveIsMyTurn", belongUnit.isMyTurn ? 1 : 0);
                 target[i].SetIdentifier("graveTurn", state.currentUnit.turn);
                 belongUnit.grave.cards.Add(target[i]);
@@ -1220,7 +1223,7 @@ public static class EffectAbilityHandler
             }
 
             // Return to hand.
-            target[i].SetIdentifier("graveReason", (float)BattleCardGraveReason.Return);
+            target[i].SetIdentifier("graveReason", (int)BattleCardGraveReason.Return);
             target[i].SetIdentifier("graveIsMyTurn", belongUnit.isMyTurn ? 1 : 0);
             target[i].SetIdentifier("graveTurn", state.currentUnit.turn);
             belongUnit.grave.cards.Add(target[i]);
@@ -1428,7 +1431,7 @@ public static class EffectAbilityHandler
         }
 
         effect.invokeTarget = inHand;
-        inGrave.ForEach(x => x.SetIdentifier("graveReason", (float)BattleCardGraveReason.DrawTooMuch));
+        inGrave.ForEach(x => x.SetIdentifier("graveReason", (int)BattleCardGraveReason.DrawTooMuch));
 
         tokenUnit.hand.cards.AddRange(inHand);
         tokenUnit.grave.cards.AddRange(inGrave);
@@ -1782,6 +1785,7 @@ public static class EffectAbilityHandler
             EffectAbility.Summon, new Dictionary<string, string>() 
             {
                 { "where", "grave" },
+                { "pool", "reanimate" },
             })
         {
             source = effect.source,
@@ -1821,7 +1825,7 @@ public static class EffectAbilityHandler
             effect.invokeTarget = new List<BattleCard>() { target[i] };
 
             // Remove and grave++;
-            target[i].SetIdentifier("graveReason", (float)BattleCardGraveReason.Discard);
+            target[i].SetIdentifier("graveReason", (int)BattleCardGraveReason.Discard);
             target[i].SetIdentifier("graveIsMyTurn", unit.isMyTurn ? 1 : 0);
             target[i].SetIdentifier("graveTurn", unit.turn);
             unit.grave.cards.Add(target[i]);
@@ -1915,6 +1919,20 @@ public static class EffectAbilityHandler
 
         effect.hudOptionDict.Set("log", effect.source.CurrentCard.name + " 設定狀態");
         Hud.SetState(state);
+        return true;
+    }
+
+    public static bool SetEP(Effect effect, BattleState state) {
+        var add = Parser.ParseEffectExpression(effect.abilityOptionDict.Get("add", "0"), effect, state);
+
+        effect.invokeTarget = new List<BattleCard>() { effect.invokeUnit.leader.leaderCard };
+        effect.invokeUnit.leader.EP += add;
+
+        effect.hudOptionDict.Set("log", "回復自己的EP " + add + " 點");
+        Hud.SetState(state);
+
+        EnqueueEffect("on_this_set_ep", effect.invokeTarget, state);
+        OnPhaseChange("on_set_ep", state);
         return true;
     }
 }
