@@ -654,7 +654,7 @@ id,timing,target,condition,cond_option,ability,ability_option
 1630,on_this_use,op_field_1_index_[type:1|9],none,none,damage,damage=2
 1631,on_this_evolve_with_ep,none,none,me.isUnion=0,get_token,id=910122208&count=1
 1632,on_this_evolve_with_ep,none,none,me.isUnion=1,get_token,id=910122208&count=2
-1633,on_this_use,op_field_1_index_[type:1|9],none,enhance[5]=1,damage,enhance=5&damage=4
+1633,on_this_use,op_field_1_index_[type:1|9],none,enhance[7]=1,damage,enhance=7&damage=4
 1634,on_this_defense,me_field_0_all_[type:1|9],none,effect.source.where=5,heal,heal=1
 1635,on_this_defense,op_field_0_all_[type:1|9],none,effect.source.where=5,damage,damage=1
 1636,on_this_use,me_token_1_index,none,none,choose,appendix=1637&token=910122101/910122102
