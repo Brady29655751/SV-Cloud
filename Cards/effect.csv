@@ -566,8 +566,8 @@ id,timing,target,condition,cond_option,ability,ability_option
 1542,on_this_use,none,none,none,add_deck,id=910182101&count=1
 1543,on_this_destroy,none,none,none,draw,count=2
 1544,on_this_destroy,me_field_1_random_[id:910081101],none,none,transform,id=110182108
-1545,on_this_use,me_grave_1_first+sort[cost:max]+distinct_[type:1|9][trait:4],none,enhance[5]=0,summon,where=grave
-1546,on_this_use,me_grave_2_first+sort[cost:max]+distinct_[type:1|9][trait:4],none,enhance[5]=1,summon,enhance=5&where=grave
+1545,on_this_use,me_grave_1_first+sort[cost:max]+distinct_[type:1|9][trait:4],none,enhance[10]=0,summon,where=grave
+1546,on_this_use,me_grave_2_first+sort[cost:max]+distinct_[type:1|9][trait:4],none,enhance[10]=1,summon,enhance=10&where=grave
 1547,on_this_use,none,none,none,summon,id=910081105&count=2
 1548,on_this_destroy,none,none,none,draw,count=2&filter=[type:1|9][trait:4]
 1549,on_this_use,all_field_1_index_[type:1|9],none,none,set_buff,atk=4&hp=4
