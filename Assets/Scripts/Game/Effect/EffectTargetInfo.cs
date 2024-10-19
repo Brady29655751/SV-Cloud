@@ -48,27 +48,50 @@ public class EffectTargetInfo  {
     }
 
     private List<BattleCard> ExcludeTargetByMode(List<BattleCard> allCards, Effect effect) {
-        var source = effect.source;
-        var sourceEffect = effect.sourceEffect;
-
         var excludeResult = allCards.ToList();
 
         for (int i = 0; i < mode.Count; i++) {
-            if (!mode[i].TryTrimStart("other", out var trimMode))
-                continue;
+            excludeResult = ExcludeByDistinct(excludeResult, mode[i]);
+            excludeResult = ExcludeByOther(excludeResult, mode[i], effect);
+        }
+        return excludeResult;
+    }
 
-            if (trimMode == string.Empty)
-                trimMode += "[source]";
+    private List<BattleCard> ExcludeByDistinct(List<BattleCard> allCards, string excludeMode) {
+        if (!excludeMode.TryTrimStart("distinct", out var trimMode))
+            return allCards;
 
-            while (trimMode.TryTrimParentheses(out var excludeType)) {
-                Predicate<BattleCard> predicate = excludeType switch {
-                    "source"              => x => x == source,
-                    "sourceEffect.target" => sourceEffect.invokeTarget.Contains,
-                    _ => x => false,
-                };
-                excludeResult.RemoveAll(predicate);
-                trimMode = trimMode.TrimStart("[" + excludeType + "]");
-            }
+        if (trimMode == string.Empty)
+            trimMode += "[id]";
+
+        if (!trimMode.TryTrimParentheses(out var excludeType))
+            return allCards;
+        
+        if (!excludeType.Contains('.'))
+            excludeType = "current." + excludeType;
+
+        return allCards.GroupBy(x => x.GetIdentifier(excludeType)).Select(x => x.First()).ToList();
+    }
+
+    private List<BattleCard> ExcludeByOther(List<BattleCard> allCards, string excludeMode, Effect effect) {
+        if (!excludeMode.TryTrimStart("other", out var trimMode))
+            return allCards;
+
+        if (trimMode == string.Empty)
+            trimMode += "[source]";
+
+        var source = effect.source;
+        var sourceEffect = effect.sourceEffect;
+        var excludeResult = allCards.ToList();
+
+        while (trimMode.TryTrimParentheses(out var excludeType)) {
+            Predicate<BattleCard> predicate = excludeType switch {
+                "source"              => x => x == source,
+                "sourceEffect.target" => sourceEffect.invokeTarget.Contains,
+                _ => x => false,
+            };
+            excludeResult.RemoveAll(predicate);
+            trimMode = trimMode.TrimStart("[" + excludeType + "]");
         }
         return excludeResult;
     }
@@ -88,11 +111,17 @@ public class EffectTargetInfo  {
                 var splitInfo = sortInfo.Split(':');
                 var sortType = ((splitInfo[0].Split('.').Length > 1) ? string.Empty : "current.") + splitInfo[0].TrimStart("options.");
                 var sortOrder = splitInfo[1];
+                var sortResult = new List<BattleCard>(allCards);
 
-                var sortResult = (sortOrder == "max") ? allCards.OrderByDescending(x => x.GetIdentifier(sortType))
-                    : allCards.OrderBy(x => x.GetIdentifier(sortType));
+                // Use unstable sort for "random"
+                if (sortOrder == "max")
+                    sortResult.Sort((x, y) => y.GetIdentifier(sortType).CompareTo(x.GetIdentifier(sortType)));
+                else
+                    sortResult.Sort((x, y) => x.GetIdentifier(sortType).CompareTo(y.GetIdentifier(sortType)));
 
-                return sortResult.Where((x, i) => x.GetIdentifier(sortType) == sortResult.First().GetIdentifier(sortType)).ToList();
+                return sortResult;
+                // Below only remains all cards with same value as max/min
+                // return sortResult.Where((x, i) => x.GetIdentifier(sortType) == sortResult.First().GetIdentifier(sortType)).ToList();
             }
         }
         return allCards;
@@ -115,6 +144,9 @@ public class EffectTargetInfo  {
 
         if (!places.Contains(BattlePlaceId.None))
             effectCards.RemoveAll(x => !places.Contains(state.GetBelongUnit(x).GetBelongPlace(x).PlaceId));
+
+        // Remove illegal targets.
+        effectCards.RemoveAll(x => !filter.FilterWithCurrentCard(x));
 
         return mode[0] switch {
             "all"       => effectCards,

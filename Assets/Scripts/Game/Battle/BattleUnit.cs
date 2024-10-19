@@ -70,12 +70,23 @@ public class BattleUnit : IIdentifyHandler
     /// </summary>
     /// <returns>Total cards drawn, including inHand and inGrave.</returns>    
     public List<BattleCard> Draw(int count, out List<BattleCard> inHand, out List<BattleCard> inGrave) {
-        return Draw(count, new BattleCardFilter(-1), out inHand, out inGrave);
+        return Draw(count, new BattleCardFilter(-1), "none", out inHand, out inGrave);
     }
     
-    public List<BattleCard> Draw(int count, BattleCardFilter filter, out List<BattleCard> inHand, out List<BattleCard> inGrave) {
+    public List<BattleCard> Draw(int count, BattleCardFilter filter, string distinctOptions, out List<BattleCard> inHand, out List<BattleCard> inGrave) {
         var availableCount = hand.MaxCount - hand.Count;
-        var result = deck.cards.Where(filter.FilterWithCurrentCard).Take(count).ToList();
+        var result = deck.cards.Where(filter.FilterWithCurrentCard).ToList();
+
+        // Distinct by options.
+        if (distinctOptions.TryTrimParentheses(out var distinctType)) {
+            if (!distinctType.Contains('.'))
+                distinctType = "current." + distinctType;
+
+            result = result.GroupBy(x => x.GetIdentifier(distinctType)).Select(x => x.First()).ToList();
+        }
+
+        // Get results.
+        result = result.Take(count).ToList();
 
         if (result.Count > availableCount) {
             inHand = result.GetRange(0, availableCount);
@@ -113,6 +124,7 @@ public class BattleUnit : IIdentifyHandler
 
         return id switch {
             "id"        => Id,
+            "turn"      => turn,
             "isFirst"   => isFirst ? 1 : 0,
             "isMyTurn"  => isMyTurn ? 1 : 0,
             "isDone"    => isDone ? 1 : 0,
@@ -123,6 +135,7 @@ public class BattleUnit : IIdentifyHandler
             "isRed"     => leader.GetIdentifier("isRed"),
             "isGreedy"  => (hand.Count >= 7) ? 1 : 0,
             "isReson"   => 1 - (deck.Count % 2),
+            "isUnion"   => field.GetIdentifier("isUnion"),
             _ => int.MinValue,
         };
     }

@@ -145,10 +145,11 @@ public class Card : IIdentifyHandler
         string trimId;
 
         if (id.TryTrimStart("trait", out trimId)) {
+            if (trimId == string.Empty)
+                return traits.Select(x => (int)x).Aggregate((total, next) => total * GameManager.versionData.traitCount + next);
+
             while (trimId.TryTrimParentheses(out var traitId)) {
                 var checkTrait = traitId.Split('|').Select(x => (CardTrait)int.Parse(x));
-                Debug.Log(traitId);
-                Debug.Log("checkTrait: " + checkTrait.Select(x => x.ToString()).ConcatToString(" "));
                 if (!checkTrait.Any(traits.Contains))
                     return 0;
 
@@ -158,6 +159,9 @@ public class Card : IIdentifyHandler
         }
 
         if (id.TryTrimStart("keyword", out trimId)) {
+            if (trimId == string.Empty)
+                return keywords.Select(x => (int)x).Aggregate((total, next) => total * GameManager.versionData.keywordCount + next);
+
             while (trimId.TryTrimParentheses(out var keywordId)) {
                 var checkKeyword = keywordId.Split('|').Select(x => (CardKeyword)int.Parse(x));
                 if (!checkKeyword.Any(keywords.Contains))
@@ -235,4 +239,6 @@ public struct CardStatus
         this.atk = atk;
         this.hp = hp;
     }
+
+    public bool IsEmpty() => (cost == 0) && (atk == 0) && (hp == 0);
 }

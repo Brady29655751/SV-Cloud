@@ -108,9 +108,36 @@ public class Effect : IIdentifyHandler
             };
         }
 
+        if (id.TryTrimStart("target.", out trimId)) {
+            var cards = invokeTarget;
+            if (trimId.TryTrimStart("first.", out trimId)) {
+                var card = cards?.FirstOrDefault();
+                if (card == null)
+                    return 0;
+
+                return trimId switch {
+                    "isMe"  => (invokeUnit.GetBelongPlace(card) != null) ? 1 : 0,
+                    "where" => (int)(invokeUnit.GetBelongPlace(card)?.PlaceId ?? BattlePlaceId.None),
+                    _       => card.GetIdentifier(trimId),
+                };
+            }
+
+            return trimId switch {
+                "count" => cards?.Count ?? 0,
+                _       => int.MinValue,
+            };
+        }
+
         if (id.TryTrimStart("ability", out trimId)) {
-            if (trimId.TryTrimParentheses(out var abilityType))
-                return int.Parse(abilityOptionDict.Get(abilityType, "0"));
+            if (trimId.TryTrimParentheses(out var abilityOption)) {
+                var abilitySplit = abilityOption.Split(':');
+                if (abilitySplit.Length == 1)
+                    return int.Parse(abilityOptionDict.Get(abilityOption, "0"));
+                
+                var abilityOptionType = abilitySplit[0];
+                var abilityOptionCheck = abilitySplit[1];
+                return (abilityOptionDict.Get(abilityOptionType) == abilityOptionCheck) ? 1 : 0;
+            }
         }
 
         return id switch {
@@ -128,7 +155,7 @@ public class Effect : IIdentifyHandler
             return trimId switch {
                 "isMe"  => (invokeUnit.GetBelongPlace(sourceEffectSource) != null) ? 1 : 0,
                 "isOp"  => (rhsUnit.GetBelongPlace(sourceEffectSource) != null) ? 1 : 0,
-                "where" => (int)(invokeUnit.GetBelongPlace(sourceEffectSource)?.PlaceId ?? BattlePlaceId.None),
+                "where" => (int)state.GetCardPlaceInfo(sourceEffectSource).place,
                 _ => sourceEffectSource.GetIdentifier(trimId),
             };
         }
@@ -173,7 +200,7 @@ public class Effect : IIdentifyHandler
             return trimId switch {
                 "isMe"  => me.Contains(card) ? 1 : 0,
                 "isOp"  => op.Contains(card) ? 1 : 0,
-                "where" => (int)(invokeUnit.GetBelongPlace(source)?.PlaceId ?? BattlePlaceId.None),
+                "where" => (int)state.GetCardPlaceInfo(card).place,
                 _       => card.GetIdentifier(trimId),
             };
         }
@@ -280,6 +307,7 @@ public class Effect : IIdentifyHandler
 
     public Func<bool> GetCheckCondition(string checkTiming, BattleState state) {
         return checkTiming switch {
+            "source_evolve" => () => source?.IsEvolved ?? true,
             "turn_end"      => () => state.currentEffect.ability == EffectAbility.TurnEnd,
             "me_turn_end"   => () => (state.currentEffect.ability == EffectAbility.TurnEnd) && (invokeUnit.isDone),
             "op_turn_end"   => () => (state.currentEffect.ability == EffectAbility.TurnEnd) && (state.GetRhsUnitById(invokeUnit.id).isDone),

@@ -19,7 +19,8 @@ public static class EffectDatabase {
         {"act",             EffectAbility.Act           },
 
         {"accelerate",      EffectAbility.Accelerate    },
-        {"crystalize",      EffectAbility.Crystalize    },   
+        {"crystalize",      EffectAbility.Crystalize    },
+        {"switch",          EffectAbility.Switch        },   
 
         {"random",          EffectAbility.Random        },
         {"index",           EffectAbility.Index         },
@@ -59,6 +60,12 @@ public static class EffectDatabase {
         {"set_value",       EffectAbility.SetValue      },
 
         {"set_ep",          EffectAbility.SetEP         },
+        {"set_buff",        EffectAbility.SetBuff       },
+        {"set_trait",       EffectAbility.SetTrait      },
+    };
+
+    private static Dictionary<string, string> unitInfoDict = new Dictionary<string, string>() {
+        {"turn", "回合數" },
     };
 
     private static Dictionary<string, string> leaderInfoDict = new Dictionary<string, string>() {
@@ -83,6 +90,14 @@ public static class EffectDatabase {
         return (ability == EffectAbility.Use) || (ability == EffectAbility.Evolve);
     }
 
+    public static string[] GetUnitInfoKeys() => unitInfoDict.Keys.ToArray();
+    public static string[] GetUnitInfoValues() => unitInfoDict.Values.ToArray();
+    public static string ToUnitInfoValue(this string key) {
+        if (key.TryTrimStart("leader.", out var leaderKey))
+            return ToLeaderInfoValue(leaderKey);
+
+        return unitInfoDict.Get(key, string.Empty);
+    }
     public static string[] GetLeaderInfoKeys() => leaderInfoDict.Keys.ToArray();
     public static string[] GetLeaderInfoValues() => leaderInfoDict.Values.ToArray();
     public static string ToLeaderInfoValue(this string key) => leaderInfoDict.Get(key, string.Empty);
@@ -94,7 +109,7 @@ public static class EffectDatabase {
 public enum EffectAbility {
     None = 0,   SetResult = 1,  KeepCard = 2,   TurnStart = 3,  TurnEnd = 4,
     Use = 5,    Cover = 6,  Attack = 7, Evolve = 8, Fusion = 9, Act = 10,
-    Accelerate = 11,    Crystalize = 12,
+    Accelerate = 11,    Crystalize = 12,    Switch = 13,
 
     Random = 91,
     Index = 92,
@@ -134,4 +149,6 @@ public enum EffectAbility {
     SetValue    = 130,
 
     SetEP       = 131,
+    SetBuff     = 132,
+    SetTrait    = 133,
 }

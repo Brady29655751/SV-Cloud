@@ -887,6 +887,511 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - bishop
+  - m_GUID: 7e7e858deeb428645b64af402c3adfbb
+    m_Address: 110184101
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: 776ea67ad3822284886e05c3e02ca8e7
+    m_Address: 910184101
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: 07efaaffaa9112a478f029e50c11ee9d
+    m_Address: 110184103
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: f7b8a11115c7c7b4c8b5a0b52afbd5ae
+    m_Address: 110184102
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: 6fb5cd1d75be4544c92e62b0af945dae
+    m_Address: 910183101
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: 6af683c47e9e0ba439b902c5fd34aa53
+    m_Address: 110183101
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: 99b9a113542e8ce4ea661df18169e21e
+    m_Address: 110183103
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: d7f3eab62ab8b73428befe87e5d79eff
+    m_Address: 110183102
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: 2400a3c953adad04fb854962bcd86aa5
+    m_Address: 910183103
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: 86d28785c1a6a484d8c1ba41be85b733
+    m_Address: 110183104
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: 01d3d4792d7ae7d4c82dcb6c3ee9403e
+    m_Address: 110183106
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: 5c56616c9af8183488472efb7ec406ef
+    m_Address: 910183102
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: f879aacf937754a44b20083a32902e02
+    m_Address: 110183202
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: 4436042c9816f1a4885d96e573db2226
+    m_Address: 110183107
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: aab7453303396624787a50f873bcbffc
+    m_Address: 110183201
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: c774afdac011622469d67553d05ceacc
+    m_Address: 110183105
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: d322f2d6edac96941a122e78233d99a2
+    m_Address: 110182101
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: 71ba133d21143c9408aa286611a0f9ce
+    m_Address: 110182105
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: 029ce537597f6a542870672bde9a2dc5
+    m_Address: 110182109
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: 67eea12848e7e6246948b07b2a444d41
+    m_Address: 110182110
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: 91c091512544ff74a869a090a838e691
+    m_Address: 910182101
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: 7dfb0298a27049847bdbe76185e87429
+    m_Address: 110182107
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: 570c31bf609ede44791d3b37d1d60b18
+    m_Address: 110182106
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: e51d169940b15694883ce24d72fc6e42
+    m_Address: 110182102
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: b175dccafda269441b3816a476479120
+    m_Address: 110182104
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: 7a52a97c63edd3d4fb56bf1803db67a1
+    m_Address: 110182103
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: d77710356415be2429017a7db4bb7ab1
+    m_Address: 110182201
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: b02f415e6e8726a41bb421be18ed6eae
+    m_Address: 110182301
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: 1df7acd93fac0894586ee614a7890a67
+    m_Address: 110182202
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: 10e420276d500ca48bb2ea47e94c7bf8
+    m_Address: 110182108
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: 7f7e22f74bfb36e4a995ef537e75a69f
+    m_Address: 110181111
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: 696a7b3691eb616409c32a522c85c743
+    m_Address: 110181108
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: e92e136bcb0501f40a130b6cb476b362
+    m_Address: 110181109
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: 3f3a9695d8afecd4288db6698b0dd278
+    m_Address: 110181110
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: 9169fb2bd4e350d45af70e66f427eb85
+    m_Address: 110181104
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: eb352d8622667964aa3e5e2bc2cf01be
+    m_Address: 110181101
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: 544a2034b25aed5408a2dbfec40e8766
+    m_Address: 110181102
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: 50d4361116aa687458a7f96dfea3a977
+    m_Address: 110181103
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: c069dd575ef6e4a4aa3070a2abe2dd39
+    m_Address: 110181112
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: 9967e475a3cb8e748b4e8ad3c573d555
+    m_Address: 110181107
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: eb97d55e56d0fc5438dd7da53bcfadff
+    m_Address: 110181106
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: 20930080cc8a28d4e87b1d7ae494d195
+    m_Address: 110181105
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: 47ca32d9355d17d4c81411d7d6468faf
+    m_Address: 110181205
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: af3d44b64fd09e94e9c16e977136d9dd
+    m_Address: 110181201
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: 3d4d3488e855c804cb3d636b04214ea8
+    m_Address: 110181202
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: 9753a34d614dc41439e6de2e2ccf1169
+    m_Address: 110181203
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: c21e4c973eb495e45947aadac484f2eb
+    m_Address: 110181204
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - nemesis
+  - m_GUID: 486b6725ed2f8c749bce8f4fa169aea2
+    m_Address: 110124101
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: 87ce5ae7e86f9ef43bd705d41742877f
+    m_Address: 110124102
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: 94a2704147c8f7945bd2292595161856
+    m_Address: 110124103
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: 0360acbe6f572ea42b8d86b37dd8f7ec
+    m_Address: 110123106
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: 1ef2fff33b467704bbbfa5363f521969
+    m_Address: 110123101
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: 3a237c12294eaaf4396b70c302b925d1
+    m_Address: 110123102
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: c4c4c9a16c6c06142bff279164c52c08
+    m_Address: 110123103
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: aea1077f7a4a2d14b96e907cd9a0d3de
+    m_Address: 110123104
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: 489fa0c7056a32146ad6986825d5e285
+    m_Address: 110123105
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: 2665358b735033a4f842af8996785d3b
+    m_Address: 910123101
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: d7bb8962e8fb62f4e82958e3539daeef
+    m_Address: 910123102
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: c6edfcbcf30cb4a489429e46c6a453d7
+    m_Address: 910123103
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: 82010a5b0f1807f46b9b4f865883c14f
+    m_Address: 910123104
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: 7282d1c537a13cf4e94d94b82146caf4
+    m_Address: 910123201
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: bffbc7ddb2796294bbd8b733f96d416d
+    m_Address: 910123202
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: fdcc4ccc34b479f4c926d26bbf5560d5
+    m_Address: 910123203
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: a67f944da045265419ec5efb110dc439
+    m_Address: 110123301
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: 7c123230565f86d4a8a87359b3157c4a
+    m_Address: 110123201
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: 66b5bd17a98532b4a8fb099bf7852519
+    m_Address: 110123202
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: a5743da123675504aa2027bbeae35024
+    m_Address: 910121201
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: 8bcca9147f7e9a441b10136e27951094
+    m_Address: 910121202
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: 54c75bb3013b75e46ba3fc5eab13a21e
+    m_Address: 910122101
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: 5448582b62a642147a72057aa180a233
+    m_Address: 910122102
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: 0bd0260572de59d43b21193bf6d4ec25
+    m_Address: 910122208
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: 81d6382dfd231ef409f5ddf20ed12aa1
+    m_Address: 110122301
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: af761a49dcb5ead42bb1cfdcfcf9d314
+    m_Address: 110122201
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: 07a5938be5b95d143807ad63810cfdc2
+    m_Address: 110122202
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: 75b0d2188a16e3a4ca1b494d42fe4ae8
+    m_Address: 110122203
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: 8d7dfb27dc8c2694e9c1e786581e0314
+    m_Address: 110122204
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: ff194e7b2e9643a499754f0d89939a7e
+    m_Address: 110122205
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: 4116a82e87f707143a6eccb0ca37f4b9
+    m_Address: 110122107
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: 0f85743d6ccea2d4f9f6eb976d183115
+    m_Address: 110122101
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: 1e295264e98ae844c97a31f48b67c7e4
+    m_Address: 110122102
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: 1cd7161fac369d9458f790288c6b21da
+    m_Address: 110122103
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: 0ee5c9bf5ade4d64aab696b598074d9c
+    m_Address: 110122104
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: fe465c7583385464a9961495e7d4557e
+    m_Address: 110122105
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: 0ca08d885712cba448652c2c23ac418d
+    m_Address: 110122106
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: 201f5dc8432f7fe42a18076461062cfc
+    m_Address: 110121101
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: a6a6bfb410c37cc4087154ed160399a2
+    m_Address: 110121102
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: 5c7d9746b5e61d64a9a644be93fd80d2
+    m_Address: 110121103
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: 86a31ce06efb881449b2d164ea2730dc
+    m_Address: 110121104
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: 23d13ef45bb96e54bbd90991f83bdc4b
+    m_Address: 110121105
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: 9060193ca6b549343a5b8379155ee132
+    m_Address: 110121106
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: bd49ceff5cfdba34fb34c5e827e20527
+    m_Address: 110121107
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: 3c811af96bcb1444e87369822a5184f2
+    m_Address: 110121108
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: 859ee75be6ad75f498d100ecb2b2519f
+    m_Address: 110121109
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: c80f1ead461c3de469e4154bf25fa841
+    m_Address: 110121110
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: a3ac3249f670a2844b1bcd63dfe2dfbd
+    m_Address: 110121111
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: 479f5f4b9b790e046980f28c511aadab
+    m_Address: 110121112
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: 442645b8fce69504fbccd5e325b87c84
+    m_Address: 110121113
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: ce7d733d62ed85c4da3a2b2c5cb5e7c0
+    m_Address: 110121201
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: 82ed2a028bbcaa44080900804b6ce480
+    m_Address: 110121202
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: 97e635ab692fc48498e5a07b43165c21
+    m_Address: 110121203
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
+  - m_GUID: 8d144d21e846edf4bb2ae07cbcdae730
+    m_Address: 110121301
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - royal
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 69e741ee149781a478094fca2d01f357, type: 2}
   m_SchemaSet:

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,10 +23,19 @@ public class BattleCardEffectView : IMonoBehaviour
         effectObjects[1]?.SetActive(card.actionController.IsKeywordAvailable(CardKeyword.Ambush));
         effectObjects[2]?.SetActive(card.actionController.IsKeywordAvailable(CardKeyword.Pressure));
         effectObjects[3]?.SetActive(card.CurrentCard.effects.Exists(x => x.ability == EffectAbility.SetDamage));
-        effectObjects[4]?.SetActive(card.actionController.IsKeywordAvailable(CardKeyword.Undestroyable) 
-            || card.actionController.IsKeywordAvailable(CardKeyword.Unvanishable));
+        effectObjects[4]?.SetActive(CardDatabase.UneffectableKeywords.Any(keyword =>
+            card.actionController.IsKeywordAvailable(keyword)));
         effectObjects[5]?.SetActive(card.actionController.IsKeywordAvailable(CardKeyword.Aura));
         effectObjects[6]?.SetActive(card.actionController.IsKeywordAvailable(CardKeyword.Freeze));
+        effectObjects[7]?.SetActive(false);
+
+        // If at least 3 kinds of special effects are active, 
+        // replace it with "All In One" effect.
+        var allEffectRange = Enumerable.Range(2, 3).ToList();
+        if (allEffectRange.All(x => effectObjects[x].activeSelf)) {
+            allEffectRange.ForEach(x => effectObjects[x].SetActive(false));
+            effectObjects[7]?.SetActive(true);
+        }
     }
 
     public void SetTargeting(bool isTargeting) {

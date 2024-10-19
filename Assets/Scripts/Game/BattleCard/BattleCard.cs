@@ -127,8 +127,8 @@ public class BattleCard : IIdentifyHandler
             
         var result = new Card(baseCard);
         result.cost = Mathf.Max(result.cost + buffController.CostBuff, 0);
-        result.atk = Mathf.Max(result.atk + buffController.AtkBuff, 0);
-        result.hpMax = Mathf.Max(result.hpMax + buffController.HpBuff, 0);
+        result.atk = Mathf.Max(buffController.GetBuffedAtk(result.atk), 0);
+        result.hpMax = Mathf.Max(buffController.GetBuffedHp(result.hpMax), 0);
         result.hp = Mathf.Max(result.hpMax - buffController.Damage, 0);
         result.effects.AddRange(newEffects.Select(x => x.Value));
         result.effects.ForEach(x => x.source = this);
@@ -140,11 +140,20 @@ public class BattleCard : IIdentifyHandler
             return this;
 
         var ability = situation.ToEffectAbility();
-        var effect = CurrentCard.effects.Find(x => (x.ability == ability) && (int.Parse(x.abilityOptionDict.Get("accelerate", "-1")) == cost));
+        if (ability == EffectAbility.None)
+            return this;
+        
+        var effect = CurrentCard.effects.Find(x => int.Parse(x.abilityOptionDict.Get(situation, "-1")) == cost);
         if (effect == null)
             return this;
 
-        return BattleCard.Get(int.Parse(effect.abilityOptionDict.Get("id", "-1"))) ?? this;
+        var tokenNameType = ability switch {
+            EffectAbility.Switch    => "token",
+            _                       => "id",
+        };
+
+        var currentId = effect.abilityOptionDict.Get(tokenNameType, "-1").ToIntList('/').FirstOrDefault();
+        return BattleCard.Get(currentId) ?? this;
     }
 
     #region card-description
@@ -152,7 +161,7 @@ public class BattleCard : IIdentifyHandler
     public string GetConditionDescription() {
         var card = CurrentCard;
         var description = string.Empty;
-        var leaderInfoKeys = new List<string>();
+        var unitInfoKeys = new List<string>();
         var sourceInfoKeys = new List<string>();
 
         for (int i = 0; i < card.effects.Count; i++) {
@@ -162,18 +171,20 @@ public class BattleCard : IIdentifyHandler
 
             for (int j = 0; j < currentEffect.condition.Count; j++) {
                 var currentCondition = currentEffect.condition[j];
-                if (currentCondition.TryTrimStart("leader.", out var leaderKey))
-                    leaderInfoKeys.Add(leaderKey);
-                else if (currentCondition.TryTrimStart("source.", out var sourceKey))
+                if (currentCondition.TryTrimStart("source.", out var sourceKey))
                     sourceInfoKeys.Add(sourceKey);
+                else
+                    unitInfoKeys.Add(currentCondition);
             }
         }
-        leaderInfoKeys = leaderInfoKeys.Distinct().ToList();
+        unitInfoKeys = unitInfoKeys.Distinct().ToList();
         sourceInfoKeys = sourceInfoKeys.Distinct().ToList();
 
-        for (int i = 0; i < leaderInfoKeys.Count; i++) {
-            var num = Hud.CurrentState.GetBelongUnit(this).leader.GetIdentifier(leaderInfoKeys[i]);
-            description += "（當前 " + leaderInfoKeys[i].ToLeaderInfoValue() + " 為 " + num + "）\n";
+        var unit = Hud.CurrentState.GetBelongUnit(this);
+
+        for (int i = 0; i < unitInfoKeys.Count; i++) {
+            var num = unit.GetIdentifier(unitInfoKeys[i]);
+            description += "（當前 " + unitInfoKeys[i].ToUnitInfoValue() + " 為 " + num + "）\n";
         }
 
         for (int i = 0; i < sourceInfoKeys.Count; i++) {
@@ -210,6 +221,12 @@ public class BattleCard : IIdentifyHandler
             keywordCount++;
         }
 
+        var maxAttackChance = actionController.MaxAttackChance;
+        if (maxAttackChance != BattleCard.Get(CurrentCard.id).actionController.MaxAttackChance) {
+            description += "1回合中可以進行" + maxAttackChance + "次攻擊\n";
+            keywordCount++;
+        }
+
         var newEffectDescription = string.Empty;
         for (int i = 0; i < newEffects.Count; i++) {
             if (newEffects[i].Value.hudOptionDict.TryGetValue("description", out var effectDesc) && (!string.IsNullOrEmpty(effectDesc)))
@@ -237,6 +254,16 @@ public class BattleCard : IIdentifyHandler
         targetInfoQueue = new Queue<EffectTargetInfo>();
         selectableTargetQueue = new Queue<List<int>>();
 
+        if (situation == "switch")
+            GetTargetEffectWithTimingAndCurrentCard(timing, CurrentCard, targetEffectQueue, targetInfoQueue, selectableTargetQueue);
+        
+        GetTargetEffectWithTimingAndCurrentCard(timing, nowCard, targetEffectQueue, targetInfoQueue, selectableTargetQueue);
+    }
+
+    private void GetTargetEffectWithTimingAndCurrentCard(string timing, Card nowCard,
+        Queue<Effect> targetEffectQueue, Queue<EffectTargetInfo> targetInfoQueue, 
+        Queue<List<int>> selectableTargetQueue) 
+    {
         for (int i = 0; i < nowCard.effects.Count; i++) {
             var currentEffect = nowCard.effects[i];
             if (currentEffect.timing != timing)
@@ -304,6 +331,10 @@ public class BattleCard : IIdentifyHandler
                 Enumerable.Range(0, opField.Count).Where(x => opField.cards[x].IsTargetSelectable() && 
                     currentInfo.filter.FilterWithCurrentCard(opField.cards[x])).ToList();
 
+            var unignorableIndex = opIndex.Where(x => opField.cards[x].actionController.IsKeywordAvailable(CardKeyword.Unignorable)).ToList();
+            if (unignorableIndex.Count > 0)
+                opIndex = unignorableIndex;
+
             myIndex.ForEach(x => currentSelectableList.Add((int)BattlePlaceId.Field * 10 + x));
             opIndex.ForEach(x => currentSelectableList.Add(100 + (int)BattlePlaceId.Field * 10 + x));
         }
@@ -339,10 +370,27 @@ public class BattleCard : IIdentifyHandler
                 var currentEffect = effects[i];
                 if (currentEffect.abilityOptionDict.TryGetValue(choiceSituation, out var choiceCostId))
                     choiceList.Add(int.Parse(choiceCostId));
+
+                while (int.TryParse(currentEffect.abilityOptionDict.Get("appendix", "0"), out var appendixId)
+                    && (appendixId != 0)) 
+                {
+                    currentEffect = Effect.Get(appendixId);
+                    if (currentEffect == null)
+                        break;
+
+                    if (currentEffect.abilityOptionDict.TryGetValue(choiceSituation, out choiceCostId))
+                        choiceList.Add(int.Parse(choiceCostId));                    
+                }
             }
 
             choiceCost = choiceList.Where(x => x <= leader.PP).Max();
             return choiceList;
+        }
+
+        var switchList = GetSecondChoiceCostList("switch", out var switchCost);
+        if (switchCost != -1) {
+            situation = "switch";
+            return switchCost;
         }
 
         var enhanceList = GetSecondChoiceCostList("enhance", out var enhanceCost);
@@ -433,6 +481,7 @@ public class BattleCard : IIdentifyHandler
     // Evolve this follower. You should check IsEvolvable() before calling this if you use EP evolve.
     public void Evolve() {
         IsEvolved = true;
+        RemoveUntilEffect();
     }
 
     public void SetKeyword(Func<bool> untilFunc, CardKeyword keyword, ModifyOption option) {
@@ -453,19 +502,23 @@ public class BattleCard : IIdentifyHandler
 
         if (originalEffects.Count <= 0)
             return validEffects;
-        
+
         for (int i = 0; i < originalEffects.Count; i++) {
-            originalEffects[i].source = effect.source;
+            // originalEffects[i].source = effect.source;
+            originalEffects[i].sourceEffect = effect;
             originalEffects[i].invokeUnit = state.GetBelongUnit(this);
             originalEffects[i].condOptionDictList.ForEach(x => x.ForEach(y => {
                 if (y.lhs == originalId)
                     y.lhs = "[num]" + replaceId.ToString();
             }));
 
-            if (originalEffects[i].Condition(state))
+            if (originalEffects[i].Condition(state)) {
                 validEffects.Add(originalEffects[i]);
+                continue;
+            }
 
-            originalEffects[i].source = null;
+            // originalEffects[i].source = null;
+            originalEffects[i].sourceEffect = null;
             originalEffects[i].invokeUnit = null;
             originalEffects[i].condOptionDictList.ForEach(x => x.ForEach(y => {
                 if (y.lhs.StartsWith("[num]"))
@@ -488,6 +541,20 @@ public class BattleCard : IIdentifyHandler
         if (setEffects.Count > 0)
             damage = setEffects.Select(x => Parser.ParseEffectExpression(x.abilityOptionDict.Get("set"), effect, state)).Min();
 
+        // Do postprocess for take effects.
+        // "damage" here is same as GetValidTakeEffects function param.
+        void PostprocessTakeEffect(Effect takeEffect) {
+            takeEffect.Postprocess(state); 
+            takeEffect.condOptionDictList.ForEach(x => x.ForEach(y => {
+                if (y.lhs.StartsWith("[num]"))
+                    y.lhs = "damage";
+            }));
+            state.currentEffect = effect; 
+        }
+
+        addEffects.ForEach(PostprocessTakeEffect);
+        setEffects.ForEach(PostprocessTakeEffect);
+
         return buffController.TakeDamage(damage);
     }
 
@@ -503,11 +570,29 @@ public class BattleCard : IIdentifyHandler
         if (setEffects.Count > 0)
             heal = setEffects.Select(x => Parser.ParseEffectExpression(x.abilityOptionDict.Get("set"), effect, state)).Min();
 
+        // Do postprocess for take effects.
+        // "heal" here is same as GetValidTakeEffects function param.
+        void PostprocessTakeEffect(Effect takeEffect) {
+            takeEffect.Postprocess(state); 
+            takeEffect.condOptionDictList.ForEach(x => x.ForEach(y => {
+                if (y.lhs.StartsWith("[num]"))
+                    y.lhs = "heal";
+            }));
+            state.currentEffect = effect; 
+        }
+
+        addEffects.ForEach(PostprocessTakeEffect);
+        setEffects.ForEach(PostprocessTakeEffect);
+
         return buffController.TakeHeal(heal);
     }
 
     public void TakeBuff(CardStatus status, Func<bool> untilCondition) {
         buffController.TakeBuff(status, untilCondition);
+    }
+
+    public void SetBuff(CardStatus status, Func<bool> untilCondition) {
+        buffController.SetBuff(status, untilCondition);
     }
 
     public int TakeCountdown(int add) {
@@ -519,7 +604,21 @@ public class BattleCard : IIdentifyHandler
 
     #endregion
 
-    #region remove-effects
+    #region set-effects
+
+    public void AddEffect(Func<bool> untilFunc, Effect effect, BattleState state) {
+        // Special handle maxAttackChance
+        if ((effect.ability == EffectAbility.SetValue) && 
+            effect.abilityOptionDict.Get("id", string.Empty).EndsWith("maxAttackChance"))
+        {   
+            int value = Parser.ParseEffectExpression(effect.abilityOptionDict.Get("value", "0"), effect, state);
+            var maxAttackChanceWithUntilFunc = new KeyValuePair<Func<bool>, int>(untilFunc, value);
+            actionController.maxAttackChanceList.Add(maxAttackChanceWithUntilFunc);
+            return;
+        }
+
+        newEffects.Add(new KeyValuePair<Func<bool>, Effect>(untilFunc, effect));
+    }
 
     public void RemoveUntilEffect() {
         newEffects.RemoveAll(x => (x.Key != null) && (x.Key.Invoke()));
@@ -534,12 +633,13 @@ public class BattleCard : IIdentifyHandler
         }
 
         baseCard.ClearEffect(effect.id);
-        evolveCard.ClearEffect(effect.id);
+        evolveCard?.ClearEffect(effect.id);
+        newEffects.RemoveAll(x => x.Value.id == effect.id);
     }
 
     public void RemoveEffectWithTiming(string timing = "all") {
         baseCard.ClearEffects(timing);
-        evolveCard.ClearEffects(timing);
+        evolveCard?.ClearEffects(timing);
         newEffects.RemoveAll(x => (timing == "all") || (timing == x.Value.timing));
 
         if (timing == "all") {    

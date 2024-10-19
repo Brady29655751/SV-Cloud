@@ -17,13 +17,14 @@ public class BattleCardActionController
     }
 
     public int CurrentAttackChance {
-        get => Mathf.Clamp(GetIdentifier("attackChance"), 0, MaxAttackChance);
-        set => SetIdentifier("attackChance", Mathf.Clamp(value, 0, MaxAttackChance));
+        get => Mathf.Max(MaxAttackChance - GetIdentifier("usedAttackChance"), 0);
+        set => SetIdentifier("usedAttackChance", MaxAttackChance - value);
     }
 
     public bool IsAttackFinished => CurrentAttackChance == 0;
 
     public List<KeyValuePair<Func<bool>, CardKeyword>> keywordList = new List<KeyValuePair<Func<bool>, CardKeyword>>();
+    public List<KeyValuePair<Func<bool>, int>> maxAttackChanceList = new List<KeyValuePair<Func<bool>, int>>();
     public Dictionary<string, int> options = new Dictionary<string, int>();
 
     public BattleCardActionController(int maxAttackChance) {
@@ -33,6 +34,7 @@ public class BattleCardActionController
 
     public BattleCardActionController(BattleCardActionController rhs) {
         keywordList = new List<KeyValuePair<Func<bool>, CardKeyword>>(rhs.keywordList);
+        maxAttackChanceList = new List<KeyValuePair<Func<bool>, int>>(rhs.maxAttackChanceList);
         options = new Dictionary<string, int>(rhs.options);
     }
 
@@ -44,6 +46,7 @@ public class BattleCardActionController
 
         return id switch {
             "isAttackFinished" => IsAttackFinished ? 1 : 0,
+            "maxAttackChance" => maxAttackChanceList.Max(x => x.Value),
             _ => options.Get(id, 0),
         };
     }
@@ -52,6 +55,9 @@ public class BattleCardActionController
         switch (id) {
             default:
                 options.Set(id, num);
+                return;
+            case "maxAttackChance":
+                maxAttackChanceList.Add(new KeyValuePair<Func<bool>, int>(null, num));
                 return;
         }
     }
@@ -62,6 +68,7 @@ public class BattleCardActionController
 
     public void RemoveUntilEffect() {
         keywordList.RemoveAll(x => x.Key?.Invoke() ?? false);
+        maxAttackChanceList.RemoveAll(x => x.Key?.Invoke() ?? false);
     }
 
     public void OnTurnStartInField() {

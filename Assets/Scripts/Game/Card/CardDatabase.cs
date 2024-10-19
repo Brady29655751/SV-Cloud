@@ -87,10 +87,16 @@ public static class CardDatabase
     public static string[] PropertyEffects => new string[] { 
         "leaveVanish", "destroyVanish", "returnVanish" 
     };
-    public static CardKeyword[] KeywordEffects => new CardKeyword[] { 
+    public static CardKeyword[] KeywordEffects => (new CardKeyword[] { 
         CardKeyword.Storm, CardKeyword.Ward, CardKeyword.Bane,
         CardKeyword.Rush, CardKeyword.Ambush, CardKeyword.Drain,
         CardKeyword.Pressure, CardKeyword.Aura, CardKeyword.Freeze,
+        CardKeyword.Unignorable,
+    }).Concat(UneffectableKeywords).ToArray();
+
+    public static CardKeyword[] UneffectableKeywords => new CardKeyword[] {
+        CardKeyword.Undestroyable, CardKeyword.Unvanishable,
+        CardKeyword.Untransformable, CardKeyword.Unreturnable,
     };
 
     public static string GetPackName(this CardPack pack) => packNameDict.Get(pack, "-");
@@ -203,6 +209,7 @@ public enum CardTrait
     All = 0,
     Soldier = 1, Commander = 2, Earth = 3, Artifact = 4, Golem = 5,
     Light = 6, Dark = 7, Manaria = 8, RedMoon = 9, Sister = 10,
+    Mechanic = 11, Nature = 12, Levin = 13, Treasure = 14,
 }
 
 public enum CardKeyword 
@@ -214,7 +221,9 @@ public enum CardKeyword
     Pressure = 22, Bury = 23, Reanimate = 24, Aura = 25, Accelerate = 26,
     Crystalize = 27, Travel = 28, Freeze = 29, Choose = 30, Greedy = 31,
     Eager = 32, Chase = 33, Red = 34, Abuse = 35, Undestroyable = 36,
-    Unvanishable = 37,
+    Unvanishable = 37, Union = 38, Untransformable = 39, Unreturnable = 40,
+    Unignorable = 41, Switch = 42,
+
 }
 
 public enum BattlePlaceId 

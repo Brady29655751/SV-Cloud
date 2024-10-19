@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,7 @@ public class BattleField : BattlePlace
 {
     public BattleField() {
         MaxCount = 5;
+        cards = new List<BattleCard>() { BattleCard.Get(110021906) };
     }
     public BattleField(BattleField rhs) : base(rhs) {}
 
@@ -27,5 +29,26 @@ public class BattleField : BattlePlace
     public override BattlePlaceId GetPlaceId()
     {
         return BattlePlaceId.Field;
+    }
+
+    public override int GetIdentifier(string id)
+    {
+        switch (id) {
+            default:
+                return base.GetIdentifier(id);
+            case "isUnion":
+                return (cards.Exists(x => x.CurrentCard.traits.Contains(CardTrait.Commander)) && 
+                    cards.Exists(x => x.CurrentCard.traits.Contains(CardTrait.Soldier))) ? 1 : 0;
+        }
+    }
+
+    public override void SetIdentifier(string id, int num)
+    {
+        base.SetIdentifier(id, num);
+    }
+
+    public override void AddIdentifier(string id, int num)
+    {
+        SetIdentifier(id, GetIdentifier(id) + num);
     }
 }

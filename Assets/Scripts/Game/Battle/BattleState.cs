@@ -63,11 +63,11 @@ public class BattleState
             return new BattleCardPlaceInfo();
 
         var place = unit.GetBelongPlace(card);
-        var index = place.cards.IndexOf(card);  
+        var index = place?.cards.IndexOf(card) ?? 0;  
 
         return new BattleCardPlaceInfo(){
             unitId = (unit.id == myUnit.id) ? 0 : 1,
-            place = place.PlaceId,
+            place = place?.PlaceId ?? BattlePlaceId.None,
             index = index,
         };
     }

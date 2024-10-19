@@ -9,13 +9,13 @@ public class CardFilter
     public virtual string[] GetSetStringType() => new string[] { "name", "description" };
     public virtual string[] GetSetIntType() => new string[] { "format", "zone" };
     public virtual string[] GetSelectIntType() => new string[] { 
-        "uid", "id", "craft", "pack", "type", "rarity", "trait", "keyword",
+        "uid", "id", "excludeId", "craft", "pack", "type", "rarity", "trait", "keyword",
         "cost", "atk", "hp", "countdown" };
     public virtual string[] GetSetBoolType() => new string[] { "token" };
 
     public int format, zone;
     public string name, description;
-    public List<int> uidList, idList, craftList, packList, typeList, rarityList, traitList, keywordList,
+    public List<int> uidList, idList, excludeIdList, craftList, packList, typeList, rarityList, traitList, keywordList,
         costList, atkList, hpList, countdownList;
     public bool isWithToken;
 
@@ -29,6 +29,7 @@ public class CardFilter
         name = description = string.Empty;
         uidList = new List<int>();
         idList = new List<int>();
+        excludeIdList = new List<int>();
         craftList = new List<int>();
         packList = new List<int>();
         typeList = new List<int>();
@@ -42,6 +43,12 @@ public class CardFilter
         isWithToken = false;
     }
 
+    /// <summary>
+    /// Parse the string representation of filter.
+    /// </summary>
+    /// <param name="options">paramToSet</param>
+    /// <param name="transformFunc">(filterType, paramToSet) => transformedParamToSet</param>
+    /// <returns>CardFilter</returns>
     public static CardFilter Parse(string options, Func<string, string, string> transformFunc = null) {
         var filter = new CardFilter(-1);
         if (string.IsNullOrEmpty(options) || (options == "none"))
@@ -112,6 +119,7 @@ public class CardFilter
         var list = which switch {
             "uid"       => uidList,
             "id"        => idList,
+            "excludeId" => excludeIdList,
             "craft"     => craftList,
             "pack"      => packList,
             "type"      => typeList,
@@ -151,7 +159,7 @@ public class CardFilter
 
     public bool Filter(Card card) {
         return FormatFilter(card) && ZoneFilter(card)
-            && UIDFilter(card) && IDFilter(card) && NameFilter(card)
+            && UIDFilter(card) && IDFilter(card) && ExcludeIDFilter(card) && NameFilter(card)
             && CostFilter(card) && AtkFilter(card) && HpFilter(card) && CountdownFilter(card)
             && CraftFilter(card) && PackFilter(card) && TypeFilter(card) 
             && RarityFilter(card) && TraitFilter(card) && KeywordFilter(card) 
@@ -163,6 +171,7 @@ public class CardFilter
     public virtual bool NameFilter(Card card) => string.IsNullOrEmpty(name) || card.name.Contains(name);
     public virtual bool UIDFilter(Card card) => List.IsNullOrEmpty(uidList) || uidList.Contains(card.id);
     public virtual bool IDFilter(Card card) => List.IsNullOrEmpty(idList) || idList.Contains(Card.GetBaseId(card.NameId)) || idList.Contains(Card.GetEvolveId(card.NameId));
+    public virtual bool ExcludeIDFilter(Card card) => List.IsNullOrEmpty(excludeIdList) || (!(excludeIdList.Contains(Card.GetBaseId(card.NameId)) || excludeIdList.Contains(Card.GetEvolveId(card.NameId))));
     public virtual bool CraftFilter(Card card) => List.IsNullOrEmpty(craftList) || craftList.Contains(card.CraftId);
     public virtual bool PackFilter(Card card) => List.IsNullOrEmpty(packList) || packList.Contains(card.PackId);
     public virtual bool TypeFilter(Card card) => (card.Type != CardType.Leader) && (card.Type != CardType.Evolved) && (List.IsNullOrEmpty(typeList) || typeList.Contains(card.TypeId));
@@ -195,6 +204,12 @@ public class BattleCardFilter : CardFilter {
         isInitStatus = false;
     }
 
+    /// <summary>
+    /// Parse the string representation of filter.
+    /// </summary>
+    /// <param name="options">paramToSet</param>
+    /// <param name="transformFunc">(filterType, paramToSet) => transformedParamToSet</param>
+    /// <returns>BattleCardFilter</returns>
     public static new BattleCardFilter Parse(string options, Func<string, string, string> transformFunc = null) {
         var filter = new BattleCardFilter(-1);
         if (string.IsNullOrEmpty(options) || (options == "none"))

@@ -72,6 +72,15 @@ public static class Operator {
         return rhs;
     }
 
+    public static ModifyOption ToModifyOption(this string option, ModifyOption defaultReturn = ModifyOption.Clear) {
+        return option.ToLower() switch {
+            "clear"     => ModifyOption.Clear,
+            "add"       => ModifyOption.Add,
+            "remove"    => ModifyOption.Remove,
+            "set"       => ModifyOption.Set,
+            _           => defaultReturn,
+        };
+    }
 }
 
 public enum DataType {

@@ -14,7 +14,37 @@ public static class Identifier {
 
         if (id.TryTrimStart("enhance", out trimId)) {
             var enhance = Parser.ParseEffectExpression(trimId.TrimParentheses(), effect, state);
-            return lhsUnit.leader.PP >= enhance ? 1 : 0;
+            var useEffect = effect;
+
+            if (lhsUnit.GetBelongPlace(effect.source).PlaceId == BattlePlaceId.Hand)
+                return lhsUnit.leader.PP >= enhance ? 1 : 0;
+
+            while (useEffect.ability != EffectAbility.Use) {
+                useEffect = useEffect.sourceEffect;
+                if (useEffect == null)
+                    return 0;
+            }
+            var useSituation = useEffect.abilityOptionDict.Get("useSituation", string.Empty);
+            var useCost = Parser.ParseEffectExpression(useEffect.abilityOptionDict.Get("useCost", "-1"), effect, state);
+            return ((useSituation == "enhance") && (useCost >= enhance)) ? 1 : 0;
+        }
+
+        if (id.TryTrimStart("switch", out trimId)) {
+            var switchCost = Parser.ParseEffectExpression(trimId.TrimParentheses(), effect, state);
+            var useEffect = effect;
+
+            var place = lhsUnit.GetBelongPlace(effect.source);
+            if ((place == null) || (place.PlaceId == BattlePlaceId.Hand))
+                return (lhsUnit.leader.PP >= switchCost) ? 1 : 0;
+
+            while (useEffect.ability != EffectAbility.Use) {
+                useEffect = useEffect.sourceEffect;
+                if (useEffect == null)
+                    return 0;
+            }
+            var useSituation = useEffect.abilityOptionDict.Get("useSituation", string.Empty);
+            var useCost = Parser.ParseEffectExpression(useEffect.abilityOptionDict.Get("useCost", "-1"), effect, state);
+            return ((useSituation == "switch") && (useCost == switchCost)) ? 1 : 0;
         }
 
         if (id.TryTrimStart("earth", out trimId)) {
