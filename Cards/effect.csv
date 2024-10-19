@@ -606,7 +606,7 @@ id,timing,target,condition,cond_option,ability,ability_option
 1582,on_this_use,sourceEffect.target_hand_0_all_[type:1|9],none,none,set_keyword,keyword=1
 1583,on_this_use,none,none,none,get_token,id=110021202&count=1
 1584,on_this_use,op_field_1_index_[type:1|9],none,none,damage,damage=1
-1585,on_this_use,me_leader+field_1_index_[type:1|9],none,none,heal,heal=2
+1585,on_this_use,me_leader+field_1_index_[type:0|1|9],none,none,heal,heal=2
 1586,on_this_use,me_field_1_index_[type:1|9],none,none,set_keyword,keyword=4
 1587,on_this_use,me_field_1_index_[type:1|9],none,none,buff,add=1/1
 1588,on_this_destroy,none,none,none,get_token,id=910021201&count=1
