@@ -8,7 +8,6 @@ public class BattleField : BattlePlace
 {
     public BattleField() {
         MaxCount = 5;
-        cards = new List<BattleCard>() { BattleCard.Get(110021906) };
     }
     public BattleField(BattleField rhs) : base(rhs) {}
 

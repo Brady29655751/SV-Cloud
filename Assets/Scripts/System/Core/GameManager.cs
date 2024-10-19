@@ -12,7 +12,7 @@ public class GameManager : Singleton<GameManager>
     public static string fileType => ".zip";
 
     public static string serverUrl => instance.debugMode ? "Data/" : "https://raw.githubusercontent.com/Brady29655751/SV-Cloud/" + branch + "/";
-    public static string gameUrl => "https://media.githubusercontent.com/media/Brady29655751/SV-Cloud/" + branch + "/";
+    public static string gameUrl => "https://download-directory.github.io/?url=https://github.com/Brady29655751/SV-Cloud/tree/"  + branch + "/Release";
 
     public static string versionDataUrl => serverUrl + "System/version.xml";
     public static string gameDownloadUrl => gameUrl + "Release/SVCloud_" + gamePlatform + fileType;
