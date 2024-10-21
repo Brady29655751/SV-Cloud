@@ -45,6 +45,11 @@ public class BattleUnit : IIdentifyHandler
         isMyTurn = first;
 
         Draw(3, out _, out _);
+
+        if (GameManager.instance.debugMode) {
+            leader.PPMax = 10;
+            leader.PP = 10;
+        }
     }
 
     public BattleUnit(BattleUnit rhs) {
@@ -81,6 +86,9 @@ public class BattleUnit : IIdentifyHandler
         if (distinctOptions.TryTrimParentheses(out var distinctType)) {
             if (!distinctType.Contains('.'))
                 distinctType = "current." + distinctType;
+
+            if (Card.NoneIdentifiers.Any(distinctType.EndsWith))
+                result.RemoveAll(x => x.GetIdentifier(distinctType) < 0);
 
             result = result.GroupBy(x => x.GetIdentifier(distinctType)).Select(x => x.First()).ToList();
         }

@@ -70,6 +70,9 @@ public class EffectTargetInfo  {
         if (!excludeType.Contains('.'))
             excludeType = "current." + excludeType;
 
+        if (Card.NoneIdentifiers.Any(excludeType.EndsWith))
+            allCards.RemoveAll(x => x.GetIdentifier(excludeType) < 0);
+
         return allCards.GroupBy(x => x.GetIdentifier(excludeType)).Select(x => x.First()).ToList();
     }
 
@@ -143,7 +146,7 @@ public class EffectTargetInfo  {
         };
 
         if (!places.Contains(BattlePlaceId.None))
-            effectCards.RemoveAll(x => !places.Contains(state.GetBelongUnit(x).GetBelongPlace(x).PlaceId));
+            effectCards.RemoveAll(x => !places.Contains(state.GetBelongUnit(x)?.GetBelongPlace(x)?.PlaceId ?? BattlePlaceId.None));
 
         // Remove illegal targets.
         effectCards.RemoveAll(x => !filter.FilterWithCurrentCard(x));

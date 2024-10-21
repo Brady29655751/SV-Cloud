@@ -1,12 +1,12 @@
 <versionData>
-    <gameVersion>0.8</gameVersion>
-    <buildVersion>0.8</buildVersion>
-    <releaseDate>2023-10-19+08:00</releaseDate>
+    <gameVersion>0.9</gameVersion>
+    <buildVersion>0.9</buildVersion>
+    <releaseDate>2023-10-22+08:00</releaseDate>
     <releaseNote>
-    【當前版本】0.8
-    【版本日期】2023/10/19
-    【更新內容】《新界基石》皇家護衛、復仇者卡片
-    【修復錯誤】修復部分卡片條件無效之錯誤
+    【當前版本】0.9
+    【版本日期】2023/10/22
+    【更新內容】復仇者卡片能力調整
+    【修復錯誤】修復部分卡片能力異常之錯誤
 
     【1】當前版本為測試版本，流量達到上限後無法進行私人對戰。
     【2】初次加載資源會非常慢，請耐心等待並確保網路連線環境順暢。

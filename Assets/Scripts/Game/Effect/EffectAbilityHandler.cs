@@ -803,9 +803,10 @@ public static class EffectAbilityHandler
                     _ => grave.DestroyedCards,
                 };
                 */
-                var gravePoolId = effect.abilityOptionDict.Get("pool", "all");
+                var gravePoolId = effect.abilityOptionDict.Get("pool", "0");
                 if (gravePoolId != "reanimate")
-                    effect.invokeTarget = effect.invokeTarget.Select(x => BattleCard.Get(x.baseCard.id)).ToList();
+                    effect.invokeTarget = effect.invokeTarget.Where(x => x.GetIdentifier("graveReason") == Parser.ParseEffectExpression(gravePoolId, effect, state))
+                        .Select(x => BattleCard.Get(x.baseCard.id)).ToList();
                 break;
         }
 
@@ -960,7 +961,9 @@ public static class EffectAbilityHandler
         for (int i = 0; i < effect.invokeTarget.Count; i++) {
             if (effect.invokeTarget[i].CurrentCard.hp <= 0) {
                 Effect destroyEffect = new Effect("none", "self", null, null,
-                    EffectAbility.Destroy, null)
+                    EffectAbility.Destroy, new Dictionary<string, string>() {
+                        { "situation", situation },
+                    })
                 {
                     source = effect.invokeTarget[i],
                     sourceEffect = effect,
@@ -1357,6 +1360,10 @@ public static class EffectAbilityHandler
             place.cards[index] = BattleCard.Get(id);
             transformedTarget.Add(place.cards[index]);
 
+            // effect.hudOptionDict.Set("log", effect.invokeTarget.Select(x => "使 " + x.CurrentCard.name + " 變身為 " + card.CurrentCard.name).ConcatToString("\n"));
+            effect.hudOptionDict.Set("log", "使 " + target.CurrentCard.name + " 變身為 " + place.cards[index].CurrentCard.name + "\n");
+            Hud.SetState(state);
+
             if (place.PlaceId != BattlePlaceId.Field)
                 continue;
 
@@ -1369,16 +1376,13 @@ public static class EffectAbilityHandler
                     {
                         source = place.cards[index],
                         sourceEffect = effect,
-                        invokeUnit = state.GetBelongUnit(target),
+                        invokeUnit = state.GetBelongUnit(place.cards[index]),
                     };
                     keywordEffect.Apply(state);
                     state.currentEffect = effect;
                 }
             }
         }
-
-        effect.hudOptionDict.Set("log", effect.invokeTarget.Select(x => "使 " + x.CurrentCard.name + " 變身為 " + card.CurrentCard.name).ConcatToString("\n"));
-        Hud.SetState(state);
 
         // Change invokeTarget to newly transformed targets.
         effect.invokeTarget = transformedTarget;

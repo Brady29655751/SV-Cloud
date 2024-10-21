@@ -14,6 +14,7 @@ public class Card : IIdentifyHandler
     public const int DATA_COL = 7;
     public const int DESC_COL = 2;
     public static string[] StatusNames => new string[] { "cost", "atk", "hp" };
+    public static string[] NoneIdentifiers = new string[] { "trait", "keyword" };
     public static Card Get(int id) => DatabaseManager.instance.GetCardInfo(id);
     public static GameObject Prefab => ResourceManager.instance.GetPrefab("Card");
     public static int GetBaseId(int uid) => ((CardType)(uid % 1000 / 100) != CardType.Evolved) ? uid : (uid - uid % 1000 + 100 + uid % 100);
@@ -146,7 +147,7 @@ public class Card : IIdentifyHandler
 
         if (id.TryTrimStart("trait", out trimId)) {
             if (trimId == string.Empty)
-                return traits.Select(x => (int)x).Aggregate((total, next) => total * GameManager.versionData.traitCount + next);
+                return traits.Select(x => (int)x).DefaultIfEmpty(-1).Aggregate((total, next) => total * GameManager.versionData.traitCount + next);
 
             while (trimId.TryTrimParentheses(out var traitId)) {
                 var checkTrait = traitId.Split('|').Select(x => (CardTrait)int.Parse(x));
@@ -160,7 +161,7 @@ public class Card : IIdentifyHandler
 
         if (id.TryTrimStart("keyword", out trimId)) {
             if (trimId == string.Empty)
-                return keywords.Select(x => (int)x).Aggregate((total, next) => total * GameManager.versionData.keywordCount + next);
+                return keywords.Select(x => (int)x).DefaultIfEmpty(-1).Aggregate((total, next) => total * GameManager.versionData.keywordCount + next);
 
             while (trimId.TryTrimParentheses(out var keywordId)) {
                 var checkKeyword = keywordId.Split('|').Select(x => (CardKeyword)int.Parse(x));
