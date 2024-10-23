@@ -725,8 +725,8 @@ id,timing,target,condition,cond_option,ability,ability_option
 1701,on_after_this_attack,self,none,effect.source.where=5&sourceEffect.target.first.isOp=1&sourceEffect.target.first.current[IF][type:1|9][hp:0]=1,set_value,id=effect.target.all[type:1|9].action.usedAttackChance&value=0
 1702,on_turn_end,me_field_0_all+other_[type:1|9],none,effect.source.where=5&me.isMyTurn=1&me.isUnion=1,buff,add=1/1
 1703,on_this_use,none,none,none,draw,count=2&filter=[type:1|9]&distinct=[trait]
-1704,on_turn_start,none,none,me.isMyTurn=1&effect.source.where=5,remove_effect,timing=all
-1705,on_turn_start,none,none,me.isMyTurn=1&effect.source.where=5,remove_effect,timing=all
+1704,on_turn_start,self,none,me.isMyTurn=1&effect.source.where=5,remove_effect,timing=all
+1705,on_turn_start,self,none,me.isMyTurn=1&effect.source.where=5,remove_effect,timing=all
 ----,----,----,----,----,----,----
 201001,on_this_use,self,none,me.field[craft:0].count[GTE]2,set_keyword,keyword=3
 201002,on_this_use,self,none,me.field[craft:0].count[GTE]4,evolve,none
