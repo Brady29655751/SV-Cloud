@@ -575,7 +575,7 @@ id,timing,target,condition,cond_option,ability,ability_option
 1551,on_this_use,none,none,none,get_token,id=910081101&count=1
 1552,on_turn_end,me_field_0_all_[id:910081101],none,none,remove_effect,timing=all
 1553,on_this_use,none,none,none,summon,id=910081101&count=4
-1554,on_this_use,op_field_1_index_[type:1|9],none,none,damage,damage=4
+1554,on_this_use,op_field_1_index_[type:1|9],none,none,damage,damage=3
 1555,on_this_attack,op_field_0_all_[type:1|9],none,none,damage,damage=2
 1556,on_this_destroy,none,none,none,get_token,id=910081101&count=2
 1557,on_this_destroy,none,none,none,add_deck,id=910183101&count=1
