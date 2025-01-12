@@ -62,6 +62,7 @@ public static class EffectDatabase {
         {"set_ep",          EffectAbility.SetEP         },
         {"set_buff",        EffectAbility.SetBuff       },
         {"set_trait",       EffectAbility.SetTrait      },
+        {"copy_effect",     EffectAbility.CopyEffect    },
     };
 
     private static Dictionary<string, string> unitInfoDict = new Dictionary<string, string>() {
@@ -151,4 +152,5 @@ public enum EffectAbility {
     SetEP       = 131,
     SetBuff     = 132,
     SetTrait    = 133,
+    CopyEffect  = 134,
 }

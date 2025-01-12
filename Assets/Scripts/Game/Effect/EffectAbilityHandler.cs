@@ -57,6 +57,7 @@ public static class EffectAbilityHandler
             EffectAbility.SetEP         => SetEP,
             EffectAbility.SetBuff       => SetBuff,
             EffectAbility.SetTrait      => SetTrait,
+            EffectAbility.CopyEffect    => CopyEffect,
 
             _ => (e, s) => true,
         };
@@ -1638,6 +1639,85 @@ public static class EffectAbilityHandler
         EnqueueEffect("on_this_remove_effect", effect.invokeTarget, state);
         OnPhaseChange("on_remove_effect", state);
 
+        return true;
+    }
+
+    public static bool CopyEffect(this Effect effect, BattleState state) {
+        var keywords = effect.abilityOptionDict.Get("keyword", "none").ToIntList('/').Select(x => (CardKeyword)x).ToList();
+
+        Effect GetEffectOfSetThisKeyword(CardKeyword keyword) {
+            return new Effect("none", "none", null, null, 
+                EffectAbility.SetKeyword, new Dictionary<string, string>()
+                {
+                    { "keyword", ((int)keyword).ToString() },
+                }) 
+            {
+                source = effect.source,
+                sourceEffect = effect,
+                invokeUnit = state.GetBelongUnit(effect.source),
+                invokeTarget = new List<BattleCard>() { effect.source },
+            };
+        }
+
+        Effect GetEffectOfAddingThisEffect(Effect thisEffect, CardKeyword keyword, string description) {
+            return new Effect("none", "none", null, null, 
+                EffectAbility.AddEffect, new Dictionary<string, string>()
+                {
+                    { "id", thisEffect.id.ToString() },
+                    { "keyword", ((int)keyword).ToString() },
+                    { "description", description },
+                }) 
+            {
+                source = thisEffect.source,
+                sourceEffect = effect,
+                invokeUnit = state.GetBelongUnit(effect.source),
+                invokeTarget = new List<BattleCard>() { effect.source },
+            };
+        }
+
+        for (int i = 0; i < effect.invokeTarget.Count; i++) {
+            var addEffects = new List<Effect>();
+            for (int j = 0; j < keywords.Count; j++) {
+                if (CardDatabase.KeywordEffects.Contains(keywords[j])) {
+                    if (!effect.invokeTarget[i].actionController.IsKeywordAvailable(keywords[j]))
+                        continue;
+
+                    addEffects.Add(GetEffectOfSetThisKeyword(keywords[j]));
+                } else {
+                    var timing = keywords[j].GetKeywordTiming();
+                    if (timing == "none")
+                        continue;
+
+                    bool descriptionFlag = false;
+                    var targetEffects = effect.invokeTarget[i].CurrentCard.effects;
+                    for (int k = 0; k < targetEffects.Count; k++) {
+                        if (targetEffects[k].timing != timing)
+                            continue;
+
+                        var description = targetEffects[k].hudOptionDict.Get("description");
+                        if (string.IsNullOrEmpty(description) && (!descriptionFlag)) {
+                            description = targetEffects[k].source.CurrentCard.description.GetDescription();
+                            var startIndex = description.IndexOf("<color=#ffbb00>" + keywords[j].GetKeywordName() + "</color>");
+                            var endIndex = description.IndexOf('\n', startIndex);
+                            description = (endIndex < 0) ? description.Substring(startIndex) :
+                                description.Substring(startIndex, endIndex - startIndex + 1);
+                            descriptionFlag = true;
+                        }
+                        addEffects.Add(GetEffectOfAddingThisEffect(targetEffects[k], keywords[j], description));
+                    }
+                }
+            }
+            for (int j = 0; j < addEffects.Count; j++) {
+                addEffects[j].Apply(state);
+                state.currentEffect = effect;
+            }
+        }
+
+        effect.hudOptionDict.Set("log", effect.source.CurrentCard.name + " 複製能力完成");
+        Hud.SetState(state);
+
+        EnqueueEffect("on_this_copy_effect", effect.invokeTarget, state);
+        OnPhaseChange("on_copy_effect", state);
         return true;
     }
 

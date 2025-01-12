@@ -190,10 +190,11 @@ public class CardFilter
 public class BattleCardFilter : CardFilter {
     public override string[] GetSetStringType() => new string[] { "name", "description" };
     public override string[] GetSelectIntType() => base.GetSelectIntType().Concat(new string[] { "initCost", "initAtk", "initHp" }).ToArray();
-    public override string[] GetSetIntType() => base.GetSetIntType().Concat(new string[] { "isAttackFinished" }).ToArray();
+    public override string[] GetSetIntType() => base.GetSetIntType().Concat(new string[] { "isAttackFinished", "isDamaged" }).ToArray();
 
     public Dictionary<string, float> options;
     public int isAttackFinished = -1;
+    public int isDamaged = -1;
     public bool isInitStatus = false;
 
     public BattleCardFilter(int formatId) : base(formatId) {
@@ -240,6 +241,9 @@ public class BattleCardFilter : CardFilter {
             case "isAttackFinished":
                 isAttackFinished = item;
                 return;
+            case "isDamaged":
+                isDamaged = item;
+                return;
         }
     }
 
@@ -255,7 +259,7 @@ public class BattleCardFilter : CardFilter {
 
     public bool FilterWithCurrentCard(BattleCard battleCard) {
         var card = battleCard.CurrentCard;
-        return base.Filter(card) && AttackFinishFilter(battleCard);
+        return base.Filter(card) && AttackFinishFilter(battleCard) && DamageFilter(battleCard);
     }
 
     public override bool TypeFilter(Card card) => List.IsNullOrEmpty(typeList) || typeList.Contains(card.TypeId);
@@ -274,4 +278,5 @@ public class BattleCardFilter : CardFilter {
         return List.IsNullOrEmpty(hpList) || hpList.Contains(Mathf.Min(filterCard.hp, 10));
     } 
     public bool AttackFinishFilter(BattleCard card) => (isAttackFinished == -1) || (card.actionController.GetIdentifier("isAttackFinished") == isAttackFinished);
+    public bool DamageFilter(BattleCard card) => (isDamaged == -1) || ((card.buffController.Damage > 0) ^ (isDamaged == 0));
 }

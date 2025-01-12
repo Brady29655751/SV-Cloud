@@ -84,6 +84,14 @@ public static class CardDatabase
         { BattlePlaceId.Token,        "token"     },
     };
 
+    public static Dictionary<CardKeyword, string> keywordTimingDict = new Dictionary<CardKeyword, string>() {
+        { CardKeyword.Fanfare,  "on_this_use"               },
+        { CardKeyword.Lastword, "on_this_destroy"           },
+        { CardKeyword.Attack,   "on_this_attack"            },
+        { CardKeyword.Defense,  "on_this_defense"           },
+        { CardKeyword.Evolve,   "on_this_evolve_with_ep"    },
+    };
+
     public static string[] PropertyEffects => new string[] { 
         "leaveVanish", "destroyVanish", "returnVanish" 
     };
@@ -111,6 +119,7 @@ public static class CardDatabase
     public static string GetKeywordName(this CardKeyword keyword) => DatabaseManager.instance.GetKeywordName(keyword);
     public static string GetKeywordEnglishName(this CardKeyword keyword) => DatabaseManager.instance.GetKeywordEnglishName(keyword);
     public static string GetKeywordInfo(this CardKeyword keyword) => DatabaseManager.instance.GetKeywordInfo(keyword);
+    public static string GetKeywordTiming(this CardKeyword keyword) => keywordTimingDict.Get(keyword, "none");
 
     public static int GetMaxCardCountInDeck(this GameFormat format) => format switch {
         GameFormat.GemOfFortune => 30,

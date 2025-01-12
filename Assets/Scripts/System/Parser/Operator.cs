@@ -60,6 +60,9 @@ public static class Operator {
         return lhs * rhs;
     }
     public static int Div(int lhs, int rhs) {
+        if (lhs == 0)
+            return 0;
+            
         return Mathf.CeilToInt(lhs * 1f / rhs);
     }
     public static int Pow(int lhs, int rhs) {

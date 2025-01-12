@@ -297,7 +297,7 @@ public class Effect : IIdentifyHandler
             return;
         } 
 
-        if (info.unit.TryTrimStart("sourceEffect.", out var trimUnit)) {
+        if (info.unit.TryTrimStart("sourceEffect", out _)) {
             invokeTarget = info.GetSourceEffectTarget(this, state);                                                                                                                                                                        
             return;
         }

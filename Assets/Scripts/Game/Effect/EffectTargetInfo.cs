@@ -29,7 +29,8 @@ public class EffectTargetInfo  {
         if (options.Length <= 4)
             return info;
 
-        info.filter = BattleCardFilter.Parse(options[4]);
+        info.filter = BattleCardFilter.Parse(options[4], (filterType, paramToSet) => 
+            Parser.ParseEffectExpression(paramToSet, effect, state).ToString());
         info.options = options.SubArray(5).ToList();
         return info;
     }
@@ -135,9 +136,18 @@ public class EffectTargetInfo  {
         var rhsUnit = state.GetRhsUnitById(invokeUnit.id);
 
         var sourceEffect = effect.sourceEffect;
-        var sourceEffectAllCards = (new List<BattleCard>(){ sourceEffect.source }).Concat(sourceEffect.invokeTarget);
+        var sourceUnit = unit.Replace("sourceEffect.", "sourceEffect[1].");
+        if (unit.TryTrimStart("sourceEffect", out _)) {
+            var sourceStepExpr = sourceUnit.TrimParentheses();
+            var sourceStep = int.Parse(sourceStepExpr); 
+            for (int i = 0; i < sourceStep - 1; i++)
+                sourceEffect = sourceEffect.sourceEffect;
 
-        var effectCards = unit.TrimStart("sourceEffect.") switch {
+            sourceUnit = sourceUnit.TrimStart("sourceEffect[" + sourceStepExpr + "].");
+        }
+
+        var sourceEffectAllCards = (new List<BattleCard>(){ sourceEffect.source }).Concat(sourceEffect.invokeTarget);
+        var effectCards = sourceUnit switch {
             "source" => new List<BattleCard>(){ sourceEffect.source },
             "target" => sourceEffect.invokeTarget,
             "me"     => sourceEffectAllCards.Where(x => state.GetBelongUnit(x).id == invokeUnit.id).ToList(),
