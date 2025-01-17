@@ -757,7 +757,7 @@ id,timing,target,condition,cond_option,ability,ability_option
 1733,on_this_use,none,none,me.isAwake=1,get_token,id=910041105&count=1
 1734,on_this_evolve_with_ep,none,none,me.isAwake=0,get_token,id=910041101&count=1
 1735,on_this_evolve_with_ep,none,none,me.isAwake=1,get_token,id=910041105&count=1
-1736,on_turn_start,self,none,me.isMyTurn=1&effect.source.where=5&op.field[type:1|9][isDamaged:1].count>0,destroy,
+1736,on_turn_start,self,none,me.isMyTurn=1&effect.source.where=5&op.field[type:1|9][isDamaged:1].count>0,destroy,none
 1737,on_this_destroy,none,none,none,summon,id=910041103&count=1
 1738,on_this_use,all_field_1_index_[type:1|9],none,none,copy_effect,keyword=9/10
 1739,on_this_defense,none,none,none,draw,count=1
