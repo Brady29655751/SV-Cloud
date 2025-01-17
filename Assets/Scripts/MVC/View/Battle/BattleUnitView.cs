@@ -110,7 +110,7 @@ public class BattleUnitView : BattleBaseView
 
                 var drawCount = int.Parse(effect.hudOptionDict.Get("count"));
                 var inHand = effect.invokeTarget.Select(x => x.CurrentCard).ToList();
-                var inGrave = unit.grave.cards.TakeLast(drawCount - effect.invokeTarget.Count).Select(x => x.CurrentCard).ToList();
+                var inGrave = Enumerable.TakeLast(unit.grave.cards, drawCount - effect.invokeTarget.Count).Select(x => x.CurrentCard).ToList();
 
                 Anim.DrawAnim(0, handView.Mode, inHand, inGrave, SetMyUnit);
                 break;
@@ -258,7 +258,7 @@ public class BattleUnitView : BattleBaseView
                 
                 var count = int.Parse(effect.hudOptionDict.Get("count"));
                 var inHand = effect.invokeTarget.Select(x => x.CurrentCard).ToList();
-                var inGrave = unit.grave.cards.TakeLast(count - effect.invokeTarget.Count).Select(x => x.CurrentCard).ToList();
+                var inGrave = Enumerable.TakeLast(unit.grave.cards, count - effect.invokeTarget.Count).Select(x => x.CurrentCard).ToList();
 
                 if (count <= 0)
                     goto default;

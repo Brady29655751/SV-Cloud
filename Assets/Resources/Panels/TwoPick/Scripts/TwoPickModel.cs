@@ -35,7 +35,7 @@ public class TwoPickModel : IMonoBehaviour
             return;
         }
         leftPair = twoPick.Take(2).ToArray();
-        rightPair = twoPick.TakeLast(2).ToArray();
+        rightPair = Enumerable.TakeLast(twoPick, 2).ToArray();
     }
 
     private List<Card> GetTwoPickStorageByRound() {

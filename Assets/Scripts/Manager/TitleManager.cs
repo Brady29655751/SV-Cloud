@@ -29,9 +29,10 @@ public class TitleManager : Manager<TitleManager>
         }
 
         if (GameManager.versionData.buildVersion != Application.version) {
-            IsLoading = true;
-            RequestManager.OnRequestFail("檢測到新版本，正在獲取更新檔案大小\n請稍候");
-            RequestManager.instance.GetDownloadSize(GameManager.gameDownloadUrl, OpenUpdateBuildHintbox);
+            // IsLoading = true;
+            // RequestManager.OnRequestFail("檢測到新版本，正在獲取更新檔案大小\n請稍候");
+            // RequestManager.instance.GetDownloadSize(GameManager.gameDownloadUrl, OpenUpdateBuildHintbox);
+            RequestManager.OnRequestFail("檢測到新版本（" + GameManager.versionData.buildVersion + "），請自行前往下載");
             return;
         }
 
