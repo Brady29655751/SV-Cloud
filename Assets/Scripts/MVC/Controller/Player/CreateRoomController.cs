@@ -38,7 +38,8 @@ public class CreateRoomController : IMonoBehaviour
             clientName = "電腦",
         };
 
-        BattleDeck myDeck = new BattleDeck(1, 1, 1, deckTestData[0].ToIntList('/').ToArray());
+        var deck = Player.gameData.decks[0];
+        BattleDeck myDeck = new BattleDeck(deck.zone, deck.format, deck.craft, deck.cardIds.ToArray());//new BattleDeck(1, 1, 1, deckTestData[0].ToIntList('/').ToArray());
         BattleDeck opDeck = new BattleDeck(1, 1, 2, deckTestData[1].ToIntList('/').ToArray());
         Battle battle = new Battle(myDeck, opDeck, settings);
         SceneLoader.instance.ChangeScene(SceneId.Battle);
