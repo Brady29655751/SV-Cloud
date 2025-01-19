@@ -281,10 +281,12 @@ public class BattleCard : IIdentifyHandler
 
                 var appendixEffect = currentEffect;
                 while (appendixEffect.abilityOptionDict.TryGetValue("appendix", out var appendixId)) {
+                    var sourceEffect = appendixEffect;
                     appendixEffect = Effect.Get(int.Parse(appendixId));
                     if (appendixEffect == null)
                         break;
 
+                    appendixEffect.sourceEffect = sourceEffect;
                     appendixEffect.invokeUnit = Hud.CurrentState.myUnit;
                     if (appendixEffect.Condition(Hud.CurrentState)) {
                         var appendixInfo = appendixEffect.GetEffectTargetInfo(Hud.CurrentState);
@@ -296,6 +298,7 @@ public class BattleCard : IIdentifyHandler
                         }
                     }
                     appendixEffect.invokeUnit = null;
+                    appendixEffect.sourceEffect = null;
                 }
             }
             currentEffect.invokeTarget = null;

@@ -32,7 +32,9 @@ public class TitleManager : Manager<TitleManager>
             // IsLoading = true;
             // RequestManager.OnRequestFail("檢測到新版本，正在獲取更新檔案大小\n請稍候");
             // RequestManager.instance.GetDownloadSize(GameManager.gameDownloadUrl, OpenUpdateBuildHintbox);
-            RequestManager.OnRequestFail("檢測到新版本（" + GameManager.versionData.buildVersion + "），請自行前往下載");
+            var hintbox = Hintbox.OpenHintbox("檢測到新版本（" + GameManager.versionData.buildVersion + "），請前往下載");
+            hintbox.SetOptionNum(2);
+            hintbox.SetOptionCallback(() => Application.OpenURL(GameManager.gameDownloadUrl));
             return;
         }
 

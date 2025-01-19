@@ -169,6 +169,8 @@ public class Effect : IIdentifyHandler
         else
             return sourceEffect.GetIdentifier(id); 
 
+        all ??= new List<BattleCard>();
+        
         var me = all.Where(x => state.GetBelongUnit(x).id == invokeUnit.id).ToList();
         var op = all.Where(x => state.GetBelongUnit(x).id == rhsUnit.id).ToList();
 

@@ -47,8 +47,8 @@ public class BattleUnit : IIdentifyHandler
         Draw(3, out _, out _);
 
         if (GameManager.instance.debugMode) {
-            leader.PPMax = 4;
-            leader.PP = 4;
+            leader.PPMax = 10;
+            leader.PP = 10;
         }
     }
 
