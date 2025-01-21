@@ -731,7 +731,7 @@ id,timing,target,condition,cond_option,ability,ability_option
 1707,on_this_use,op_field_1_index_[type:1|9],none,none,damage,damage=1
 1708,on_turn_end,none,none,me.isMyTurn=1&effect.source.where=5,get_token,id=910041102&count=1
 1709,on_this_use,op_leader+field_1_index_[type:0|1|9],none,me.isAwake=1,damage,damage=2
-1710,on_this_use,self,none,none,buff,enhance=7&add=3/3
+1710,on_this_use,self,none,none,buff,enhance=7&add=4/4
 1711,on_this_use,self,none,none,set_keyword,enhance=7&keyword=2
 1712,on_this_use,op_field_1_index_[type:1|9][isDamaged:1],none,op.field[type:1|9][isDamaged:1].count>0,damage,damage=4
 1713,on_this_use,self,none,me.field[id:910041102].count>0,buff,add=0/1
@@ -801,7 +801,7 @@ id,timing,target,condition,cond_option,ability,ability_option
 1777,on_this_use,sourceEffect[2].target_field_0_all_[type:1|9],none,none,return,none
 1778,on_after_this_attack,self,none,effect.source.where=5&sourceEffect.op.first.current[IF][type:1|9][hp:0]=1\effect.source.where=5&sourceEffect.op.first.current[IF][type:1|9]=1&sourceEffect.op.first.where[NOT]5,buff,add=1/1
 1779,on_after_this_defense,self,none,effect.source.where=5&sourceEffect.op.first.current[IF][type:1|9][hp:0]=1\effect.source.where=5&sourceEffect.op.first.current[IF][type:1|9]=1&sourceEffect.op.first.where[NOT]5,buff,add=1/1
-1780,on_this_defense,self,none,effect.source.where=5&sourceEffect.op[type:1|9].first.current.atk>effect.source.current.atk,add_effect,until=turn_end&id=1781&description=受到的傷害皆轉變為0
+1780,on_this_attack,self,none,effect.source.where=5&sourceEffect.op[type:1|9].first.current.atk>effect.source.current.atk,add_effect,until=turn_end&id=1781&description=受到的傷害皆轉變為0
 1781,on_before_this_damage,self,none,none,set_damage,set=0
 1782,on_this_use,self,none,none,set_keyword,enhance=6&keyword=4
 1783,on_this_use,self,none,none,set_keyword,enhance=6&keyword=3

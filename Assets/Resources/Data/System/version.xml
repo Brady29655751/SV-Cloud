@@ -1,12 +1,12 @@
 <versionData>
-    <gameVersion>1.1</gameVersion>
-    <buildVersion>1.1</buildVersion>
-    <releaseDate>2025-01-19+08:00</releaseDate>
+    <gameVersion>1.2</gameVersion>
+    <buildVersion>1.2</buildVersion>
+    <releaseDate>2025-01-21+08:00</releaseDate>
     <releaseNote>
-    【當前版本】1.1
-    【版本日期】2025/01/19
-    【更新內容】《新界基石》龍族卡片
-    【修復錯誤】造極的暗龍屠無法使用的錯誤
+    【當前版本】1.2
+    【版本日期】2025/01/21
+    【更新內容】《新界基石》龍族卡片調整
+    【修復錯誤】擁有激奏、結晶能力的從者無法進化的錯誤
 
     【1】當前版本為測試版本，流量達到上限後無法進行私人對戰。
     【2】初次加載資源會非常慢，請耐心等待並確保網路連線環境順暢。

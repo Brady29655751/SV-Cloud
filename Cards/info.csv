@@ -408,7 +408,7 @@ id,status,trait,keyword,option,effect,token
 110141102,2/2/1,none,7,none,1707,none
 110141103,2/1/2,none,none,none,1708,910041102
 110141104,2/1/3,none,7/15,none,1709,none
-110141105,3/2/3,none,7/21,none,1710/1711,none
+110141105,3/2/3,none,2/7/21,none,2/1710,none
 110141106,3/3/1,none,7,none,1712,none
 110141107,4/3/3,none,22,none,22,none
 110141108,4/3/4,none,7,none,1713/1714,910041102
@@ -419,10 +419,10 @@ id,status,trait,keyword,option,effect,token
 110141202,2/0/0,none,none,none,1723,none
 110141203,2/0/0,none,15,none,1725/1726,none
 110141204,3/0/0,none,none,none,1728,none
-110141301,3/0/0,none,7/8/18,countdown=2,1729/1730,none
+110141301,3/0/0,none,7/8/18,countdown=3,1729/1730,none
 110141302,4/0/0,none,8,none,1736/1737,910041103
 110142101,1/1/2,none,7/15,none,1731,none
-110142102,2/2/1,none,7/11/15,none,1732/1733/1734/1735,910041101/910041105
+110142102,2/2/1,none,7/11/15,none,1732/1733,910041101/910041105
 110142103,3/3/2,none,4/7,none,4/1738,none
 110142104,4/2/4,none,10,none,1739,none
 110142105,4/3/4,none,11,none,1740,none
@@ -682,7 +682,7 @@ id,status,trait,keyword,option,effect,token
 110141902,2/4/3,none,7,none,0,none
 110141903,2/3/4,none,none,none,1708,910041102
 110141904,2/3/5,none,7/15,none,0,none
-110141905,3/4/5,none,7/21,none,0,none
+110141905,3/4/5,none,2/7/21,none,2,none
 110141906,3/5/3,none,7,none,0,none
 110141907,4/5/5,none,22,none,22,none
 110141908,4/5/6,none,7,none,0,910041102
@@ -690,7 +690,7 @@ id,status,trait,keyword,option,effect,token
 110141910,7/3/9,none,7/10,none,1719,none
 110141911,8/9/9,none,10,none,1720,none
 110142901,1/3/4,none,7/15,none,0,none
-110142902,2/4/3,none,7/11/15,none,1734/1735,910041101/910041105
+110142902,2/4/3,none,7/11/15,none,0,910041101/910041105
 110142903,3/5/4,none,4/7,none,4,none
 110142904,4/4/6,none,10,none,1739,none
 110142905,4/4/5,none,11,none,1740,none

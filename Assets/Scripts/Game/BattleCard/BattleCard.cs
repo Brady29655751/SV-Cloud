@@ -247,7 +247,7 @@ public class BattleCard : IIdentifyHandler
         bool isEvolveTiming = timing == "on_this_evolve_with_ep";
 
         var nowCost = GetUseCost(Hud.CurrentState.myUnit.leader, out var situation);
-        var nowBattleCard = GetCurrentBattleCard(nowCost, situation);
+        var nowBattleCard = GetCurrentBattleCard(nowCost, isEvolveTiming ? null : situation);
         var nowCard = GetCurrentCard(isEvolveTiming ? nowBattleCard.evolveCard : nowBattleCard.OriginalCard);
 
         targetEffectQueue = new Queue<Effect>();
