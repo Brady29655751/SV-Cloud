@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace System {
     
-public static class String {
+public static class StringHelper {
     public static string TrimEmpty(this string str, bool trimNewline = true) {
         string result = str.Replace(" ", string.Empty).Replace("\t", string.Empty);
         if (trimNewline)

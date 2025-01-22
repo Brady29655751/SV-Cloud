@@ -166,7 +166,7 @@ public class BattleCard : IIdentifyHandler
 
         for (int i = 0; i < card.effects.Count; i++) {
             var currentEffect = card.effects[i];
-            if (List.IsNullOrEmpty(currentEffect.condition))
+            if (ListHelper.IsNullOrEmpty(currentEffect.condition))
                 continue;
 
             for (int j = 0; j < currentEffect.condition.Count; j++) {
@@ -273,7 +273,7 @@ public class BattleCard : IIdentifyHandler
             if (currentEffect.Condition(Hud.CurrentState)) {
                 var info = currentEffect.GetEffectTargetInfo(Hud.CurrentState);
 
-                if ((!List.IsNullOrEmpty(info.mode)) && (info.mode[0] == "index")) {
+                if ((!ListHelper.IsNullOrEmpty(info.mode)) && (info.mode[0] == "index")) {
                     targetEffectQueue.Enqueue(currentEffect);
                     targetInfoQueue.Enqueue(info);
                     selectableTargetQueue.Enqueue(GetCurrentSelectableTarget(info));
@@ -291,7 +291,7 @@ public class BattleCard : IIdentifyHandler
                     if (appendixEffect.Condition(Hud.CurrentState)) {
                         var appendixInfo = appendixEffect.GetEffectTargetInfo(Hud.CurrentState);
 
-                        if ((!List.IsNullOrEmpty(appendixInfo.mode)) && (appendixInfo.mode[0] == "index")) {
+                        if ((!ListHelper.IsNullOrEmpty(appendixInfo.mode)) && (appendixInfo.mode[0] == "index")) {
                             targetEffectQueue.Enqueue(appendixEffect);
                             targetInfoQueue.Enqueue(appendixInfo);
                             selectableTargetQueue.Enqueue(GetCurrentSelectableTarget(appendixInfo));

@@ -169,22 +169,22 @@ public class CardFilter
     public virtual bool FormatFilter(Card card) => (format == -1) || card.IsFormat((GameFormat)format);
     public virtual bool ZoneFilter(Card card) => (zone == -1) || (card.ZoneId == zone) || (card.PackId == 0);
     public virtual bool NameFilter(Card card) => string.IsNullOrEmpty(name) || card.name.Contains(name);
-    public virtual bool UIDFilter(Card card) => List.IsNullOrEmpty(uidList) || uidList.Contains(card.id);
-    public virtual bool IDFilter(Card card) => List.IsNullOrEmpty(idList) || idList.Contains(Card.GetBaseId(card.NameId)) || idList.Contains(Card.GetEvolveId(card.NameId));
-    public virtual bool ExcludeIDFilter(Card card) => List.IsNullOrEmpty(excludeIdList) || (!(excludeIdList.Contains(Card.GetBaseId(card.NameId)) || excludeIdList.Contains(Card.GetEvolveId(card.NameId))));
-    public virtual bool CraftFilter(Card card) => List.IsNullOrEmpty(craftList) || craftList.Contains(card.CraftId);
-    public virtual bool PackFilter(Card card) => List.IsNullOrEmpty(packList) || packList.Contains(card.PackId);
-    public virtual bool TypeFilter(Card card) => (card.Type != CardType.Leader) && (card.Type != CardType.Evolved) && (List.IsNullOrEmpty(typeList) || typeList.Contains(card.TypeId));
-    public virtual bool RarityFilter(Card card) => List.IsNullOrEmpty(rarityList) || rarityList.Contains(card.RarityId);
-    public virtual bool TraitFilter(Card card) => List.IsNullOrEmpty(traitList) || card.traits.Contains(CardTrait.All) || traitList.Select(x => (CardTrait)x).Intersect(card.traits).Any();
-    public virtual bool KeywordFilter(Card card) => List.IsNullOrEmpty(keywordList) || keywordList.Select(x => (CardKeyword)x).Intersect(card.keywords).Any();
+    public virtual bool UIDFilter(Card card) => ListHelper.IsNullOrEmpty(uidList) || uidList.Contains(card.id);
+    public virtual bool IDFilter(Card card) => ListHelper.IsNullOrEmpty(idList) || idList.Contains(Card.GetBaseId(card.NameId)) || idList.Contains(Card.GetEvolveId(card.NameId));
+    public virtual bool ExcludeIDFilter(Card card) => ListHelper.IsNullOrEmpty(excludeIdList) || (!(excludeIdList.Contains(Card.GetBaseId(card.NameId)) || excludeIdList.Contains(Card.GetEvolveId(card.NameId))));
+    public virtual bool CraftFilter(Card card) => ListHelper.IsNullOrEmpty(craftList) || craftList.Contains(card.CraftId);
+    public virtual bool PackFilter(Card card) => ListHelper.IsNullOrEmpty(packList) || packList.Contains(card.PackId);
+    public virtual bool TypeFilter(Card card) => (card.Type != CardType.Leader) && (card.Type != CardType.Evolved) && (ListHelper.IsNullOrEmpty(typeList) || typeList.Contains(card.TypeId));
+    public virtual bool RarityFilter(Card card) => ListHelper.IsNullOrEmpty(rarityList) || rarityList.Contains(card.RarityId);
+    public virtual bool TraitFilter(Card card) => ListHelper.IsNullOrEmpty(traitList) || card.traits.Contains(CardTrait.All) || traitList.Select(x => (CardTrait)x).Intersect(card.traits).Any();
+    public virtual bool KeywordFilter(Card card) => ListHelper.IsNullOrEmpty(keywordList) || keywordList.Select(x => (CardKeyword)x).Intersect(card.keywords).Any();
     public virtual bool DescriptionFilter(Card card) => string.IsNullOrEmpty(description) || card.description.Contains(description);
     public virtual bool TokenFilter(Card card) => (card.Group == CardGroup.Normal) || (isWithToken && (card.Group == CardGroup.Token));
 
-    public virtual bool CostFilter(Card card) => List.IsNullOrEmpty(costList) || costList.Contains(Mathf.Min(card.cost, 10));
-    public virtual bool AtkFilter(Card card) => List.IsNullOrEmpty(atkList) || atkList.Contains(Mathf.Min(card.atk, 10));
-    public virtual bool HpFilter(Card card) => List.IsNullOrEmpty(hpList) || hpList.Contains(Mathf.Min(card.hp, 10));
-    public virtual bool CountdownFilter(Card card) => List.IsNullOrEmpty(countdownList) || countdownList.Contains(Mathf.Min(card.countdown, 10));
+    public virtual bool CostFilter(Card card) => ListHelper.IsNullOrEmpty(costList) || costList.Contains(Mathf.Min(card.cost, 10));
+    public virtual bool AtkFilter(Card card) => ListHelper.IsNullOrEmpty(atkList) || atkList.Contains(Mathf.Min(card.atk, 10));
+    public virtual bool HpFilter(Card card) => ListHelper.IsNullOrEmpty(hpList) || hpList.Contains(Mathf.Min(card.hp, 10));
+    public virtual bool CountdownFilter(Card card) => ListHelper.IsNullOrEmpty(countdownList) || countdownList.Contains(Mathf.Min(card.countdown, 10));
 }
 
 public class BattleCardFilter : CardFilter {
@@ -262,20 +262,20 @@ public class BattleCardFilter : CardFilter {
         return base.Filter(card) && AttackFinishFilter(battleCard) && DamageFilter(battleCard);
     }
 
-    public override bool TypeFilter(Card card) => List.IsNullOrEmpty(typeList) || typeList.Contains(card.TypeId);
+    public override bool TypeFilter(Card card) => ListHelper.IsNullOrEmpty(typeList) || typeList.Contains(card.TypeId);
     public override bool TokenFilter(Card card) => (card.Group == CardGroup.Normal) || isWithToken;
 
     public override bool CostFilter(Card card) {
         var filterCard = isInitStatus ? card.BaseCard : card;
-        return List.IsNullOrEmpty(costList) || costList.Contains(Mathf.Min(filterCard.cost, 10));
+        return ListHelper.IsNullOrEmpty(costList) || costList.Contains(Mathf.Min(filterCard.cost, 10));
     } 
     public override bool AtkFilter(Card card) {
         var filterCard = isInitStatus ? card.BaseCard : card;
-        return List.IsNullOrEmpty(atkList) || atkList.Contains(Mathf.Min(filterCard.atk, 10));
+        return ListHelper.IsNullOrEmpty(atkList) || atkList.Contains(Mathf.Min(filterCard.atk, 10));
     } 
     public override bool HpFilter(Card card) {
         var filterCard = isInitStatus ? card.BaseCard : card;
-        return List.IsNullOrEmpty(hpList) || hpList.Contains(Mathf.Min(filterCard.hp, 10));
+        return ListHelper.IsNullOrEmpty(hpList) || hpList.Contains(Mathf.Min(filterCard.hp, 10));
     } 
     public bool AttackFinishFilter(BattleCard card) => (isAttackFinished == -1) || (card.actionController.GetIdentifier("isAttackFinished") == isAttackFinished);
     public bool DamageFilter(BattleCard card) => (isDamaged == -1) || ((card.buffController.Damage > 0) ^ (isDamaged == 0));

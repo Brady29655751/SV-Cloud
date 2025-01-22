@@ -119,7 +119,7 @@ public class BattleUnitView : BattleBaseView
                 var damageIndexList = effect.hudOptionDict.Get("myIndex", string.Empty).ToIntList('/');
                 var damageValueList = effect.hudOptionDict.Get("myDamage", string.Empty).ToIntList('/');
 
-                if (List.IsNullOrEmpty(damageIndexList) || List.IsNullOrEmpty(damageValueList))
+                if (ListHelper.IsNullOrEmpty(damageIndexList) || ListHelper.IsNullOrEmpty(damageValueList))
                     goto default;
 
                 for (int i = 0; i < damageIndexList.Count; i++) {
@@ -132,7 +132,7 @@ public class BattleUnitView : BattleBaseView
                 var healIndexList = effect.hudOptionDict.Get("myIndex", string.Empty).ToIntList('/');
                 var healValueList = effect.hudOptionDict.Get("myHeal", string.Empty).ToIntList('/');
 
-                if (List.IsNullOrEmpty(healIndexList) || List.IsNullOrEmpty(healValueList))
+                if (ListHelper.IsNullOrEmpty(healIndexList) || ListHelper.IsNullOrEmpty(healValueList))
                     goto default;
 
                 for (int i = 0; i < healIndexList.Count; i++) {
@@ -149,7 +149,7 @@ public class BattleUnitView : BattleBaseView
                 var lastVanishIndex = leaveFieldValueList.LastIndexOf("vanish");
                 var lastCallbackIndex = (lastVanishIndex == -1) ? (leaveFieldIndexList.Count - 1) : lastVanishIndex;
 
-                if (List.IsNullOrEmpty(leaveFieldIndexList) || List.IsNullOrEmpty(leaveFieldValueList))
+                if (ListHelper.IsNullOrEmpty(leaveFieldIndexList) || ListHelper.IsNullOrEmpty(leaveFieldValueList))
                     goto default;
 
                 for (int i = 0; i < leaveFieldIndexList.Count; i++) {
@@ -270,7 +270,7 @@ public class BattleUnitView : BattleBaseView
                 var damageIndexList = effect.hudOptionDict.Get("opIndex", string.Empty).ToIntList('/');
                 var damageValueList = effect.hudOptionDict.Get("opDamage", string.Empty).ToIntList('/');
 
-                if (List.IsNullOrEmpty(damageIndexList) || List.IsNullOrEmpty(damageValueList))
+                if (ListHelper.IsNullOrEmpty(damageIndexList) || ListHelper.IsNullOrEmpty(damageValueList))
                     goto default;
 
                 for (int i = 0; i < damageIndexList.Count; i++) {
@@ -283,7 +283,7 @@ public class BattleUnitView : BattleBaseView
                 var healIndexList = effect.hudOptionDict.Get("opIndex", string.Empty).ToIntList('/');
                 var healValueList = effect.hudOptionDict.Get("opHeal", string.Empty).ToIntList('/');
         
-                if (List.IsNullOrEmpty(healIndexList) || List.IsNullOrEmpty(healValueList))
+                if (ListHelper.IsNullOrEmpty(healIndexList) || ListHelper.IsNullOrEmpty(healValueList))
                     goto default;
 
                 for (int i = 0; i < healIndexList.Count; i++) {
@@ -300,7 +300,7 @@ public class BattleUnitView : BattleBaseView
                 var lastVanishIndex = leaveFieldValueList.LastIndexOf("vanish");
                 var lastCallbackIndex = (lastVanishIndex == -1) ? (leaveFieldIndexList.Count - 1) : lastVanishIndex;
 
-                if (List.IsNullOrEmpty(leaveFieldIndexList) || List.IsNullOrEmpty(leaveFieldValueList))
+                if (ListHelper.IsNullOrEmpty(leaveFieldIndexList) || ListHelper.IsNullOrEmpty(leaveFieldValueList))
                     goto default;
 
                 for (int i = 0; i < leaveFieldIndexList.Count; i++) {

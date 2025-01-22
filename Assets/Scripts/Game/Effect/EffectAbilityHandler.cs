@@ -646,7 +646,7 @@ public static class EffectAbilityHandler
         var randomEffects = effect.abilityOptionDict.Get("effect", "none").ToIntList('/').Select(Effect.Get).ToList();
         var count = Parser.ParseEffectExpression(effect.abilityOptionDict.Get("count", "1"), effect, state);
 
-        if (List.IsNullOrEmpty(pdf) || randomEffects.Contains(null) || (pdf.Count != randomEffects.Count))
+        if (ListHelper.IsNullOrEmpty(pdf) || randomEffects.Contains(null) || (pdf.Count != randomEffects.Count))
             return false;
 
         var result = new List<Effect>();
@@ -1398,7 +1398,7 @@ public static class EffectAbilityHandler
         var add = effect.abilityOptionDict.Get("add", "0/0").Split('/')
             .Select(x => Parser.ParseEffectExpression(x, effect, state)).ToList();
 
-        if (List.IsNullOrEmpty(add))
+        if (ListHelper.IsNullOrEmpty(add))
             return false;
 
         int atk = add[0], hp = add[1];
@@ -1422,7 +1422,7 @@ public static class EffectAbilityHandler
         var add = effect.abilityOptionDict.Get("add", "0/0").Split('/')
             .Select(x => Parser.ParseEffectExpression(x, effect, state)).ToList();
 
-        if (List.IsNullOrEmpty(add))
+        if (ListHelper.IsNullOrEmpty(add))
             return false;
 
         int atk = add[0], hp = add[1];
@@ -1471,7 +1471,7 @@ public static class EffectAbilityHandler
 
         var availableCount = tokenUnit.hand.AvailableCount;
 
-        if (List.IsNullOrEmpty(tokenIds) || tokenIds.Exists(x => BattleCard.Get(x) == null)){
+        if (ListHelper.IsNullOrEmpty(tokenIds) || tokenIds.Exists(x => BattleCard.Get(x) == null)){
             tokens = effect.invokeTarget.ToList();
         } else {
             for (int i = 0; i < tokenIds.Count; i++)
@@ -2143,7 +2143,7 @@ public static class EffectAbilityHandler
         var modifyOption = modify.ToModifyOption(ModifyOption.Add);
         var traitIdList = effect.abilityOptionDict.Get("trait", "0").Split('/').Select(x => Parser.ParseEffectExpression(x, effect, state)).ToList();
 
-        if (List.IsNullOrEmpty(traitIdList) || traitIdList.Exists(x => x < 0))
+        if (ListHelper.IsNullOrEmpty(traitIdList) || traitIdList.Exists(x => x < 0))
             return false;
 
         string log = string.Empty;

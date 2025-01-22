@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 namespace System.Collections.Generic {
 
-public static class Dictionary {
+public static class DictionaryHelper {
     public static TValue Get<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, TValue defaultReturn = default(TValue)) { 
         if (dict.ContainsKey(key))
             return dict[key];
@@ -24,7 +24,7 @@ public static class Dictionary {
     }
 }
 
-public static class List {
+public static class ListHelper {
     public static bool IsNullOrEmpty<T>(this IList<T> list) {
         return (list == null) || (list.Count == 0);
     }

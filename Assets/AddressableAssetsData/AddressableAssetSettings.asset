@@ -15,7 +15,7 @@ MonoBehaviour:
   m_DefaultGroup: 645c737f918d63d42b67745bfe26a75a
   m_currentHash:
     serializedVersion: 2
-    Hash: c807bfc5c51448addcc50e694c95ac39
+    Hash: 6226240c2728dd40fceed993fc9d948e
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 1
   m_BundleLocalCatalog: 0
@@ -38,7 +38,7 @@ MonoBehaviour:
     m_Id: df40ce22e78d9ed47a0f3aed31157ec8
   m_RemoteCatalogLoadPath:
     m_Id: 76636c5a94870bf4aab7206b981c12ac
-  m_ContentStateBuildPathProfileVariableName: 
+  m_ContentStateBuildPathProfileVariableName: <default settings path>
   m_CustomContentStateBuildPath: 
   m_ContentStateBuildPath: 
   m_BuildAddressablesWithPlayerBuild: 2
@@ -112,6 +112,7 @@ MonoBehaviour:
     - vampire
     - bishop
     - nemesis
+    - second
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: c27a5fe4de6de064dbaff13ad3ef3b77, type: 2}

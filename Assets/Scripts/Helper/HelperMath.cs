@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace UnityEngine {
 
-public static class Math {
+public static class MathHelper {
 
     /// <summary>
     /// Check if a number is in the range (Max exclusive).
@@ -34,7 +34,7 @@ public static class Math {
     }
 }
 
-public static class Vector {
+public static class VectorHelper {
 
     /// <summary>
     /// <paramref name="anchor"/> Bottom-left (0, 0). Top-right (1, 1).

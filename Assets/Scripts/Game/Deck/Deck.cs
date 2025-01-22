@@ -71,7 +71,7 @@ public class Deck
     }
 
     public bool IsEmpty() {
-        return List.IsNullOrEmpty(cardIds);
+        return ListHelper.IsNullOrEmpty(cardIds);
     }
 
     public bool IsBattleAvailable(CardZone battleZone, GameFormat gameFormat) {

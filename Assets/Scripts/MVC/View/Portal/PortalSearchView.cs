@@ -39,7 +39,7 @@ public class PortalSearchView : IMonoBehaviour
             packImages[i].GetComponentInChildren<Text>()?.SetText(pack.GetPackName());
         }
         
-        if (List.IsNullOrEmpty(zoneOutlines))
+        if (ListHelper.IsNullOrEmpty(zoneOutlines))
             return;
 
         if (!(zone - 1).IsInRange(0, zoneOutlines.Count))
