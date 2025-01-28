@@ -1,12 +1,12 @@
 <versionData>
-    <gameVersion>1.2</gameVersion>
-    <buildVersion>1.2</buildVersion>
-    <releaseDate>2025-01-21+08:00</releaseDate>
+    <gameVersion>1.3</gameVersion>
+    <buildVersion>1.3</buildVersion>
+    <releaseDate>2025-01-28+08:00</releaseDate>
     <releaseNote>
-    【當前版本】1.2
-    【版本日期】2025/01/21
-    【更新內容】《新界基石》龍族卡片調整
-    【修復錯誤】擁有激奏、結晶能力的從者無法進化的錯誤
+    【當前版本】1.3
+    【版本日期】2025/01/28
+    【更新內容】《新界基石》死靈卡片
+    【修復錯誤】虛無的寶珠點對面會使對面的飛龍獲得突進而不是自己的、飛龍長老謝幕曲在未覺醒時一樣會拿風暴巨龍
 
     【1】當前版本為測試版本，流量達到上限後無法進行私人對戰。
     【2】初次加載資源會非常慢，請耐心等待並確保網路連線環境順暢。
@@ -17,7 +17,7 @@
     
     <keywordCount>43</keywordCount>
     <traitCount>15</traitCount>
-    <cardCount>1041</cardCount>
+    <cardCount>1121</cardCount>
     <cardPack>0/1/1/0</cardPack>
     <topicDeck>
         <deck>

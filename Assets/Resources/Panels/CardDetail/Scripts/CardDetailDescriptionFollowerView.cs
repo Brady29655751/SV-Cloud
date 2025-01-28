@@ -18,10 +18,10 @@ public class CardDetailDescriptionFollowerView : IMonoBehaviour
         rectTransform = GetComponent<RectTransform>();
     }
 
-    public void SetCard(Card card) {
+    public void SetCard(Card card, bool isStoryMode = false) {
         indicator?.SetText(card == null ? string.Empty : (card.Type == CardType.Evolved ? "進化後" : "進化前"));
         splitLine?.SetActive(card != null);
-        description?.SetText(card == null ? string.Empty : card.description);
+        description?.SetText(card == null ? string.Empty : (isStoryMode ? card.story : card.description));
         description?.SetSizeAuto(RectTransform.Axis.Vertical);
 
         SetStatus("atk", card == null ? -1 : card.atk);

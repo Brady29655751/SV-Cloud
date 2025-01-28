@@ -8,7 +8,7 @@ public class CardDetailDescriptionSpellView : IMonoBehaviour
     [SerializeField] private Text indicator;
     [SerializeField] private IText description;
 
-    public void SetCard(Card card) {
+    public void SetCard(Card card, bool isStoryMode = false) {
         if ((card == null) || (card.IsFollower())) {
             gameObject.SetActive(false);
             return;
@@ -16,7 +16,7 @@ public class CardDetailDescriptionSpellView : IMonoBehaviour
 
         gameObject?.SetActive(true);
         indicator?.SetText(card.Type.GetTypeName());
-        description?.SetText(card.description);
+        description?.SetText(isStoryMode ? card.story : card.description);
         description?.SetSizeAuto(RectTransform.Axis.Vertical);
     }
 

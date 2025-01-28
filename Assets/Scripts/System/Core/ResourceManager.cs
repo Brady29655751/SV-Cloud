@@ -255,7 +255,14 @@ public class ResourceManager : Singleton<ResourceManager>
     private void LoadCardDescription(Dictionary<int, Card> info, Dictionary<int, Effect> effect, Action<Dictionary<int, Card>> onCardSuccess = null) {
         LoadCSV(cardUrl + "description.csv", (data) => {
             var descInfoDict = GetDescriptionInfoDict(data, Card.DESC_COL);
-            onCardSuccess?.Invoke(GetCardInfo(info, effect, descInfoDict));
+            var cardDict = GetCardInfo(info, effect, descInfoDict);
+            LoadCSV(cardUrl + "story.csv", (story) => {
+                var storyInfoDict = GetDescriptionInfoDict(story, Card.STORY_COL);
+                foreach (var entry in cardDict) {
+                    entry.Value?.SetStory(storyInfoDict.Get(entry.Key, new string[]{ entry.Value.name, "none" }));
+                }
+                onCardSuccess?.Invoke(cardDict);
+            });
         });
     }
 

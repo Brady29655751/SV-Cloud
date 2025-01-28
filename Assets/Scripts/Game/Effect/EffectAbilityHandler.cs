@@ -178,10 +178,12 @@ public static class EffectAbilityHandler
             if (unit.grave.GraveCount < necromance)
                 return false;
 
-            unit.grave.GraveCount -= necromance;
+            if (necromance > 0) {
+                unit.grave.GraveCount -= necromance;
 
-            EnqueueEffect("on_this_necromance", new List<BattleCard>() { effect.source }, state);
-            OnPhaseChange("on_necromance", state);
+                EnqueueEffect("on_this_necromance", new List<BattleCard>() { effect.source }, state);
+                OnPhaseChange("on_necromance", state);
+            }
         }
 
         return true;
@@ -807,7 +809,7 @@ public static class EffectAbilityHandler
                 var gravePoolId = effect.abilityOptionDict.Get("pool", "0");
                 if (gravePoolId != "reanimate")
                     effect.invokeTarget = effect.invokeTarget.Where(x => x.GetIdentifier("graveReason") == Parser.ParseEffectExpression(gravePoolId, effect, state))
-                        .Select(x => BattleCard.Get(x.baseCard.id)).ToList();
+                        .Select(x => BattleCard.Get(x.baseCard)).ToList();
                 break;
         }
 
@@ -1116,9 +1118,11 @@ public static class EffectAbilityHandler
                 case CardType.Follower:
                 case CardType.Evolved:
                     belongUnit.leader.AddIdentifier("destroyedFollowerCount", 1);
+                    belongUnit.leader.AddIdentifier("turn_destroyedFollowerCount", 1);
                     break;
                 case CardType.Amulet:
                     belongUnit.leader.AddIdentifier("destroyedAmuletCount", 1);
+                    belongUnit.leader.AddIdentifier("turn_destroyedAmuletCount", 1);
                     break;
             }
         }
@@ -1472,7 +1476,7 @@ public static class EffectAbilityHandler
         var availableCount = tokenUnit.hand.AvailableCount;
 
         if (ListHelper.IsNullOrEmpty(tokenIds) || tokenIds.Exists(x => BattleCard.Get(x) == null)){
-            tokens = effect.invokeTarget.ToList();
+            tokens = effect.invokeTarget.Select(x => BattleCard.Get(x.baseCard)).ToList();
         } else {
             for (int i = 0; i < tokenIds.Count; i++)
                 tokens.AddRange(Enumerable.Repeat(tokenIds[i], tokenCounts[i]).Select(BattleCard.Get));

@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.UI;
 
 public class GameManager : Singleton<GameManager>
 {
     public bool debugMode = false; 
     
+    public static bool isPlatformAndroid => Application.platform == RuntimePlatform.Android;
     public static string branch => "windows";
     public static string gamePlatform => "Windows";
     public static string fileType => ".zip";
@@ -15,7 +17,7 @@ public class GameManager : Singleton<GameManager>
     public static string gameUrl => "https://download-directory.github.io/?url=https://github.com/Brady29655751/SV-Cloud/tree/"  + branch + "/Release";
 
     public static string versionDataUrl => serverUrl + "System/version.xml";
-    public static string gameDownloadUrl => (Application.platform == RuntimePlatform.Android) ? 
+    public static string gameDownloadUrl => isPlatformAndroid ? 
         "https://drive.google.com/file/d/1nY-gnWY1VxaGiwMMhWk9GhNVVNSmj3Oz/view?usp=sharing" :
         "https://drive.google.com/file/d/132nmIZToXjuOEWH836RagpYIOwWjTLXf/view?usp=drive_link";
         // gameUrl + "Release/SVCloud_" + gamePlatform + fileType;

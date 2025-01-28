@@ -11,16 +11,16 @@ public class CardDetailDescriptionView : IMonoBehaviour
     [SerializeField] private CardDetailDescriptionFollowerView evolveView;
     [SerializeField] private CardDetailDescriptionSpellView spellView;
 
-    public void SetCard(Card card) {
+    public void SetCard(Card card, bool isStoryMode = false) {
         followerObject.SetActive((card != null) && (card.Type == CardType.Follower));
         spellObject.SetActive((card != null) && (card.Type != CardType.Follower));
 
         if (card == null)
             return;
 
-        followerView.SetCard(card);
-        evolveView?.SetCard(card?.EvolveCard);
-        spellView.SetCard(card);
+        followerView.SetCard(card, isStoryMode);
+        evolveView?.SetCard(card?.EvolveCard, isStoryMode);
+        spellView.SetCard(card, isStoryMode);
 
         float followerSize = 45 + Mathf.Max(70, followerView.GetContentSize());
         float evolveSize = followerSize + 45 + evolveView.GetContentSize();

@@ -13,6 +13,7 @@ public class Card : IIdentifyHandler
 {
     public const int DATA_COL = 7;
     public const int DESC_COL = 2;
+    public const int STORY_COL = 2;
     public static string[] StatusNames => new string[] { "cost", "atk", "hp" };
     public static string[] NoneIdentifiers = new string[] { "trait", "keyword" };
     public static Card Get(int id) => DatabaseManager.instance.GetCardInfo(id);
@@ -51,7 +52,7 @@ public class Card : IIdentifyHandler
     public List<int> effectIds = new List<int>();
     public List<Effect> effects = new List<Effect>();
     public Dictionary<string, string> options = new Dictionary<string, string>();
-    public string description;
+    public string description, story;
 
     public Task<Texture2D> Artwork => Addressables.LoadAssetAsync<Texture2D>(ArtworkId.ToString()).Task;
     public Card BaseCard => Card.Get(Card.GetBaseId(id));
@@ -103,6 +104,7 @@ public class Card : IIdentifyHandler
         options = new Dictionary<string, string>(rhs.options);
 
         description = rhs.description;
+        story = rhs.story;
 
         ArtworkId = rhs.ArtworkId;
         NameId = rhs.NameId;
@@ -139,6 +141,10 @@ public class Card : IIdentifyHandler
     public void SetDescription(string[] _data) {
         name = _data[0];
         description = _data[1].GetDescription((Type == CardType.Leader) ? string.Empty : "（沒有卡片能力記敘）");
+    }
+
+    public void SetStory(string[] _data) {
+        story = _data[1].GetDescription("（沒有卡片故事）");
     }
 
     public int GetIdentifier(string id) 

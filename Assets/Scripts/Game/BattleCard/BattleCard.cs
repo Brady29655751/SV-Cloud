@@ -181,10 +181,14 @@ public class BattleCard : IIdentifyHandler
         sourceInfoKeys = sourceInfoKeys.Distinct().ToList();
 
         var unit = Hud.CurrentState.GetBelongUnit(this);
+        var rhsUnit = (unit == null) ? null : Hud.CurrentState.GetRhsUnitById(unit.id);
 
         for (int i = 0; i < unitInfoKeys.Count; i++) {
-            var num = unit.GetIdentifier(unitInfoKeys[i]);
-            description += "（當前 " + unitInfoKeys[i].ToUnitInfoValue() + " 為 " + num + "）\n";
+            bool isOp = unitInfoKeys[i].TryTrimStart("op.", out var trimUnitInfoKey);
+            var infoUnit = isOp ? rhsUnit : unit;
+            var num = infoUnit?.GetIdentifier(trimUnitInfoKey) ?? 0;
+            var unitIndicator = isOp ? "敵方" : "我方";
+            description += "（" + unitIndicator + " " + trimUnitInfoKey.ToUnitInfoValue() + " 為 " + num + "）\n";
         }
 
         for (int i = 0; i < sourceInfoKeys.Count; i++) {

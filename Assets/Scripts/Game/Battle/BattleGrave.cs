@@ -35,6 +35,14 @@ public class BattleGrave : BattlePlace
         return base.Contains(battleCard) || usedCards.Contains(battleCard.baseCard);
     }
 
+    public override int GetIdentifier(string id) 
+    {
+        return id switch {
+            "num" => GraveCount,
+            _ => base.GetIdentifier(id),
+        };
+    }
+
     public List<Card> GetFilterCards(Func<BattleCard, bool> filter) {
         return cards.Where(filter).Select(x => x.baseCard).ToList();
     }

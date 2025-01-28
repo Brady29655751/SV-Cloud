@@ -18,6 +18,7 @@ public class CardFilter
     public List<int> uidList, idList, excludeIdList, craftList, packList, typeList, rarityList, traitList, keywordList,
         costList, atkList, hpList, countdownList;
     public bool isWithToken;
+    public Dictionary<string, int> options = new Dictionary<string, int>();
 
     /// <summary>
     /// Create a filter to search card from database.
@@ -41,6 +42,7 @@ public class CardFilter
         hpList = new List<int>();
         countdownList = new List<int>();
         isWithToken = false;
+        options = new Dictionary<string, int>();
     }
 
     /// <summary>
@@ -82,6 +84,7 @@ public class CardFilter
     public virtual void SetString(string which, string input) {
         switch (which) {
             default:
+                options.Set(which, int.Parse(input));
                 return;
             case "name": 
                 name = input;
@@ -192,14 +195,11 @@ public class BattleCardFilter : CardFilter {
     public override string[] GetSelectIntType() => base.GetSelectIntType().Concat(new string[] { "initCost", "initAtk", "initHp" }).ToArray();
     public override string[] GetSetIntType() => base.GetSetIntType().Concat(new string[] { "isAttackFinished", "isDamaged" }).ToArray();
 
-    public Dictionary<string, float> options;
     public int isAttackFinished = -1;
     public int isDamaged = -1;
     public bool isInitStatus = false;
 
     public BattleCardFilter(int formatId) : base(formatId) {
-        options = new Dictionary<string, float>();
-
         isWithToken = true;
         isAttackFinished = -1;
         isInitStatus = false;
@@ -259,7 +259,7 @@ public class BattleCardFilter : CardFilter {
 
     public bool FilterWithCurrentCard(BattleCard battleCard) {
         var card = battleCard.CurrentCard;
-        return base.Filter(card) && AttackFinishFilter(battleCard) && DamageFilter(battleCard);
+        return base.Filter(card) && OptionFilter(battleCard) && AttackFinishFilter(battleCard) && DamageFilter(battleCard);
     }
 
     public override bool TypeFilter(Card card) => ListHelper.IsNullOrEmpty(typeList) || typeList.Contains(card.TypeId);
@@ -277,6 +277,8 @@ public class BattleCardFilter : CardFilter {
         var filterCard = isInitStatus ? card.BaseCard : card;
         return ListHelper.IsNullOrEmpty(hpList) || hpList.Contains(Mathf.Min(filterCard.hp, 10));
     } 
+
+    public bool OptionFilter(BattleCard card) => (options.Count == 0) || options.All(entry => card.GetIdentifier(entry.Key) == entry.Value);
     public bool AttackFinishFilter(BattleCard card) => (isAttackFinished == -1) || (card.actionController.GetIdentifier("isAttackFinished") == isAttackFinished);
     public bool DamageFilter(BattleCard card) => (isDamaged == -1) || ((card.buffController.Damage > 0) ^ (isDamaged == 0));
 }

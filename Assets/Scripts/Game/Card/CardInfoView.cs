@@ -16,6 +16,7 @@ public class CardInfoView : IMonoBehaviour
     [SerializeField] public CardInfoButtonView buttonView;
     [SerializeField] public CardInfoEffectView effectView;
 
+    private Card currentCard;
     private Text costText, atkText, hpText;
     private float normalSizeY, evolveSizeY;
 
@@ -28,12 +29,15 @@ public class CardInfoView : IMonoBehaviour
     }
 
     private void Update() {
-        if (Input.GetMouseButton(0) && (backgroundRect != null)) {
+        if (Input.GetMouseButtonUp(0) && (backgroundRect != null)) {
             var camera = (SceneLoader.CurrentSceneId == SceneId.Battle) ? Camera.main : null;
             RectTransformUtility.ScreenPointToLocalPointInRectangle(backgroundRect, Input.mousePosition, camera, out var point);
             SetActive(backgroundRect.rect.Contains(point));
+            if (gameObject.activeSelf) {
+                var panel = Panel.OpenPanel<CardDetailPanel>();
+                panel?.SetCard(currentCard);
+            }
         }
-            
     }
 
     public void SetActive(bool active) {
@@ -41,6 +45,7 @@ public class CardInfoView : IMonoBehaviour
     }
 
     public void SetCard(Card card, string additionalDescription = null) {
+       currentCard = card;
         SetActive(card != null);
         buttonView?.Reset();
 

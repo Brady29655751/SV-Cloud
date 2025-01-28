@@ -8,10 +8,10 @@ public class CardDetailView : IMonoBehaviour
     [SerializeField] private CardDetailInfoView infoView;
     [SerializeField] private CardDetailDescriptionView descriptionView;
 
-    public void SetCard(Card card) {
+    public void SetCard(Card card, bool isStoryMode = false) {
         cardView?.SetCard(card);
         infoView?.SetCard(card);
-        descriptionView?.SetCard(card);
+        descriptionView?.SetCard(card, isStoryMode);
         
     }   
 }

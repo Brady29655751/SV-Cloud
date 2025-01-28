@@ -14,7 +14,7 @@ public class CardDetailController : IMonoBehaviour
     }
 
     public void OnSetPage() {
-        detailView?.SetCard(detailModel.CurrentCard);
+        detailView?.SetCard(detailModel.CurrentCard, detailModel.IsStoryMode);
         pageView?.SetPage(detailModel.Page, detailModel.LastPage);
     }
 
@@ -25,6 +25,11 @@ public class CardDetailController : IMonoBehaviour
 
     public void OnCardNextPage() {
         detailModel.NextPage();
+        OnSetPage();
+    }
+
+    public void ToggleStoryMode() {
+        detailModel.SetStoryMode(!detailModel.IsStoryMode);
         OnSetPage();
     }
 }
