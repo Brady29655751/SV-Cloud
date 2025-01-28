@@ -29,14 +29,16 @@ public class CardInfoView : IMonoBehaviour
     }
 
     private void Update() {
-        if (Input.GetMouseButtonUp(0) && (backgroundRect != null)) {
+        if (Input.GetMouseButton(0) && (backgroundRect != null)) {
             var camera = (SceneLoader.CurrentSceneId == SceneId.Battle) ? Camera.main : null;
             RectTransformUtility.ScreenPointToLocalPointInRectangle(backgroundRect, Input.mousePosition, camera, out var point);
             SetActive(backgroundRect.rect.Contains(point));
+            /*
             if (gameObject.activeSelf) {
                 var panel = Panel.OpenPanel<CardDetailPanel>();
                 panel?.SetCard(currentCard);
             }
+            */
         }
     }
 
