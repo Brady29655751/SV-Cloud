@@ -838,7 +838,7 @@ id,timing,target,condition,cond_option,ability,ability_option
 1814,on_turn_end,none,none,op.isMyTurn=1&effect.source.where=5,summon,id=910051102&count=1
 1815,on_this_use,none,none,necromance[2]=1,draw,necromance=2&count=1
 1816,on_this_use,self,none,none,add_effect,id=1817&keyword=8&description=[ffbb00]謝幕曲[-] 召喚1個[ffbb00]南瓜幻影[-]到戰場上。
-1817,on_this_destroy,none,none,none,summon,id=910151301&count=1
+1817,on_this_destroy,none,none,none,summon,id=910152301&count=1
 1818,on_this_destroy,none,none,none,summon,appendix=1819&id=110152102&count=1
 1819,on_this_destroy,sourceEffect.target_field_0_all,none,none,set_keyword,keyword=4
 1820,on_this_use,op_field_0_all_[type:1|9],none,necromance[6]=1,damage,necromance=6&damage=2
