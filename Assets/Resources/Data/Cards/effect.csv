@@ -246,7 +246,7 @@ id,timing,target,condition,cond_option,ability,ability_option
 1222,on_this_use,me_deck_0_all_[keyword:14],none,none,boost,add=1
 1223,on_this_use,op_field_0_all_[type:1|9],none,me.deck.count>20,damage,damage=3&giveType=takeTurn
 1224,on_this_use,op_field_0_all_[type:1|9],none,me.deck.count[LTE]20,damage,damage=7&giveType=takeTurn
-1225,on_this_use,op_field_1_index_[type:1|9],none,none,damage,appendix=1226&damage=2
+1225,on_this_use,all_field_0_all_[type:1|9],none,none,damage,repeat=me.field[type:1|9].count+op.field[type:1|9].count&damage=1
 1226,on_this_use,op_field_1_random_[type:9],none,none,damage,damage=2
 1227,on_this_use,op_field_1_index_[type:1|9],none,none,damage,damage=3
 1228,on_this_use,none,none,none,get_token,id=910131202&count=1
@@ -833,7 +833,7 @@ id,timing,target,condition,cond_option,ability,ability_option
 1809,on_this_use,op_field_1_index_[type:1|9][hp:3|-2],none,necromance[4]=0,destroy,none
 1810,on_this_use,op_field_1_index_[type:1|9],none,necromance[4]=1,destroy,necromance=1-effect.target.first.current[IF][hp:3|2|1|0]*4
 1811,on_this_use,none,none,none,summon,id=910051103&count=1
-1812,on_this_use,none,none,necromance[4]=1,summon,repeat=2&necromance=4&id=910051103&count=1
+1812,on_this_use,none,none,necromance[4]=1,summon,necromance=4&id=910051103&count=1
 1813,on_this_use,me_field_0_all_[id:910051103],none,none,buff,add=1/0
 1814,on_turn_end,none,none,op.isMyTurn=1&effect.source.where=5,summon,id=910051102&count=1
 1815,on_this_use,none,none,necromance[2]=1,draw,necromance=2&count=1
@@ -864,7 +864,7 @@ id,timing,target,condition,cond_option,ability,ability_option
 1840,on_this_destroy,me_field_1_random_[type:1|9],none,none,buff,appendix=1841&add=1/1
 1841,on_this_destroy,sourceEffect.target_field_0_all_[type:1|9],none,none,add_effect,id=1840&keyword=8&description=[ffbb00]謝幕曲[-] 隨機給予1個自己的從者+1/+1及此[ffbb00]謝幕曲[-]效果。
 1842,on_this_use,self,none,necromance[4]=1,set_keyword,necromance=4&keyword=4
-1843,on_this_destroy,op_field_1_random_[type:1|9],none,none,damage,damage=4
+1843,on_this_destroy,op_field_1_random_[type:1|9],none,none,damage,damage=3
 1844,on_this_destroy,me_field_1_random_[type:1|9],none,none,add_effect,id=1845&keyword=8&description=[ffbb00]謝幕曲[-] 召喚1個沒有[ffbb00]謝幕曲[-]能力的[ffbb00]活動魔劍[-]到戰場上。
 1845,on_this_destroy,none,none,none,summon,id=910154101&count=1
 1846,on_this_evolve_with_ep,none,none,none,random,repeat=me.grave.num&pdf=1/1&effect=1847/1848

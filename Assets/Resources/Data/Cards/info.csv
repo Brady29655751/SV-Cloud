@@ -368,7 +368,7 @@ id,status,trait,keyword,option,effect,token
 110131203,2/0/0,none,20,none,1220/1221,none
 110131204,2/0/0,none,none,none,1222,none
 110131205,3/0/0,none,none,none,1223/1224,none
-110131206,2/0/0,none,none,none,1225,none
+110131206,6/0/0,none,none,none,1225,none
 110131207,5/0/0,none,14,none,1230/1231/1232/1233,none
 110131208,5/0/0,none,14,none,1236/1237/1238/1239,910031202
 110131209,6/0/0,none,14,none,1240/1241,none
@@ -489,12 +489,12 @@ id,status,trait,keyword,option,effect,token
 110153201,4/0/0,none,24,none,1863,none
 110153301,3/0/0,none,18,countdown=2,1865/1866,none
 110154101,2/1/2,none,2/8,none,2/1840,none
-110154102,5/4/1,none,7/8/16,none,1842/1843/1844,none
+110154102,5/3/1,none,7/8/16,none,1842/1843/1844,none
 110154103,8/5/5,none,11/16,none,1846,none
 810152201,2/0/0,none,23,artId=110152109,1829/1830,none
 910151101,3/2/2,none,2,none,2,none
 910152301,2/0/0,none,8/18,countdown=2&artId=110152102,1818,110152102
-910154101,5/4/1,none,7/16,artId=110154102,1842,none
+910154101,5/3/1,none,7/16,artId=110154102,1842,none
 -Vampire-,-----,----,----,----,-,-------
 110161101,1/1/2,none,7/31,none,1317/1318,none
 110161102,2/1/3,none,7/8,none,1319/1320,none
@@ -784,10 +784,10 @@ id,status,trait,keyword,option,effect,token
 110153906,7/4/4,none,8,none,1858,910051101
 110153907,10/7/7,none,7/24,none,0,none
 110154901,2/3/4,none,2/8,none,2/1840,none
-110154902,5/6/3,none,7/8/16,none,1843/1844,none
+110154902,5/5/3,none,7/8/16,none,1843/1844,none
 110154903,8/5/5,none,11/16,none,1846,none
 910151901,3/4/4,none,2,none,2,none
-910154901,5/6/3,none,7/16,artId=110154102,0,none
+910154901,5/5/3,none,7/16,artId=110154102,0,none
 -Vampire-,-----,----,----,----,-,-------
 110161901,1/3/4,none,7/31,none,0,none
 110161902,2/3/5,none,7/8,none,1320,none
