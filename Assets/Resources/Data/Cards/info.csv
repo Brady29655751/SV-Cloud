@@ -490,7 +490,7 @@ id,status,trait,keyword,option,effect,token
 110153301,3/0/0,none,18,countdown=2,1865/1866,none
 110154101,2/1/2,none,2/8,none,2/1840,none
 110154102,5/3/1,none,7/8/16,none,1842/1843/1844,none
-110154103,8/5/5,none,11/16,none,1846,none
+110154103,8/5/5,none,11/16/25,none,25/1846,none
 810152201,2/0/0,none,23,artId=110152109,1829/1830,none
 910151101,3/2/2,none,2,none,2,none
 910152301,2/0/0,none,8/18,countdown=2&artId=110152102,1818,110152102
@@ -785,7 +785,7 @@ id,status,trait,keyword,option,effect,token
 110153907,10/7/7,none,7/24,none,0,none
 110154901,2/3/4,none,2/8,none,2/1840,none
 110154902,5/5/3,none,7/8/16,none,1843/1844,none
-110154903,8/5/5,none,11/16,none,1846,none
+110154903,8/5/5,none,11/16/25,none,25/1846,none
 910151901,3/4/4,none,2,none,2,none
 910154901,5/5/3,none,7/16,artId=110154102,0,none
 -Vampire-,-----,----,----,----,-,-------
