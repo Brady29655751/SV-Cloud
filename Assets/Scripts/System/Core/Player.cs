@@ -8,6 +8,8 @@ public class Player : Singleton<Player>
     public static string Nickname => gameData.nickname;
     public static Deck currentDeck = null;
     public static Battle currentBattle = null;
+    public static BattleRecord currentBattleRecord = null;
+    public static bool IsRecordMode => currentBattleRecord != null;
     
     private static Dictionary<string, object> sceneData = new Dictionary<string, object>();
 

@@ -12,12 +12,11 @@ public class DeckListModel : SelectModel<Deck>
     public List<Deck> DefaultDeckList => GetDefaultDeckList();
 
     public List<Deck> GetDefaultDeckList() {
-        var defaultDeckList = new List<Deck>() { new Deck() };
         return (mode switch {
-            DeckListMode.Normal => Player.gameData.decks.Concat(defaultDeckList),
+            DeckListMode.Normal => Player.gameData.decks.Concat(Deck.DefaultCreateDecks),
             DeckListMode.Topic  => GameManager.versionData.topicDecks,
             DeckListMode.Battle => GetBattleDeck(),
-            _ => defaultDeckList,
+            _ => Deck.DefaultCreateDecks,
         }).ToList();
     }
 

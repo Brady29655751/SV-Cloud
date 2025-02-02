@@ -42,6 +42,9 @@ public class BattleFieldView : BattleBaseView
     }
 
     public void OnBeginDrag(int index) {
+        if ((Record != null) && (!Recorder.IsStopped))
+            return;
+
         if (!index.IsInRange(0, fieldCount))
             return;
 
@@ -62,6 +65,9 @@ public class BattleFieldView : BattleBaseView
     }
 
     public void OnDrag(int index) {
+        if ((Record != null) && (!Recorder.IsStopped))
+            return;
+
         if (!index.IsInRange(0, fieldCount))
             return;
 
@@ -74,6 +80,9 @@ public class BattleFieldView : BattleBaseView
     }
 
     public void OnEndDrag(int index) {
+        if ((Record != null) && (!Recorder.IsStopped))
+            return;
+
         if (!index.IsInRange(0, fieldCount))
             return;
 
@@ -86,6 +95,9 @@ public class BattleFieldView : BattleBaseView
     }
 
     public void Evolve() {
+        if ((Record != null) && (!Recorder.IsStopped))
+            return;
+
         var info = Hud.CurrentCardPlaceInfo;
         if (Hud.IsLocked || (info.unitId != 0) || (info.place != BattlePlaceId.Field))
             return;

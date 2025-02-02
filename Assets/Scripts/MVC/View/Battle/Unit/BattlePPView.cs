@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class BattlePPView : BattleBaseView
 {
     [SerializeField] private IButton turnEndButton;
-    [SerializeField] private Text ppText, ppMaxText;
+    [SerializeField] private Text recordTurnText, ppText, ppMaxText;
     [SerializeField] private List<Image> ppOrbImages;
 
     public void SetLeader(Leader leader) {
@@ -24,6 +24,10 @@ public class BattlePPView : BattleBaseView
 
     public void SetTurnEndButtonActive(bool active) {
         turnEndButton?.gameObject.SetActive(active);
+    }
+
+    public void SetTurnEndText(string text) {
+        recordTurnText?.SetText(text);
     }
 
     public void SetTurnEnd() {

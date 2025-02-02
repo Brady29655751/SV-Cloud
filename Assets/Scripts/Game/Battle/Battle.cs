@@ -19,7 +19,10 @@ public class Battle
 
     public Battle() {}
 
-    public Battle(BattleDeck masterDeck, BattleDeck clientDeck, BattleSettings settings) {
+    public Battle(Deck masterDeck, Deck clientDeck, BattleSettings settings) {
+        if (GameManager.instance.debugMode && (Player.currentBattleRecord == null))
+            RecordBattle(masterDeck, clientDeck, settings, true);
+        
         Init(masterDeck, clientDeck, settings);
     }
 
@@ -30,27 +33,48 @@ public class Battle
     /// <param name="myHash">Local Player properties</param>
     /// <param name="opHash">Opponent properties</param>
     public Battle(Hashtable roomHash, Hashtable myHash, string myName, Hashtable opHash, string opName) {
+        var isMaster = PhotonNetwork.IsMasterClient;
         int zfb = (int)roomHash["zfb"];
         int zone = zfb / 100;
         int format = zfb % 100 / 10;
         var settings = new BattleSettings((CardZone)zone, (GameFormat)format) {
-            masterName = PhotonNetwork.IsMasterClient ? myName : opName,
-            clientName = PhotonNetwork.IsMasterClient ? opName : myName,
+            masterName = isMaster ? myName : opName,
+            clientName = isMaster ? opName : myName,
             seed = (int)roomHash["seed"],
         };
 
-        Random.InitState(settings.seed);
-
-        var masterHash = PhotonNetwork.IsMasterClient ? myHash : opHash;
-        var clientHash = PhotonNetwork.IsMasterClient ? opHash : myHash;
-        var masterDeck = new BattleDeck(zone, format, (int)masterHash["craft"], (int[])masterHash["deck"]);
-        var clientDeck = new BattleDeck(zone, format, (int)clientHash["craft"], (int[])clientHash["deck"]);
+        var masterHash = isMaster ? myHash : opHash;
+        var clientHash = isMaster ? opHash : myHash;
+        var masterDeck = new Deck(settings.zone, settings.format, (CardCraft)((int)masterHash["craft"])){ cardIds = ((int[])masterHash["deck"]).ToList() };
+        var clientDeck = new Deck(settings.zone, settings.format, (CardCraft)((int)clientHash["craft"])){ cardIds = ((int[])clientHash["deck"]).ToList() };
         
+        RecordBattle(masterDeck, clientDeck, settings, isMaster);
         Init(masterDeck, clientDeck, settings);
     }
 
-    private void Init(BattleDeck masterDeck, BattleDeck clientDeck, BattleSettings settings) {
-        this.CurrentState = new BattleState(masterDeck, clientDeck, settings);
+    private void RecordBattle(Deck masterDeck, Deck clientDeck, BattleSettings settings, bool isMaster) {
+        BattleRecord record = new BattleRecord() {
+            isMaster = isMaster,
+            settings = settings,
+            masterDeck = masterDeck,
+            clientDeck = clientDeck,
+            date = DateTime.Now,
+        };
+        Player.gameData.battleRecords.Add(record);
+        if (Player.gameData.battleRecords.Count > 30)
+            Player.gameData.battleRecords.RemoveAt(0);
+
+        SaveSystem.SaveData();        
+    }
+
+    private void Init(Deck masterDeck, Deck clientDeck, BattleSettings settings) {
+        //! BattleDeck uses Shuffle that needs Random.
+        Random.InitState(settings.seed);
+
+        var masterBattleDeck = new BattleDeck(masterDeck);
+        var clientBattleDeck = new BattleDeck(clientDeck);
+
+        this.CurrentState = new BattleState(masterBattleDeck, clientBattleDeck, settings);
         Player.currentBattle = this;
     }
 
@@ -86,6 +110,11 @@ public class Battle
         effect.source = leader;
         effect.invokeUnit = isMe ? CurrentState.myUnit : CurrentState.opUnit;
         EnqueueEffect(effect);
+
+        if ((!Settings.isLocal) || GameManager.instance.debugMode) {
+            Player.gameData.battleRecords?.LastOrDefault()?.AddAction(data, isMe);
+            SaveSystem.SaveData();
+        }
 
         if (effectQueue.Count == 1)
             ProcessQueue();

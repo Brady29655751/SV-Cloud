@@ -19,10 +19,7 @@ public static class SaveSystem
         
         Player.gameData = data = GameData.GetDefaultData();
         SaveData();
-
-        Debug.Log("Save file not found in " + SavePath);
-        Debug.Log("Using default data.");
-
+        
         return data;
     }
 

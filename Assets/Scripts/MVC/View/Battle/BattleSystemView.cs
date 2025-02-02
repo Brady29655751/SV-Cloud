@@ -49,6 +49,13 @@ public class BattleSystemView : BattleBaseView
                 break;
 
             case EffectAbility.KeepCard:
+                if (Player.IsRecordMode) {
+                    var keepCardUnit = effect.invokeUnit;
+                    Anim.KeepCardRecordAnim(effect.abilityOptionDict.Get("change", string.Empty).ToIntList('/'), keepCardUnit.hand.cards, 
+                        keepCardUnit.id == state.myUnit.id, state.myUnit.isDone && state.opUnit.isDone, () => IsDone = true);
+                    break;
+                } 
+
                 if (state.myUnit.isDone)
                     Anim.KeepCardAnim(state.myUnit.hand.cards, state.opUnit.isDone, () => IsDone = true);
                 

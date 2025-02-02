@@ -24,7 +24,7 @@ public class BattleAttackAnimView : BattleBaseView
     private IEnumerator AttackCoroutine(int unitId, int index) {
         float currentTime = 0, finishTime = attackSeconds, percent = 0;
         var fieldView = (unitId == 0) ? myCardViews : opCardViews;
-        var pos = fieldView[index].rectTransform.anchoredPosition3D;
+        // var pos = fieldView[index].rectTransform.anchoredPosition3D;
 
         while (currentTime < finishTime) {
             percent = currentTime / finishTime;
@@ -34,6 +34,8 @@ public class BattleAttackAnimView : BattleBaseView
             yield return null;
         }
 
+        var pos = fieldView[index].rectTransform.anchoredPosition3D;
+        fieldView[index].rectTransform.localRotation = Quaternion.identity;
         fieldView[index].rectTransform.anchoredPosition3D = new Vector3(pos.x, pos.y, 0);
     }
 

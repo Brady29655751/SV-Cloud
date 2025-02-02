@@ -16,7 +16,7 @@ public class DeckView : IMonoBehaviour
             return;
 
         if (deck.IsDefault()) {
-            nameText?.SetText("創建牌組");
+            nameText?.SetText(deck.name);
             leaderImage?.SetColor(Color.clear);
             button?.SetSprite(null);
             return;

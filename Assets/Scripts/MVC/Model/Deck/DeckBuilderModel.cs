@@ -37,7 +37,7 @@ public class DeckBuilderModel : IMonoBehaviour
             return;
         }
 
-        if (InitDeck.IsDefault()) {
+        if (InitDeck.IsUnnamed()) {
             var inputHintbox = Hintbox.OpenHintbox<InputHintbox>();
             inputHintbox.SetTitle("保存牌組");
             inputHintbox.SetContent("請輸入牌組名稱");
@@ -51,7 +51,7 @@ public class DeckBuilderModel : IMonoBehaviour
     }
 
     private void OnConfirmSaveDeck(string deckName) {
-        if (InitDeck.IsDefault()) {
+        if (InitDeck.IsUnnamed()) {
             if (string.IsNullOrEmpty(deckName)) {
                 Hintbox hintbox = Hintbox.OpenHintbox();
                 hintbox.SetTitle("提示");

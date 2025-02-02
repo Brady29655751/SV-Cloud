@@ -232,6 +232,14 @@ public static class EffectAbilityHandler
         };  
         state.result.masterState = resultState;
         Hud.SetState(state);
+
+        if ((!state.settings.isLocal) || GameManager.instance.debugMode) {
+            var record = Player.gameData.battleRecords?.LastOrDefault();
+            if (record != null) {
+                record.resultState = resultState;
+                SaveSystem.SaveData();
+            }
+        }
         return true;
     }
 
@@ -272,7 +280,7 @@ public static class EffectAbilityHandler
         Hud.SetState(state);
 
         // Handle next action.
-        if (state.settings.isLocal && (state.myUnit.id == unit.id))
+        if (state.settings.isLocal && (state.myUnit.id == unit.id) && (!Player.IsRecordMode))
             Battle.PlayerAction(new int[] { (int)EffectAbility.KeepCard }, false);
         
         if (state.myUnit.isDone && state.opUnit.isDone) {

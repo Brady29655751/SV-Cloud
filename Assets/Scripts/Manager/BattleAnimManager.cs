@@ -38,6 +38,15 @@ public class BattleAnimManager : Manager<BattleAnimManager>
         });
     }
 
+    public void KeepCardRecordAnim(List<int> changeIndex, List<BattleCard> handCards, bool isMe, bool isAllDone, Action callback) {
+        keepView?.ShowKeepResultWithRecordMode(changeIndex, handCards, isMe, () => {
+            if (isAllDone)
+                keepView?.SetActive(false);
+
+            callback?.Invoke();
+        });
+    }
+
     public void TurnStartAnim(string whosTurn, string description, Action callback) {
         turnView?.ShowTurnInfo(whosTurn, description, callback);
     }

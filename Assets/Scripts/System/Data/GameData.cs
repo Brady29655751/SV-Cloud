@@ -13,6 +13,9 @@ public class GameData
     [XmlArray("deckList"), XmlArrayItem(typeof(Deck), ElementName = "deck")]
     public List<Deck> decks;
 
+    [XmlArray("battleRecordList"), XmlArrayItem(typeof(BattleRecord), ElementName = "battleRecord")]
+    public List<BattleRecord> battleRecords = new List<BattleRecord>();
+
     public GameData() {
         
     }
@@ -26,6 +29,7 @@ public class GameData
     public void InitGameData() {
         nickname = string.Empty;
         decks = new List<Deck>();
+        battleRecords = new List<BattleRecord>();
         BGMVolume = SEVolume = 10f;
     }
 

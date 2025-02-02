@@ -27,6 +27,8 @@ public class VersionData
             x.battles = Enumerable.Repeat(0, 9).ToList();
             x.wins = Enumerable.Repeat(0, 9).ToList();
         });
+        Player.gameData.battleRecords?.RemoveAll(x => x.date < releaseDate);
+        SaveSystem.SaveData();
         return this;
     }
 

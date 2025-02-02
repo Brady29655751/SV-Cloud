@@ -6,12 +6,20 @@ using UnityEngine;
 public class BattleDeck : BattlePlace
 {
     public int zone, format, craft;
-    
-    public BattleDeck(int zoneId, int formatId, int craftId, int[] cardIds) : base(cardIds.Select(x => BattleCard.Get(Card.Get(x))).ToList()) {
+
+    public BattleDeck(int zoneId, int formatId, int craftId, int[] cardIds) : base(cardIds.Select(x => BattleCard.Get(x)).ToList()) {
         zone = zoneId;
         format = formatId;
         craft = craftId;
         
+        cards.Shuffle();
+    }
+
+    public BattleDeck(Deck deck) : base(deck.cardIds.Select(x => BattleCard.Get(x)).ToList()) {
+        zone = deck.zone;
+        format = deck.format;
+        craft = deck.craft;
+
         cards.Shuffle();
     }
 

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using SimpleFileBrowser;
+using System.Linq;
+using System;
 
 public class TitleManager : Manager<TitleManager>
 {
@@ -12,6 +14,23 @@ public class TitleManager : Manager<TitleManager>
 
     protected override void Start() {
         AudioSystem.instance.PlayMusic(AudioResources.Title);
+        StartCoroutine(InitCoroutine());
+    }
+
+    private IEnumerator InitCoroutine() {
+        SceneLoader.instance.StartCornerLoading();
+        while (GameManager.versionData == null)
+            yield return null;
+
+        if (GameManager.versionData.IsEmpty() || (GameManager.versionData.buildVersion != Application.version)) {
+            SceneLoader.instance.StopCornerLoading();
+            yield break;
+        }
+
+        while (!DatabaseManager.instance.IsReady)
+            yield return null;
+
+        SceneLoader.instance.StopCornerLoading();   
     }
 
     public void GameStart() {

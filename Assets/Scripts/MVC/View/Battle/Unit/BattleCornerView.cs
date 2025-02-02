@@ -13,7 +13,17 @@ public class BattleCornerView : BattleBaseView
         craftText?.SetText(leader.Craft.GetCraftName());
         graveText?.SetText(unit.grave.GraveCount.ToString());
         deckText?.SetText(unit.deck.Count.ToString());
-        handText?.SetText(unit.hand.Count.ToString());
+        handText?.SetText(GetHandColorString(unit.hand.Count, unit.hand.MaxCount) + unit.hand.Count + "</color>");
+    }
+
+    private string GetHandColorString(int handCount, int maxCount) {
+        if (handCount == maxCount)
+            return "<color=red>";
+        
+        if (handCount * 3 > maxCount * 2)
+            return "<color=#ffbb00>";
+
+        return "<color=white>";
     }
 
 }

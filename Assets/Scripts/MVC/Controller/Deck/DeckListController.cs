@@ -51,17 +51,28 @@ public class DeckListController : IMonoBehaviour
         if (deck == null)
             return;
 
-        if (deck.IsDefault()) {
-            var leaderPanel = Panel.OpenPanel<LeaderChoosePanel>();
-            leaderPanel.SetConfirmCallback(CreateDeck);
-            return;
+        switch (deck.CreateType) 
+        {
+            default:
+                var infoPanel = Panel.OpenPanel<DeckInfoPanel>();
+                infoPanel.SetDeck(deck);
+                infoPanel.SetDeckInfoMode(deckModel.mode);
+                infoPanel.onDeckUseEvent.SetListener(UseDeck);
+                infoPanel.onDeckChangeEvent.SetListener(() => SetDeckList(deckModel.DefaultDeckList));
+                return;
+            case DeckCreateType.Normal:
+                var leaderPanel = Panel.OpenPanel<LeaderChoosePanel>();
+                leaderPanel.SetConfirmCallback(CreateDeck);
+                return;
+            case DeckCreateType.Code:
+                var inputHintbox = Hintbox.OpenHintbox<InputHintbox>();
+                inputHintbox.SetTitle("輸入牌組代碼");
+                inputHintbox.SetContent(string.Empty);
+                inputHintbox.SetNote(string.Empty);
+                inputHintbox.SetInputField(0);
+                inputHintbox.SetOptionCallback(CreateDeckByCode);
+                return;
         }
-        
-        var infoPanel = Panel.OpenPanel<DeckInfoPanel>();
-        infoPanel.SetDeck(deck);
-        infoPanel.SetDeckInfoMode(deckModel.mode);
-        infoPanel.onDeckUseEvent.SetListener(UseDeck);
-        infoPanel.onDeckChangeEvent.SetListener(() => SetDeckList(deckModel.DefaultDeckList));
     }
 
     private void UseDeck(Deck deck) {
@@ -73,10 +84,26 @@ public class DeckListController : IMonoBehaviour
         SceneLoader.instance.ChangeScene(SceneId.DeckBuilder);
     }
 
+    private void CreateDeckByCode(string code) {
+        var deck = Deck.Decode(code);
+        if (deck == null) {
+            Hintbox.OpenHintbox("無效的牌組代碼");
+            return;
+        }
+        Player.currentDeck = deck;
+        SceneLoader.instance.ChangeScene(SceneId.DeckBuilder);
+    }
+
     public void ToggleTopicDeckList() {
         deckModel.ToggleTopic();
         deckView.ToggleTopicButton(deckModel.mode == DeckListMode.Topic);
         SetDeckList(deckModel.DefaultDeckList);
+    }
+
+    public void SortDeckList() {
+        Player.gameData.decks = Player.gameData.decks.OrderBy(x => (x.craft == 0) ? int.MaxValue : x.craft).ThenBy(x => x.name).ToList();
+        SaveSystem.SaveData();
+        Init();
     }
 
     private void OnDeckListSetPage() {

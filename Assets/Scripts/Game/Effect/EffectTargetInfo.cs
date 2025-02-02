@@ -118,10 +118,8 @@ public class EffectTargetInfo  {
                 var sortResult = new List<BattleCard>(allCards);
 
                 // Use unstable sort for "random"
-                if (sortOrder == "max")
-                    sortResult.Sort((x, y) => y.GetIdentifier(sortType).CompareTo(x.GetIdentifier(sortType)));
-                else
-                    sortResult.Sort((x, y) => x.GetIdentifier(sortType).CompareTo(y.GetIdentifier(sortType)));
+                var orderResult = (sortOrder == "max") ? sortResult.OrderByDescending(x => x.GetIdentifier(sortType)) : sortResult.OrderBy(x => x.GetIdentifier(sortType));
+                sortResult = orderResult.ThenBy(x => UnityEngine.Random.Range(0, 100)).ToList();
 
                 return sortResult;
                 // Below only remains all cards with same value as max/min

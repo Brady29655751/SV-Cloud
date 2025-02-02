@@ -33,7 +33,7 @@ public class RoomPlayerView : IMonoBehaviour
     }
 
     private bool SetMyReady(bool isReady) {
-        if (Player.currentDeck.IsDefault())
+        if (Player.currentDeck.IsUnnamed())
             return false;
 
         readyButton?.gameObject.SetActive(!isReady);

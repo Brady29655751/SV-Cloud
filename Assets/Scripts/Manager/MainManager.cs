@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class MainManager : Manager<MainManager>
 {
@@ -10,6 +12,8 @@ public class MainManager : Manager<MainManager>
         normalObject.ForEach(x => x.SetActive(!GameManager.instance.debugMode));
         debugObject.ForEach(x => x.SetActive(GameManager.instance.debugMode));
         AudioSystem.instance.PlayMusic(AudioResources.Main);
+        Player.currentBattleRecord = null;
+        Random.InitState((int)DateTime.Now.Ticks);
     }
 
     public void BackToTitleScene() {

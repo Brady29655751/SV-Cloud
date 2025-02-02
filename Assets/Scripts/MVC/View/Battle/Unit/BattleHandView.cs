@@ -9,6 +9,7 @@ public class BattleHandView : BattleBaseView
 {
     [SerializeField] private int id = 0;
     [SerializeField] private float useThresholdY;
+    [SerializeField] private Vector2 activePos = new Vector2(425, -36);
     [SerializeField] private Vector2 inactivePos = new Vector2(520, -18);
     [SerializeField] private RectTransform rectTransform;
     [SerializeField] private HorizontalLayoutGroup layoutGroup;
@@ -22,11 +23,19 @@ public class BattleHandView : BattleBaseView
     private List<BattleCard> handCards = new List<BattleCard>();
     private int handCount => handCards.Count;
 
+    public override void Init()
+    {
+        base.Init();
+        sleeves.ForEach(x => x.SetColor(Record == null ? Color.white : Color.clear));
+        if ((id != 0) && (Record == null))
+            cardViews.ForEach(x => x.SetCard(null));
+    }
+
     public void SetLock(bool isLocked) {
         if (id != 0)
             return;
 
-        cardViews.ForEach(x => x.draggable.isMovable = !isLocked);
+        cardViews.ForEach(x => x.draggable.SetEnable(!isLocked));
     }
 
     public void SetHand(BattleUnit unit) {
@@ -36,8 +45,9 @@ public class BattleHandView : BattleBaseView
         if (id != 0) {
             for (int i = 0; i < sleeves.Count; i++)
                 sleeves[i].gameObject.SetActive(i < hand.Count);
-            
-            return;
+
+            if (Record == null)
+                return;
         }
 
         handCards = hand.cards.ToList();
@@ -45,17 +55,18 @@ public class BattleHandView : BattleBaseView
             var card = (i < hand.Count) ? hand.cards[i] : null;
             var useCost = (i < hand.Count) ? hand.cards[i].GetUseCost(leader, out _) : 0;
             var isUsable = (i < hand.Count) ? hand.cards[i].IsUsable(unit) : false;
+            var isRecordUsable = (id == 0) && ((Record != null) ? Recorder.IsStopped : true);
 
             cardViews[i].SetBattleCard(card);
             cardViews[i].SetStatus("cost", useCost);
-            cardViews[i].draggable.SetEnable(isUsable);
+            cardViews[i].draggable.SetEnable(isUsable && isRecordUsable);
         }
 
         SetHandMode(Mode);
     }
 
     public void ShowHandInfo(int index) {
-        var unit = Hud.CurrentState.myUnit;
+        var unit = (id == 0) ? Hud.CurrentState.myUnit : Hud.CurrentState.opUnit;
         var card = (index < handCount) ? handCards[index] : null;
 
         Hud.CurrentCardPlaceInfo = new BattleCardPlaceInfo() { 
@@ -68,34 +79,38 @@ public class BattleHandView : BattleBaseView
     }
 
     public void SetHandMode(bool active) {
-        if (id == 1)
+        if ((id == 1) && (Record == null))
             return;
 
         if (active && Anim.IsSelectingTarget)
             return;
 
-        SetHandMode(active, 425);
+        SetHandMode(active, activePos);
     }   
 
-    public void SetHandMode(bool active, int emptyPos) {
+    public void SetHandMode(bool active, Vector2 emptyPos) {
         Mode = active;
         handGroupButton.gameObject.SetActive(!active);
         rectTransform.localScale = (active ? 2 : 1) * Vector3.one;
-        rectTransform.anchoredPosition = active ? new Vector2(GetLayoutGroupPosition(emptyPos, handCount), -36) : inactivePos;
+        rectTransform.anchoredPosition = active ? new Vector2(GetLayoutGroupPosition(emptyPos.x, handCount), emptyPos.y) : inactivePos;
         layoutGroup.spacing = active ? GetLayoutGroupSpacing(handCount) : 0;
+
+        if ((id == 1) && (Record != null))
+            rectTransform.SetSiblingIndex(active ? 6 : 2);
     }
 
     private float GetLayoutGroupPosition(float emptyPos, int count) {
+        int dir = (id == 0) ? -1 : 1;
         if (count < 4)
-            return emptyPos - count * 50;
+            return emptyPos + count * 50 * dir;
 
         if (count == 4)
-            return emptyPos - 190;
+            return emptyPos + 190 * dir;
 
         if (count == 5)
-            return emptyPos - 215;
+            return emptyPos + 215 * dir;
 
-        return emptyPos - 235;
+        return emptyPos + 235 * dir;
     }
 
     private float GetLayoutGroupSpacing(int count) {

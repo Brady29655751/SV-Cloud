@@ -31,7 +31,7 @@ public static class CardDatabase
     public static Dictionary<GameFormat, string> formatNameDict = new Dictionary<GameFormat, string>() {
         { GameFormat.Unlimited, "無限制" },  { GameFormat.Rotation, "指定系列" },
         { GameFormat.GemOfFortune, "寶石盃" },
-        { GameFormat.TwoPick, "2Pick" },    { GameFormat.AllStarTwoPick, "AS 2Pick"},
+        { GameFormat.TwoPick, "2Pick" },    { GameFormat.AllStarTwoPick, "AS2P"},
     };
 
     public static Dictionary<BestOf, string> bestOfNameDict = new Dictionary<BestOf, string>() {

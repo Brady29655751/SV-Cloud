@@ -70,7 +70,9 @@ public static class SpriteSize {
 
 public static class SpriteResources {
     public static Texture2D Cursor => RM.instance.Get<Texture2D>("cursor");
+    public static GameObject SplitLine => RM.instance.GetPrefab("Split Line");
     public static GameObject Log => RM.instance.GetPrefab("Log");
+    public static GameObject BattleRecord => RM.instance.GetPrefab("Battle Record");
     public static Sprite Empty => GetCardEmblemSprite(0);
     public static Sprite DefaultSleeve => RM.instance.GetSprite("Game/sleeve");
     public static Sprite PP => RM.instance.GetSprite("Game/pp/pp");
@@ -146,6 +148,10 @@ public static class SpriteResources {
         return RM.instance.GetSprite("Class/profile/class_profile_" + craft);
     }
 
+    public static Sprite GetCraftCheckboxSprite(int craft) {
+        return RM.instance.GetSprite("Class/checkbox/class_checkbox(" + craft + ")");
+    }
+
     public static Sprite GetCardGemSprite(int craft) {
         return RM.instance.GetSprite("Card Style/gem/gem_" + craft);
     }
@@ -166,6 +172,18 @@ public static class SpriteResources {
             return null;
 
         return RM.instance.GetSprite("Card Style/atk/atk_" + num);
+    }
+
+    public static Sprite GetFormatSprite(this GameFormat format) {
+        var path = format switch {
+            GameFormat.Unlimited        => "unlimited",
+            GameFormat.Rotation         => "rotation",
+            GameFormat.GemOfFortune     => "gem",
+            GameFormat.TwoPick          => "2pick",
+            GameFormat.AllStarTwoPick   => "2pick",
+            _ => string.Empty,
+        };
+        return RM.instance.GetSprite("Format/icon_" + path) ?? SpriteResources.Empty;
     }
 
 }
@@ -215,10 +233,10 @@ public static class ColorHelper {
     public static Color gray192 => new Color32(192, 192, 192, 255);
     public static Color chosen => new Color32(3, 109, 159, 255);
     public static Color gold => new Color32(255, 187, 0, 255);
-    public static Color red => Color.red;
     public static Color green => new Color32(119, 226, 12, 255);
     public static Color green192 => new Color32(0, 192, 0, 255);
     public static Color blue => new Color32(82, 229, 249, 255);
+    public static Color purple => new Color32(192, 0, 255, 255);
 
     // public static Color secretSkill => new Color32(252, 237, 105, 255); 
     // public static Color normalSkill => new Color32(82, 229, 249, 255);
@@ -247,8 +265,32 @@ public static class ColorHelper {
 
         return ColorHelper.gold;
     }
+
     public static Color GetAtkHpOutlineColor(int Hp, int HpMax, int HpInit) {
         return (GetAtkHpTextColor(Hp, HpMax, HpInit) == Color.red) ? ColorHelper.gray192 : Color.black;
+    }
+
+    public static Color GetResultColor(this BattleResultState resultState) {
+        return resultState switch {
+            BattleResultState.Win   =>  ColorHelper.gold,
+            BattleResultState.Lose  =>  ColorHelper.gray192,
+            BattleResultState.Draw  =>  Color.cyan,
+            _ => Color.white,
+        };
+    }
+
+    public static Color GetCraftColor(this CardCraft craft) {
+        return craft switch {
+            CardCraft.Elf       =>  ColorHelper.storm,
+            CardCraft.Royal     =>  Color.yellow,
+            CardCraft.Witch     =>  ColorHelper.chosen,
+            CardCraft.Dragon    =>  ColorHelper.gold,
+            CardCraft.Necro     =>  ColorHelper.purple,
+            CardCraft.Vampire   =>  Color.red,
+            CardCraft.Bishop    =>  Color.white, 
+            CardCraft.Nemesis   =>  Color.cyan,
+            _                   =>  ColorHelper.gray192,
+        };
     }
 }
 

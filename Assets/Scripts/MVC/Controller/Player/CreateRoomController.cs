@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
 
 public class CreateRoomController : IMonoBehaviour
 {
@@ -25,9 +26,6 @@ public class CreateRoomController : IMonoBehaviour
 
     //! Currently for debug battle.
     public void WatchRoom() {
-        //if (!GameManager.instance.debugMode) 
-        //    return;
-
         ResourceManager.LoadCSV(GameManager.serverUrl + "System/deckTest.csv", PrepareBattle, Debug.Log);
     }
 
@@ -39,11 +37,10 @@ public class CreateRoomController : IMonoBehaviour
         };
 
         var isRealTest = false;
-        var deck = Player.gameData.decks[0];
-        var realDeck = new BattleDeck(deck.zone, deck.format, deck.craft, deck.cardIds.ToArray());
-        var testDeck = new BattleDeck(1, 1, 1, deckTestData[0].ToIntList('/').ToArray());
-        BattleDeck myDeck = isRealTest ? realDeck : testDeck;
-        BattleDeck opDeck = new BattleDeck(1, 1, 2, deckTestData[1].ToIntList('/').ToArray());
+        var realDeck = Player.gameData.decks[0];
+        var testDeck = new Deck(CardZone.Engineering, GameFormat.Rotation, CardCraft.Elf) { cardIds = deckTestData[0].ToIntList('/') };
+        Deck myDeck = isRealTest ? realDeck : testDeck;
+        Deck opDeck = new Deck(CardZone.Engineering, GameFormat.Rotation, CardCraft.Royal) { cardIds = deckTestData[1].ToIntList('/') };
         Battle battle = new Battle(myDeck, opDeck, settings);
         SceneLoader.instance.ChangeScene(SceneId.Battle);
     }

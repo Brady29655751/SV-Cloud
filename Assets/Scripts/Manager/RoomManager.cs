@@ -56,6 +56,7 @@ public class RoomManager : Manager<RoomManager>
         int seed = Random.Range(int.MinValue, int.MaxValue);
         int zfb = (int)room["zfb"];
 
+        Random.InitState(seed);
         if (PhotonNetwork.IsMasterClient) {
             room["seed"] = seed;
             PhotonNetwork.CurrentRoom?.SetCustomProperties(room);
@@ -169,7 +170,7 @@ public class RoomManager : Manager<RoomManager>
     }
 
     public void CheckDeck() {
-        if (Player.currentDeck.IsDefault()) {
+        if (Player.currentDeck.IsUnnamed()) {
             SetDeckListPanelActive(true);
             return;
         }

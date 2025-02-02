@@ -7,6 +7,8 @@ using UnityEngine;
 public class BattleBaseView : IMonoBehaviour
 {
     public Battle Battle => Player.currentBattle;
+    public BattleRecord Record => Player.currentBattleRecord;
+    public BattleRecordManager Recorder => BattleRecordManager.instance;
     public BattleLogManager Log => BattleLogManager.instance;
     public BattleManager Hud => BattleManager.instance;
     public BattleAnimManager Anim => BattleAnimManager.instance;

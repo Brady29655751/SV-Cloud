@@ -347,9 +347,12 @@ public class BattleUnitView : BattleBaseView
     }
 
     private void SetUnit(BattleUnit unit, bool setDone = true) {
+        var isTurnEndButtonActive = unit.isMyTurn && (!unit.isDone);
+        var turnEndText = (isTurnEndButtonActive ? "我方" : "敵方") + "\n回合";
         leaderView?.SetLeader(unit?.leader);
         ppView.SetLeader(unit?.leader);
-        ppView?.SetTurnEndButtonActive((unit == null) ? false : unit.isMyTurn && (!unit.isDone));
+        ppView?.SetTurnEndButtonActive(((unit == null) || ((Record != null) && (!Recorder.IsStopped))) ? false : isTurnEndButtonActive);
+        ppView?.SetTurnEndText(((unit == null) && (Record == null)) ? string.Empty : turnEndText);
         epView?.SetLeader(unit?.leader);
         handView?.SetHand(unit);
         fieldView?.SetField(unit?.field);

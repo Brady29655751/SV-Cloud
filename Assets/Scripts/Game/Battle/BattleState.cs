@@ -17,8 +17,8 @@ public class BattleState
     }
 
     public BattleUnit currentUnit => isMasterTurn ? masterUnit : clientUnit;
-    public BattleUnit myUnit => settings.isLocal ? masterUnit : (PhotonNetwork.IsMasterClient ? masterUnit : clientUnit);
-    public BattleUnit opUnit => settings.isLocal ? clientUnit : (PhotonNetwork.IsMasterClient ? clientUnit : masterUnit);
+    public BattleUnit myUnit => GetBattleUnit(true);
+    public BattleUnit opUnit => GetBattleUnit(false);
 
     public BattleState(BattleDeck masterDeck, BattleDeck clientDeck, BattleSettings settings) {
         this.settings = settings;
@@ -54,6 +54,16 @@ public class BattleState
         isMasterTurn = newTurn;
         masterUnit.isMyTurn = isMasterTurn;
         clientUnit.isMyTurn = !isMasterTurn;
+    }
+
+    public virtual BattleUnit GetBattleUnit(bool isMe) {
+        if (!settings.isLocal)
+            return (isMe ^ PhotonNetwork.IsMasterClient) ? clientUnit : masterUnit;
+
+        if (Player.currentBattleRecord != null)    
+            return (isMe ^ Player.currentBattleRecord.isMaster) ? clientUnit : masterUnit;
+
+        return isMe ? masterUnit : clientUnit;
     }
 
     public virtual BattleCardPlaceInfo GetCardPlaceInfo(BattleCard card) {

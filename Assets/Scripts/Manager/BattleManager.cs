@@ -65,11 +65,17 @@ public class BattleManager : Manager<BattleManager>
             return;
 
         IsLocked = locked;
+        if (Player.currentBattleRecord != null)
+            return;
+            
         myView.SetLock(IsLocked);
     }
 
     public void OnConfirmBattleResult(bool isBattleEnd) {
-        if (Battle.Settings.isLocal || (!isBattleEnd)) {
+        if (Player.IsRecordMode)
+            return;
+            
+        if ((!isBattleEnd) || (GameManager.instance.debugMode && Battle.Settings.isLocal)) {
             BackToScene();
             return;
         }

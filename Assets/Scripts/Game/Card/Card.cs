@@ -85,7 +85,7 @@ public class Card : IIdentifyHandler
         int ArtId = int.Parse(options.Get("artId", id.ToString()));
         ArtworkId = (Type == CardType.Evolved) ? Card.GetBaseId(ArtId) : ArtId;
 
-        NameId = int.Parse(options.Get("nameId", id.ToString()));
+        NameId = Card.GetBaseId(int.Parse(options.Get("nameId", id.ToString())));
         CountLimit = int.Parse(options.Get("limit", "3"));
         countdown = int.Parse(options.Get("countdown", "-1"));
     }
