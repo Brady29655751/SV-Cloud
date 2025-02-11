@@ -35,7 +35,7 @@ public class BattleHandView : BattleBaseView
         if (id != 0)
             return;
 
-        cardViews.ForEach(x => x.draggable.SetEnable(!isLocked));
+        cardViews.ForEach(x => x.draggable.isMovable = !isLocked);
     }
 
     public void SetHand(BattleUnit unit) {
@@ -55,7 +55,7 @@ public class BattleHandView : BattleBaseView
             var card = (i < hand.Count) ? hand.cards[i] : null;
             var useCost = (i < hand.Count) ? hand.cards[i].GetUseCost(leader, out _) : 0;
             var isUsable = (i < hand.Count) ? hand.cards[i].IsUsable(unit) : false;
-            var isRecordUsable = (id == 0) && ((Record != null) ? Recorder.IsStopped : true);
+            var isRecordUsable = (id == 0) && (Record == null || Recorder.IsStopped);
 
             cardViews[i].SetBattleCard(card);
             cardViews[i].SetStatus("cost", useCost);

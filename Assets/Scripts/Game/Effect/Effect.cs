@@ -104,7 +104,7 @@ public class Effect : IIdentifyHandler
             return trimId switch {
                 "isMe"  => (invokeUnit.GetBelongPlace(source) != null) ? 1 : 0,
                 "where" => (int)(invokeUnit.GetBelongPlace(source)?.PlaceId ?? BattlePlaceId.None),
-                _ => source.GetIdentifier(trimId),
+                _ => source?.GetIdentifier(trimId) ?? int.MinValue,
             };
         }
 
@@ -308,11 +308,40 @@ public class Effect : IIdentifyHandler
     }
 
     public Func<bool> GetCheckCondition(string checkTiming, BattleState state) {
+        var myUnit = invokeUnit;
+        var opUnit = state.GetRhsUnitById(myUnit.id);
+        var myTurn = myUnit.turn;
+        var opTurn = opUnit.turn;
+
+        /*
+        if (checkTiming.TryTrimEnd("turn_end", out var turnEndTiming)) {
+            Func<bool> isTurnEnd = () => state.currentEffect.ability == EffectAbility.TurnEnd;
+            if (string.IsNullOrEmpty(turnEndTiming))
+                return isTurnEnd;
+            
+            var isMe = turnEndTiming.TryTrimStart("me_", out var turnEndNum);
+            var unit = isMe ? myUnit : opUnit;
+            var turn = isMe ? myTurn : opTurn;
+            Func<bool> isUnitCorrect = () => unit.isDone;
+
+            turnEndNum = turnEndNum.TrimEnd("_");
+            if (string.IsNullOrEmpty(turnEndNum))
+                return () => isTurnEnd() && isUnitCorrect();
+            
+            var num = Parser.ParseEffectExpression(turnEndNum, this, state);
+            Func<bool> isTurnNumCorrect = () => unit.turn == turn + num;
+            
+            return () => isTurnEnd() && isUnitCorrect() && isTurnNumCorrect();
+        }
+        */
+
         return checkTiming switch {
-            "source_evolve" => () => source?.IsEvolved ?? true,
-            "turn_end"      => () => state.currentEffect.ability == EffectAbility.TurnEnd,
-            "me_turn_end"   => () => (state.currentEffect.ability == EffectAbility.TurnEnd) && (invokeUnit.isDone),
-            "op_turn_end"   => () => (state.currentEffect.ability == EffectAbility.TurnEnd) && (state.GetRhsUnitById(invokeUnit.id).isDone),
+            "source_evolve"     => () => source?.IsEvolved ?? true,
+            "turn_end"          => () => state.currentEffect.ability == EffectAbility.TurnEnd,
+            "me_turn_end"       => () => (state.currentEffect.ability == EffectAbility.TurnEnd) && invokeUnit.isDone,
+            "op_turn_end"       => () => (state.currentEffect.ability == EffectAbility.TurnEnd) && state.GetRhsUnitById(invokeUnit.id).isDone,
+            "me_next_turn_end"  => () => (state.currentEffect.ability == EffectAbility.TurnEnd) && invokeUnit.isDone && (invokeUnit.turn == myTurn + 1),
+            "op_next_turn_end"  => () => (state.currentEffect.ability == EffectAbility.TurnEnd) && state.GetRhsUnitById(invokeUnit.id).isDone && (state.GetRhsUnitById(invokeUnit.id).turn == opTurn + 1),
             _               => null,
         };
     }

@@ -29,6 +29,10 @@ public static class ListHelper {
         return (list == null) || (list.Count == 0);
     }
 
+    public static List<T> SingleToList<T>(this T item) {
+        return new List<T>(){ item };
+    }
+
     public static T Random<T>(this List<T> values) {
         if (values.Count == 0)
             return default(T);

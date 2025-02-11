@@ -7,6 +7,7 @@ using UnityEngine;
 public class BattlePlace
 {
     public BattlePlaceId PlaceId => GetPlaceId();
+    public int turn = 0;
     public List<BattleCard> cards = new List<BattleCard>();
     public int MaxCount;
     public int Count => cards.Count;
@@ -39,6 +40,9 @@ public class BattlePlace
 
         if (id.StartsWith("[")) {
             var filter = BattleCardFilter.Parse(trimId);
+            if (filter.options.TryGetValue("graveTurn", out var graveTurn))
+                filter.options.Set("graveTurn", turn - graveTurn);
+
             var filterCards = cards.Where(filter.FilterWithCurrentCard).ToList();
 
             trimId = id.TrimStart(trimId).TrimStart('.');

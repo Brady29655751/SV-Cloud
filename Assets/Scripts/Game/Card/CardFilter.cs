@@ -173,8 +173,8 @@ public class CardFilter
     public virtual bool ZoneFilter(Card card) => (zone == -1) || (card.ZoneId == zone) || (card.PackId == 0);
     public virtual bool NameFilter(Card card) => string.IsNullOrEmpty(name) || card.name.Contains(name);
     public virtual bool UIDFilter(Card card) => ListHelper.IsNullOrEmpty(uidList) || uidList.Contains(card.id);
-    public virtual bool IDFilter(Card card) => ListHelper.IsNullOrEmpty(idList) || idList.Contains(Card.GetBaseId(card.NameId)) || idList.Contains(Card.GetEvolveId(card.NameId));
-    public virtual bool ExcludeIDFilter(Card card) => ListHelper.IsNullOrEmpty(excludeIdList) || (!(excludeIdList.Contains(Card.GetBaseId(card.NameId)) || excludeIdList.Contains(Card.GetEvolveId(card.NameId))));
+    public virtual bool IDFilter(Card card) => ListHelper.IsNullOrEmpty(idList) || idList.Contains(card.NameId);
+    public virtual bool ExcludeIDFilter(Card card) => ListHelper.IsNullOrEmpty(excludeIdList) || (!excludeIdList.Contains(card.NameId));
     public virtual bool CraftFilter(Card card) => ListHelper.IsNullOrEmpty(craftList) || craftList.Contains(card.CraftId);
     public virtual bool PackFilter(Card card) => ListHelper.IsNullOrEmpty(packList) || packList.Contains(card.PackId);
     public virtual bool TypeFilter(Card card) => (card.Type != CardType.Leader) && (card.Type != CardType.Evolved) && (ListHelper.IsNullOrEmpty(typeList) || typeList.Contains(card.TypeId));
@@ -183,6 +183,7 @@ public class CardFilter
     public virtual bool KeywordFilter(Card card) => ListHelper.IsNullOrEmpty(keywordList) || keywordList.Select(x => (CardKeyword)x).Intersect(card.keywords).Any();
     public virtual bool DescriptionFilter(Card card) => string.IsNullOrEmpty(description) || card.description.Contains(description);
     public virtual bool TokenFilter(Card card) => (card.Group == CardGroup.Normal) || (isWithToken && (card.Group == CardGroup.Token));
+    public virtual bool OptionFilter(Card card) => (options.Count == 0) || options.All(entry => card.GetIdentifier(entry.Key) == entry.Value);
 
     public virtual bool CostFilter(Card card) => ListHelper.IsNullOrEmpty(costList) || costList.Contains(Mathf.Min(card.cost, 10));
     public virtual bool AtkFilter(Card card) => ListHelper.IsNullOrEmpty(atkList) || atkList.Contains(Mathf.Min(card.atk, 10));

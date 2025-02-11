@@ -308,11 +308,9 @@ public static class EffectAbilityHandler
         unit.leader.PPMax += 1;
         unit.leader.PP = unit.leader.PPMax;
 
-        // Clear data and On turn start in field.
-        unit.targetQueue.Clear();
-        unit.leader.ClearTurnIdentifier(true);
-        rhsUnit.leader.ClearTurnIdentifier(false);
-        unit.field.cards.ForEach(x => x.actionController.OnTurnStartInField());
+        // Clear data
+        unit.OnTurnStart(true);
+        rhsUnit.OnTurnStart(false);
         
         // If specific turn comes, give player EP.
         var first = unit.isFirst ? 1 : 0;
@@ -404,7 +402,7 @@ public static class EffectAbilityHandler
         
         // Check if next turn is mine (Add turn effect)
         var turnStartUnit = unit;
-        int addTurn = (int)unit.leader.GetIdentifier("addTurn");
+        int addTurn = unit.leader.GetIdentifier("addTurn");
 
         if (addTurn > 0)
             unit.leader.SetIdentifier("addTurn", addTurn - 1);
@@ -451,10 +449,16 @@ public static class EffectAbilityHandler
         } else
             useCard = useCard.GetCurrentBattleCard(cost, situation);
 
+        // Record data on this card
+        useCard.SetIdentifier("combo", unit.leader.GetIdentifier("combo"));
+        useCard.baseCard.SetIdentifier("usedTurn", unit.turn);
+
+        // Consume pp, remove from hand
         unit.leader.PP -= cost;
         unit.hand.cards.Remove(unit.hand.cards[index]);
         unit.grave.usedCards.Add(useCard.baseCard);
 
+        // Set effect source and target
         effect.source = useCard;
         effect.invokeTarget = new List<BattleCard>() { useCard };
 
@@ -680,7 +684,10 @@ public static class EffectAbilityHandler
             }
         }  
 
-        result.ForEach(x => x.Apply(state));
+        result.ForEach(x => {
+            x.Apply(state);
+            state.currentEffect = effect;
+        });
         return true;
     }
 
@@ -859,7 +866,11 @@ public static class EffectAbilityHandler
     public static bool Damage(this Effect effect, BattleState state) {
         var situation = effect.abilityOptionDict.Get("situation", "none");
         var giveType = effect.abilityOptionDict.Get("giveType", "none");
-        var damage = Parser.ParseEffectExpression(effect.abilityOptionDict.Get("damage", "0"), effect, state);
+
+        var leaderCard = effect.invokeUnit.leader.leaderCard;
+        var damageEffects = leaderCard.CurrentCard.effects.Where(x => (x.timing == "on_before_damage") && (x.ability == EffectAbility.SetDamage));
+        var add = damageEffects.Select(x => Parser.ParseEffectExpression(x.abilityOptionDict.Get("add", "0"), effect, state)).Sum();
+        var damage = Parser.ParseEffectExpression(effect.abilityOptionDict.Get("damage", "0"), effect, state) + add;
 
         // Remove ambush.        
         var isSourceInField = state.GetCardPlaceInfo(effect.source).place == BattlePlaceId.Field;
@@ -2080,10 +2091,6 @@ public static class EffectAbilityHandler
             return false;
 
         Identifier.SetIdentifier(id, value, effect, state);
-        if (value.EndsWith("usedAttackChance")) {
-            Debug.Log(effect.source.actionController.GetIdentifier("usedAttackChance"));
-            Debug.Log(effect.source.actionController.CurrentAttackChance);
-        }
 
         effect.hudOptionDict.Set("log", effect.source.CurrentCard.name + " 設定狀態");
         Hud.SetState(state);

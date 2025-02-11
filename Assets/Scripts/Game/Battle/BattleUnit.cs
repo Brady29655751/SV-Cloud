@@ -117,6 +117,25 @@ public class BattleUnit : IIdentifyHandler
         return result;
     }
 
+    public void OnTurnStart(bool isMyTurnStart) {
+        // Clear data and On turn start in field.
+        leader.ClearTurnIdentifier(isMyTurnStart);
+        for (var placeId = BattlePlaceId.Deck; placeId <= BattlePlaceId.Grave; placeId++) {
+            var place = GetPlace(placeId);
+            if (place == null)
+                continue;
+
+            place.turn = turn;
+            place.cards.ForEach(x => x.ClearTurnIdentifier(isMyTurnStart));
+        }
+        if (!isMyTurnStart)
+            return;
+
+        targetQueue.Clear();
+        field.cards.ForEach(x => x.actionController.OnTurnStartInField());
+
+    }
+
     public bool TryGetIdenfier(string id, out int value)
     {
         value = GetIdentifier(id);

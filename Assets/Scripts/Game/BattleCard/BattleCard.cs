@@ -64,6 +64,24 @@ public class BattleCard : IIdentifyHandler
         return BattleCard.Get(Card.Get(id));
     }
 
+    public void ClearTurnIdentifier(bool isMyTurnStart) {
+        var turnKeys = new List<string>(options.Keys.Where(x => {
+            if (x == "combo")
+                return true;
+
+            if (!x.StartsWith("option"))
+                return false;
+
+            if (!x.TryTrimParentheses(out var trimOptionKey))
+                return false;
+
+            return trimOptionKey.StartsWith("turn");
+        }));
+
+        for (int i = 0; i < turnKeys.Count; i++)
+            SetIdentifier(turnKeys[i], 0);
+    }
+
     public bool TryGetIdenfier(string id, out int value)
     {
         value = GetIdentifier(id);
@@ -537,7 +555,7 @@ public class BattleCard : IIdentifyHandler
     }
 
     public int TakeDamage(int damage, Effect effect, BattleState state) {
-        var damageEffects = CurrentCard.effects.Where(x => x.ability == EffectAbility.SetDamage);
+        var damageEffects = CurrentCard.effects.Where(x => (x.timing == "on_before_this_damage") && (x.ability == EffectAbility.SetDamage));
         var addEffects = damageEffects.Where(x => x.abilityOptionDict.ContainsKey("add")).ToList();
         var setEffects = damageEffects.Where(x => x.abilityOptionDict.ContainsKey("set")).ToList();
 
@@ -556,6 +574,9 @@ public class BattleCard : IIdentifyHandler
                 if (y.lhs.StartsWith("[num]"))
                     y.lhs = "damage";
             }));
+            if (bool.Parse(takeEffect.abilityOptionDict.Get("autoRemove", "false")))
+                RemoveEffect(takeEffect);
+
             state.currentEffect = effect; 
         }
 

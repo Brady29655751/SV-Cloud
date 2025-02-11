@@ -6,6 +6,7 @@ using System;
 
 public class BattleGrave : BattlePlace
 {
+    public static string[] CardListNames = new string[] { "usedCards" };
     public int GraveCount = 0;
     public List<Card> usedCards = new List<Card>();
     public List<Card> DestroyedCards => GetFilterCards(x => x.GetIdentifier("graveReason") == (float)BattleCardGraveReason.Destroy);
@@ -37,6 +38,29 @@ public class BattleGrave : BattlePlace
 
     public override int GetIdentifier(string id) 
     {
+        for (int i = 0; i < BattleGrave.CardListNames.Length; i++) {
+            var listName = BattleGrave.CardListNames[i];
+            if (id.TryTrimStart(listName, out var trimId)) {
+                var cardList = GetCardListByName(listName);
+                var prefix = trimId.Split('.')[0];
+                if (trimId.StartsWith("[")) {
+                    var filter = CardFilter.Parse(prefix);
+                    if (filter.options.TryGetValue("usedTurn", out var usedTurn))
+                        filter.options.Set("usedTurn", turn - usedTurn);
+                    
+                    cardList = cardList.Where(filter.Filter).Where(filter.OptionFilter).ToList();
+                    trimId = trimId.TrimStart(prefix).TrimStart('.');
+                }
+                if (trimId.TryTrimStart("first.", out trimId))
+                    return cardList.FirstOrDefault()?.GetIdentifier(trimId) ?? 0;
+                    
+                return trimId switch {
+                    "count" => cardList.Count,
+                    _ => 0,
+                };
+            }
+        }
+
         return id switch {
             "num" => GraveCount,
             _ => base.GetIdentifier(id),
@@ -49,6 +73,13 @@ public class BattleGrave : BattlePlace
 
     public List<Card> GetDistinctCards(List<Card> cards) {
         return cards.Select(x => x.id).Distinct().Select(Card.Get).OrderBy(CardDatabase.Sorter).ToList();
+    }
+
+    public List<Card> GetCardListByName(string name) {
+        return name switch {
+            "usedCards"     =>  usedCards,
+            _               =>  cards.Select(x => x.CurrentCard).ToList(),
+        };
     }
 }
 
