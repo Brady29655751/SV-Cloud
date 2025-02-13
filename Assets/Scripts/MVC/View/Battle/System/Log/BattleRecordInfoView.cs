@@ -34,7 +34,7 @@ public class BattleRecordInfoView : IMonoBehaviour
         opCraftText?.SetText(((CardCraft)opCraft).GetCraftName());
         opCraftText?.SetColor(((CardCraft)opCraft).GetCraftColor());
         dateText?.SetText(record.date.ToString("yyyy/MM/dd HH:mm"));
-        resultText?.SetText(record.resultState.ToString().ToUpper());
+        resultText?.SetText(record.GetRecordResultState().ToString().ToUpper());
         resultText?.SetColor(record.resultState.GetResultColor());
     }
 

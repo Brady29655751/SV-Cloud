@@ -12,6 +12,7 @@ public class SettingsModel : IMonoBehaviour
 
     [SerializeField] private IInputField widthInputField;
     [SerializeField] private Slider BGMSlider, SESlider;
+    [SerializeField] private Toggle turnEndHintToggle;
 
     public int GetScreenWidth() {
         return int.TryParse(widthInputField.InputString, out int screenWidth) ? screenWidth : 0;
@@ -20,6 +21,7 @@ public class SettingsModel : IMonoBehaviour
     public void OnConfirmSettings() {
         Player.gameData.BGMVolume = BGMVolume;
         Player.gameData.SEVolume = SEVolume;
+        Player.gameData.turnEndHint = turnEndHintToggle.isOn;
         if (Width.IsWithin(400, 1920)) {
             Utility.SetScreenSize(Width, Height);
             Hintbox.OpenHintbox("已儲存設定");

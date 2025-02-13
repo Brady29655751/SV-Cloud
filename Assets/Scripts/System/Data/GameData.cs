@@ -9,6 +9,7 @@ public class GameData
 {
     public string nickname;
     public float BGMVolume, SEVolume;
+    public bool turnEndHint;
 
     [XmlArray("deckList"), XmlArrayItem(typeof(Deck), ElementName = "deck")]
     public List<Deck> decks;
@@ -31,6 +32,7 @@ public class GameData
         decks = new List<Deck>();
         battleRecords = new List<BattleRecord>();
         BGMVolume = SEVolume = 10f;
+        turnEndHint = false;
     }
 
     public GameData Verify() {

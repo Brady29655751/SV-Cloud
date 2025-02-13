@@ -10,6 +10,7 @@ public class SettingsView : IMonoBehaviour
     [SerializeField] private IInputField widthInputField;
     [SerializeField] private Text heightText;
     [SerializeField] private Slider BGMSlider, SESlider;
+    [SerializeField] private Toggle turnEndHintToggle;
 
     public void SetAnnounce(string announce) {
         announceText?.SetText(announce);
@@ -42,6 +43,10 @@ public class SettingsView : IMonoBehaviour
 
     public void SetSEVolume(float volume) {
         SESlider.value = volume;
+    }
+
+    public void SetTurnEndHint(bool isOn) {
+        turnEndHintToggle.isOn = isOn;
     }
 
 }

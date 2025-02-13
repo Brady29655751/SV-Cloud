@@ -25,6 +25,7 @@ public class SettingsController : IMonoBehaviour
         settingsView.SetScreenSize(Utility.GetScreenSize());
         settingsView.SetBGMVolume(Player.gameData.BGMVolume);
         settingsView.SetSEVolume(Player.gameData.SEVolume);
+        settingsView.SetTurnEndHint(Player.gameData.turnEndHint);
     }
 
     public void SetActive(bool active) {

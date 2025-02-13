@@ -351,12 +351,12 @@ id,timing,target,condition,cond_option,ability,ability_option
 1324,on_this_use,self,leader.turn_give_op_leader_damage,me.isChase=1,buff,add=0/1
 1325,on_this_use,me_leader+field_1_index_[type:0|1|9],none,none,damage,damage=3
 1326,on_this_use,none,leader.turn_give_op_leader_damage,me.isChase=1,draw,count=1
-1327,resident,self,none,effect.source.where=5&me.isVenge=1,remove_effect,timing=all
+1327,on_this_use,me_leader_0_all_[type:0],none,none,damage,damage=4
 1328,on_this_use,me_leader_0_all_[type:0],none,none,damage,damage=2
 1329,on_this_use,me_field_1_index_[type:1|9],none,me.field[type:1|9].count>0,damage,damage=3
 1330,on_this_use,me_leader_0_all_[type:0],none,none,damage,damage=4
 1331,on_this_use,me_hand_2_random,none,none,discard,none
-1332,on_this_use,self,none,me.isEager=1,evolve,none
+1332,on_this_use,self,leader.turn_draw_cards,me.isEager=1,evolve,none
 1333,on_this_attack,me_leader_0_all_[type:0],none,none,damage,damage=2
 1334,on_this_attack,op_field_1_random_[type:1|9],none,none,damage,damage=5
 1335,on_this_use,none,none,none,get_token,id=110162203&count=1
@@ -426,7 +426,7 @@ id,timing,target,condition,cond_option,ability,ability_option
 1399,on_this_use,op_leader+field_0_all_[type:0|1|9],leader.turn_give_op_leader_damage,me.isChase=0,damage,damage=1
 1400,on_this_use,none,leader.turn_give_op_leader_damage,me.isChase=1,get_token,id=910163101&count=1
 1401,on_turn_end,none,none,me.isMyTurn=1&effect.source.where=5&me.isVenge=1,get_token,id=110162203&count=1
-1402,on_turn_end,none,none,me.isMyTurn=1&effect.source.where=5&me.isGreedy=1\me.isMyTurn=1&effect.source.where=5&me.isEager=1,draw,count=1
+1402,on_turn_end,none,leader.turn_draw_cards,me.isMyTurn=1&effect.source.where=5&me.isGreedy=1\me.isMyTurn=1&effect.source.where=5&me.isEager=1,draw,count=1
 1403,on_turn_end,none,none,me.isMyTurn=1&effect.source.where=5&me.isGreedy=1,draw,count=2
 1404,on_turn_end,self,none,me.isMyTurn=1&effect.source.where=5&me.isGreedy=0,vanish,none
 1405,on_this_use,none,leader.turn_draw_cards,me.isEager=1\me.isGreedy=1,draw,count=2
@@ -709,7 +709,7 @@ id,timing,target,condition,cond_option,ability,ability_option
 1682,on_this_use,me_field_0_all+other_[type:1|9],none,none,buff,add=1/0
 1683,on_this_use,me_field_0_all+other_[type:1|9],none,none,set_keyword,keyword=4
 1684,on_this_attack,self,none,me.isUnion=1,buff,add=2/0
-1685,on_this_use,me_token_1_index,none,switch[5]=1,choose,switch=7&token=910123103/910123104
+1685,on_this_use,me_token_1_index,none,switch[7]=1,choose,switch=7&token=910123103/910123104
 1686,on_this_defense,self,none,none,buff,add=1/1
 1687,on_this_use,none,none,none,summon,id=910021101/910123101&count=1/1
 1688,on_this_use,op_field_1_random_[type:1|9],none,none,damage,damage=3
@@ -821,7 +821,7 @@ id,timing,target,condition,cond_option,ability,ability_option
 1794,on_this_use,op_field_1_index_[type:1|9],none,necromance[3]=1,damage,necromance=3*effect.target.count/effect.target.count&damage=4
 1795,on_this_use,none,none,none,set_grave,add=2
 1796,on_this_destroy,none,none,none,summon,id=910051103&count=1
-1797,on_this_destroy,none,none,none,summon,id=910051104&count=1
+1797,on_this_evolve_with_ep,none,none,sourceEffect.target.all[hp:0].count>0,get_token,id=910014201&count=1
 1798,on_turn_end,op_field_1_random_[type:1|9],none,necromance[2]=1&me.isMyTurn=1&effect.source.where=5&op.field[type:1|9].count>0,damage,necromance=2&damage=2
 1799,on_this_use,me_field_1_index_[type:1|9],none,me.field[type:1|9].count>0,destroy,appendix=1800
 1800,on_this_use,self,none,none,buff,add=2/2
@@ -900,7 +900,7 @@ id,timing,target,condition,cond_option,ability,ability_option
 1873,on_this_use,op_leader+field_1_index_[type:0|1|9],none,none,damage,damage=3
 1874,on_defense,sourceEffect.op_field_0_all_[type:1|9],none,effect.source.where=5,damage,damage=1
 1875,on_this_evolve_with_ep,all_field_0_all+other_[type:1|9],none,none,damage,appendix=1876&damage=1
-1876,on_this_evolve_with_ep,none,none,none,get_token,id=910014201&count=sourceEffect.target.all[hp:0].count
+1876,on_this_evolve_with_ep,none,none,none,get_token,appendix=1797&id=910014201&count=1
 1877,on_this_use,me_field_1_index_[type:1|9],none,none,buff,add=0/1
 1878,on_this_evolve_with_ep,none,none,none,draw,count=2&filter=[id:110111102]
 1879,on_this_defense,none,none,none,get_token,id=910011101&count=1
@@ -925,7 +925,7 @@ id,timing,target,condition,cond_option,ability,ability_option
 1898,on_this_attack,sourceEffect.target_field_0_all_[type:1|9],none,none,return,autoRemove=true
 1899,on_turn_end,self,none,me.isMyTurn=1&effect.source.where=2,discard,none
 1900,on_this_use,me_leader_0_all_[type:0],none,none,heal,heal=1
-1901,on_this_use,me_hand_1_index+other_[type:1|9],leader.combo,me.leader.combo[LTE]1,add_effect,id=1902&keyword=7&description=[ffbb00]入場曲[-] 增加1張[ffbb00]引路微光[-]到手牌中。
+1901,on_this_use,me_hand_1_index+other_[type:1|9],none,none,add_effect,id=1902&keyword=7&description=[ffbb00]入場曲[-] 增加1張[ffbb00]引路微光[-]到手牌中。
 1902,on_this_use,none,none,none,get_token,id=110111203&count=1
 1903,on_this_use,op_field_1_index_[type:1|9],none,none,debuff,appendix=1904&until=op_turn_end&add=-5/-0
 1904,on_this_use,sourceEffect.target_field_0_all_[type:1|9],none,none,add_effect,id=1905&keyword=8&description=[ffbb00]謝幕曲[-] 使敵方抽取1張卡片。
@@ -992,6 +992,7 @@ id,timing,target,condition,cond_option,ability,ability_option
 1965,on_this_use,self,none,me.grave[graveTurn:0][graveReason:4][graveIsMyTurn:1].count>0,set_countdown,add=1
 1966,on_this_use,none,none,none,get_token,id=110111201&count=1
 1967,on_turn_end,op_field_1_random_[type:1|9][hp:me.leader.combo|-2],leader.combo,me.isMyTurn=1&effect.source.where=5,set_value,appendix=1968&id=effect.source.option[tmpFreeze]&value=effect.target.first.current[IF][keyword:29]
-1968,on_turn_end,sourceEffect.target_field_0_all_[type:1|9],none,none,set_keyword,appendix=1969&keyword=29
+1968,on_turn_end,sourceEffect.target_field_0_all_[type:1|9],none,none,set_keyword,appendix=1969&until=op_turn_end&keyword=29
 1969,on_turn_end,sourceEffect.target_field_0_all_[type:1|9],none,effect.source.option[tmpFreeze]=1,vanish,appendix=1970
 1970,on_turn_end,none,none,effect.source.option[tmpFreeze]=1,draw,count=1
+1971,on_other_use,self,none,effect.source.where=2&sourceEffect.target.first.isMe=1,discard,none

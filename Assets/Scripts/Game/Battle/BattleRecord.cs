@@ -17,6 +17,17 @@ public class BattleRecord
 
     public BattleRecord(){}
 
+    public BattleResultState GetRecordResultState() {
+        if (isMaster)
+            return resultState;
+        
+        return resultState switch {
+            BattleResultState.Win   =>  BattleResultState.Lose,
+            BattleResultState.Lose  =>  BattleResultState.Win,
+            _   =>  resultState,
+        };
+    }
+
     public void AddAction(int[] action, bool isMe) {
         actionList.Add(new IKeyValuePair<int[], bool>(action, isMe));
     }

@@ -276,8 +276,10 @@ public class BattleCard : IIdentifyHandler
         targetInfoQueue = new Queue<EffectTargetInfo>();
         selectableTargetQueue = new Queue<List<int>>();
 
-        if (situation == "switch")
+        if (situation == "switch") {
             GetTargetEffectWithTimingAndCurrentCard(timing, CurrentCard, targetEffectQueue, targetInfoQueue, selectableTargetQueue);
+            return;
+        }
         
         GetTargetEffectWithTimingAndCurrentCard(timing, nowCard, targetEffectQueue, targetInfoQueue, selectableTargetQueue);
     }
