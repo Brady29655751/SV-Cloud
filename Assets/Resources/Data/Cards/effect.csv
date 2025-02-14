@@ -584,13 +584,13 @@ id,timing,target,condition,cond_option,ability,ability_option
 1557,on_this_destroy,none,none,none,add_deck,id=910183101&count=1
 1558,on_this_use,op_field_1_index_[type:1|9],none,none,set_buff,appendix=1559&atk=3&hp=3
 1559,on_this_use,sourceEffect.target_field_0_all_[type:1|9],none,none,remove_effect,timing=all
-1560,on_this_use,none,none,none,add_deck,id=910081103/910081104/910081105/910081106&count=1/1/1/1
+1560,on_this_use,me_token_2_index,none,none,choose,appendix=1671&token=910081103/910081104/910081105/910081106
 1561,on_this_evolve_with_ep,none,none,none,draw,count=1&filter=[type:1|9][trait:4]
 1562,on_this_use,self,none,me.isReson=1,set_value,id=effect.target.all.base.evolveCost&value=0
 1563,on_turn_end,me_hand_0_all_[id:910081101][type:1|9],none,effect.source.where=5&me.isMyTurn=1,buff,add=1/0
 1564,on_this_use,none,none,none,get_token,id=910081101&count=1
 1565,on_this_use,self,none,none,set_keyword,until=op_turn_end&keyword=5
-1566,on_this_use,me_field_2_index+other_[type:1|9],none,me.field[type:1|9].count[GTE]2,destroy,appendix=1567
+1566,on_this_use,me_field_1_index+other_[type:1|9],none,me.field[type:1|9].count[GTE]1,destroy,appendix=1567
 1567,on_this_use,none,none,none,summon,id=910183103&count=1
 1568,on_this_destroy,me_leader_0_all_[type:0],none,none,add_effect,id=1569&description=下個自己的回合開始時，召喚2個[ffbb00]懸絲傀儡[-]到戰場上
 1569,on_turn_start,none,none,me.isMyTurn=1,summon,autoRemove=true&id=910081101&count=2
@@ -602,7 +602,7 @@ id,timing,target,condition,cond_option,ability,ability_option
 1575,on_this_use,none,none,none,draw,appendix=1576&count=4&filter=[type:1|9][trait:4]
 1576,on_this_use,me_leader_0_all_[type:0],none,none,set_pp,add=sourceEffect.target.count
 1577,on_other_summon,sourceEffect.target_field_1_first_[type:1|9][craft:8],none,effect.source.where=5&sourceEffect.target.first.isMe=1&sourceEffect.target.first.current[IF][type:1|9][craft:8]=1,remove_effect,timing=all
-1578,on_this_use,me_hand_3_first+other+sort[cost:min]_[type:1|9],none,none,transform,id=910184101
+1578,on_this_use,me_hand_2_first+other+sort[cost:min]_[type:1|9],none,none,transform,id=910184101
 1579,on_this_use,all_field_0_all+other_[type:1|9],none,none,set_buff,appendix=1580&atk=2&hp=2
 1580,on_this_use,sourceEffect.target_field_0_all_[type:1|9],none,none,remove_effect,timing=all
 1581,on_this_use,me_hand_0_all+other_[id:910081101][cost:0],none,none,set_cost,appendix=1582&hide=false&add=1
@@ -695,7 +695,7 @@ id,timing,target,condition,cond_option,ability,ability_option
 1668,on_other_use,self,none,effect.source.where=5&sourceEffect.target.first.isMe=1&sourceEffect.target.first.current[IF][trait:13]=1,buff,add=1/1
 1669,on_this_use,none,none,none,summon,id=110021101/910021103&count=1/1
 1670,on_this_use,me_field_0_all_[type:1|9],none,none,buff,enhance=8&add=2/2
-1671,on_this_use,me_field_0_all_[type:1|9],none,none,set_keyword,enhance=8&keyword=1
+1671,on_this_use,sourceEffect.target_none_0_all,none,none,add_deck,none
 1672,on_this_use,none,none,none,get_token,id=910123203&count=1
 1673,on_this_use,me_field_0_all_[type:1|9],none,none,buff,add=1/0
 1674,on_this_use,me_field_0_all_[type:1|9],none,none,set_keyword,keyword=4
