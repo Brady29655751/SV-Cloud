@@ -301,7 +301,7 @@ id,status,trait,keyword,option,effect,token
 110111103,2/1/3,none,10,none,1879,910011101
 110111104,2/2/2,none,7/21,none,1880/1881,910011101
 110111105,2/2/2,none,11,none,1882,none
-110111106,3/2/2,none,none,none,1883,none
+110111106,3/2/3,none,none,none,1883,none
 110111107,4/1/1,none,7/11,none,1885/1886,none
 110111108,5/3/4,none,7,none,1887,910011101
 110111109,7/5/6,none,7/29,none,929/1889/1890,none
@@ -333,7 +333,7 @@ id,status,trait,keyword,option,effect,token
 110113201,2/0/0,none,none,none,1953/1954/1955/1956,910011101
 110113202,5/0/0,none,21,none,1961/1962,none
 110113203,7/0/0,none,none,none,1963,none
-110113301,2/0/0,none,7/18,countdown=1,1964/1965,none
+110113301,1/0/0,none,7/18,countdown=1,1964/1965,none
 110113302,4/0/0,none,7/18,countdown=3,1967,none
 110114101,2/1/1,none,11,none,1874/1875,910014201
 110114102,5/2/6,none,7/8,none,1870/1871/1872,910114201
@@ -718,7 +718,7 @@ id,status,trait,keyword,option,effect,token
 110111903,2/3/5,none,10,none,1879,910011101
 110111904,2/4/4,none,7/21,none,0,910011101
 110111905,2/3/3,none,11,none,1882,none
-110111906,3/4/4,none,none,none,1883,none
+110111906,3/4/5,none,none,none,1883,none
 110111907,4/1/1,none,7/11,none,1886,none
 110111908,5/5/6,none,none,none,0,910011101
 110111909,7/7/8,none,2/7,none,2/802,none
