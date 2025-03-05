@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using ExitGames.Client.Photon.StructWrapping;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -193,21 +194,24 @@ public static class EffectAbilityHandler
         string trimId;
 
         if (effect.abilityOptionDict.TryGetValue("appendix", out trimId)) {
-            var appendix = Effect.Get(int.Parse(trimId));
+            var appendixList = trimId.ToIntList('/') ?? new List<int>();
+            for (int i = 0; i < appendixList.Count; i++) {
+                var appendix = Effect.Get(appendixList[i]);
+                if (appendix == null)
+                    continue;
 
-            if (appendix == null)
-                return true;
+                appendix.source = effect.source;
+                appendix.sourceEffect = effect;
+                appendix.invokeUnit = effect.invokeUnit;
 
-            appendix.source = effect.source;
-            appendix.sourceEffect = effect;
-            appendix.invokeUnit = effect.invokeUnit;
+                if (!appendix.Condition(state))
+                    continue;
 
-            if (!appendix.Condition(state))
-                return true;
-
-            appendix.Apply(state);
+                appendix.Apply(state);
+                state.currentEffect = effect;
+                state.RemoveUntilEffect();
+            }
         }
-
         state.currentEffect = effect;
         state.RemoveUntilEffect();
             
@@ -295,11 +299,17 @@ public static class EffectAbilityHandler
     }
 
     public static bool OnTurnStart(this Effect effect, BattleState state) {
+        var turnEndUnitId = int.Parse(effect.abilityOptionDict.Get("turnEndUnit", "-1"));
         var unit = effect.invokeUnit;
         var rhsUnit = state.GetRhsUnitById(unit.id);
         bool isMyUnit = state.myUnit.id == unit.id;
 
         // Set Master turn.
+        if (turnEndUnitId == state.masterUnit.id)
+            state.lastMasterTurnState = new BattleState(state);
+        else
+            state.lastClientTurnState = new BattleState(state);
+
         state.IsMasterTurn = unit.IsMasterUnit;
         state.myUnit.isDone = state.opUnit.isDone = false;
 
@@ -415,6 +425,7 @@ public static class EffectAbilityHandler
             source = turnStartUnit.leader.leaderCard,
             invokeUnit = turnStartUnit
         };
+        turnStart.abilityOptionDict.Set("turnEndUnit", unit.id.ToString());
         Battle.EnqueueEffect(turnStart);
         return true;
     }
@@ -803,10 +814,13 @@ public static class EffectAbilityHandler
             default:
                 break;
             
+            case "target":
+                effect.invokeTarget = effect.invokeTarget.Select(x => BattleCard.Get(x?.baseCard?.id ?? 0)).Where(x => x != null).ToList();
+                break;
+
             case "token":
                 effect.invokeTarget = new List<BattleCard>();
-                id.Select((x, i) => Enumerable.Repeat(x, count[i]).Select(BattleCard.Get)).ToList()
-                    .ForEach(effect.invokeTarget.AddRange);
+                id.Select((x, i) => Enumerable.Repeat(x, count[i]).Select(BattleCard.Get)).ToList().ForEach(effect.invokeTarget.AddRange);
                 break;
 
             case "grave":
@@ -850,7 +864,14 @@ public static class EffectAbilityHandler
 
             fieldUnit.field.cards.AddRange(effect.invokeTarget);
 
+            if (where == "hand")
+                EnqueueEffect("on_this_leave_hand", effect.invokeTarget, state);
+
             EnqueueEffect("on_this_summon", effect.invokeTarget, state);
+            
+            if (where == "hand")
+                OnPhaseChange("on_leave_hand", state);
+
             OnPhaseChange("on_summon", state);
         }
 
@@ -1981,18 +2002,25 @@ public static class EffectAbilityHandler
     }
 
     public static bool Discard(this Effect effect, BattleState state) {
-        var unit = effect.invokeUnit;
+        var who = effect.abilityOptionDict.Get("who", "me");
+        var unit = (who == "me") ? effect.invokeUnit : state.GetRhsUnitById(effect.invokeUnit.id);
         var isMyUnit = unit.id == state.myUnit.id;
+
+        var whereId = effect.abilityOptionDict.Get("where", "hand");
+        var placeId = whereId.ToBattlePlace();
+        var where = placeId.GetBattlePlaceName();
+        var place = unit.GetPlace(placeId);
+        
         var typeId = effect.abilityOptionDict.Get("type", "destroy");
         var type = typeId.ToEffectAbility();
         var typeLog = type switch {
             EffectAbility.Destroy   => "被捨棄",
-            EffectAbility.Vanish    => "在手牌中消失",
-            _ => "離開手牌",
+            EffectAbility.Vanish    => "在" + where + "中消失",
+            _ => "離開" + where,
         };
         
-        var target = effect.invokeTarget.Where(unit.hand.Contains).ToList();
-        target.ForEach(x => unit.hand.cards.Remove(x));
+        var target = effect.invokeTarget.Where(place.Contains).ToList();
+        target.ForEach(x => place.cards.Remove(x));
 
         for (int i = 0; i < target.Count; i++) {
             var card = target[i].CurrentCard;
@@ -2005,12 +2033,14 @@ public static class EffectAbilityHandler
             target[i].SetIdentifier("graveTurn", unit.turn);
             unit.grave.cards.Add(target[i]);
 
+            EnqueueEffect("on_this_leave_" + whereId, effect.invokeTarget, state);
             EnqueueEffect("on_this_discard_" + type, effect.invokeTarget, state);
         }
 
         effect.invokeTarget = target;
         unit.grave.GraveCount += (type == EffectAbility.Destroy) ? target.Count : 0;
 
+        OnPhaseChange("on_leave_" + whereId, state);
         OnPhaseChange("on_discard_" + type, state);
 
         string log = isMyUnit ? effect.invokeTarget.Select(x => x.CurrentCard.name + " " + typeLog).ConcatToString("\n")

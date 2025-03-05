@@ -73,8 +73,9 @@ public class BattleCardBuffController
     }
 
     public int TakeDamage(int dmg) {
-        damage += Mathf.Max(dmg, 0);
-        return dmg;
+        int realDamage = Mathf.Max(dmg, 0);
+        damage += realDamage;
+        return realDamage;
     }
 
     public int TakeHeal(int heal) {

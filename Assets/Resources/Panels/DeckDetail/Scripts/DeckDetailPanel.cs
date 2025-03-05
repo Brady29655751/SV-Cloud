@@ -5,22 +5,24 @@ using UnityEngine;
 
 public class DeckDetailPanel : Panel
 {
-    [SerializeField] private List<GameObject> deckCopyObjects;
+    [SerializeField] private List<GameObject> deckCopyObjects, deckShareObjects;
     [SerializeField] private DeckTitleView titleView;
     [SerializeField] private DeckDetailView detailView;
     private Deck currentDeck;
-    private bool isCopyAvailable => SceneLoader.CurrentSceneId == SceneId.Main;
+    private bool IsCopyAvailable => SceneLoader.CurrentSceneId == SceneId.Main;
+    private bool IsShareAvailable => (currentDeck != null) && (((GameFormat)currentDeck.format == GameFormat.Rotation) || ((GameFormat)currentDeck.format == GameFormat.Unlimited));
 
     public override void Init()
     {
         base.Init();
-        deckCopyObjects?.ForEach(x => x?.SetActive(isCopyAvailable));
+        deckCopyObjects?.ForEach(x => x?.SetActive(IsCopyAvailable));
     }
 
     public void SetDeck(Deck deck) {
         currentDeck = deck;
         titleView?.SetDeck(deck);
         detailView?.SetDeck(deck, OpenCardDetailPanel);
+        deckShareObjects?.ForEach(x => x?.SetActive(IsShareAvailable));
     }
 
     private void OpenCardDetailPanel(Card card) {
@@ -29,7 +31,7 @@ public class DeckDetailPanel : Panel
     }
 
     public void CopyDeck() {
-        if (!isCopyAvailable)
+        if (!IsCopyAvailable)
             return;
             
         Player.currentDeck = new Deck((CardZone)currentDeck.zone, (GameFormat)currentDeck.format, (CardCraft)currentDeck.craft)
@@ -40,7 +42,7 @@ public class DeckDetailPanel : Panel
     }
 
     public void ShareCode() {
-        if (!isCopyAvailable)
+        if (!IsShareAvailable)
             return;
 
         var code = currentDeck?.Code;

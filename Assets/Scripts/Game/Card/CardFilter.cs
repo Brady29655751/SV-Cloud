@@ -10,13 +10,13 @@ public class CardFilter
     public virtual string[] GetSetIntType() => new string[] { "format", "zone" };
     public virtual string[] GetSelectIntType() => new string[] { 
         "uid", "id", "excludeId", "craft", "pack", "type", "rarity", "trait", "keyword",
-        "cost", "atk", "hp", "countdown" };
+        "group", "excludeGroup", "cost", "atk", "hp", "countdown" };
     public virtual string[] GetSetBoolType() => new string[] { "token" };
 
     public int format, zone;
     public string name, description;
     public List<int> uidList, idList, excludeIdList, craftList, packList, typeList, rarityList, traitList, keywordList,
-        costList, atkList, hpList, countdownList;
+        groupList, excludeGroupList, costList, atkList, hpList, countdownList;
     public bool isWithToken;
     public Dictionary<string, int> options = new Dictionary<string, int>();
 
@@ -37,6 +37,8 @@ public class CardFilter
         rarityList = new List<int>();
         traitList = new List<int>();
         keywordList = new List<int>();
+        groupList = new List<int>();
+        excludeGroupList = new List<int>();
         costList = new List<int>();
         atkList = new List<int>();
         hpList = new List<int>();
@@ -49,7 +51,7 @@ public class CardFilter
     /// Parse the string representation of filter.
     /// </summary>
     /// <param name="options">paramToSet</param>
-    /// <param name="transformFunc">(filterType, paramToSet) => transformedParamToSet</param>
+    /// <param name="transformFunc">This only works for numerical value. (filterType, paramToSet) => transformedParamToSet</param>
     /// <returns>CardFilter</returns>
     public static CardFilter Parse(string options, Func<string, string, string> transformFunc = null) {
         var filter = new CardFilter(-1);
@@ -63,7 +65,9 @@ public class CardFilter
             var type = split[0];
             var items = split[1].Split('|');
             for (int i = 0; i < items.Length; i++) {
-                filter.SetParam(type, transformFunc.Invoke(type, items[i]));
+                bool shouldTransform = !(filter.GetSetBoolType().Contains(type) || filter.GetSetStringType().Contains(type));
+                var paramToSet = shouldTransform ? transformFunc.Invoke(type, items[i]) : items[i];
+                filter.SetParam(type, paramToSet);
             }
             options = options.TrimStart("[" + trimOptions + "]");
         }
@@ -120,19 +124,21 @@ public class CardFilter
 
     public virtual void SelectInt(string which, int item) {
         var list = which switch {
-            "uid"       => uidList,
-            "id"        => idList,
-            "excludeId" => excludeIdList,
-            "craft"     => craftList,
-            "pack"      => packList,
-            "type"      => typeList,
-            "rarity"    => rarityList,
-            "trait"     => traitList,
-            "keyword"   => keywordList,
-            "cost"      => costList,
-            "atk"       => atkList,
-            "hp"        => hpList,
-            "countdown" => countdownList, 
+            "uid"           => uidList,
+            "id"            => idList,
+            "excludeId"     => excludeIdList,
+            "craft"         => craftList,
+            "pack"          => packList,
+            "type"          => typeList,
+            "rarity"        => rarityList,
+            "trait"         => traitList,
+            "keyword"       => keywordList,
+            "group"         => groupList,
+            "excludeGroup"  => excludeGroupList,
+            "cost"          => costList,
+            "atk"           => atkList,
+            "hp"            => hpList,
+            "countdown"     => countdownList, 
             _ => null,
         };
 
@@ -163,6 +169,7 @@ public class CardFilter
     public bool Filter(Card card) {
         return FormatFilter(card) && ZoneFilter(card)
             && UIDFilter(card) && IDFilter(card) && ExcludeIDFilter(card) && NameFilter(card)
+            && GroupFilter(card) && ExcludeGroupFilter(card)
             && CostFilter(card) && AtkFilter(card) && HpFilter(card) && CountdownFilter(card)
             && CraftFilter(card) && PackFilter(card) && TypeFilter(card) 
             && RarityFilter(card) && TraitFilter(card) && KeywordFilter(card) 
@@ -185,6 +192,8 @@ public class CardFilter
     public virtual bool TokenFilter(Card card) => (card.Group == CardGroup.Normal) || (isWithToken && (card.Group == CardGroup.Token));
     public virtual bool OptionFilter(Card card) => (options.Count == 0) || options.All(entry => card.GetIdentifier(entry.Key) == entry.Value);
 
+    public virtual bool GroupFilter(Card card) => ListHelper.IsNullOrEmpty(groupList) || groupList.Contains(card.GroupId);
+    public virtual bool ExcludeGroupFilter(Card card) => ListHelper.IsNullOrEmpty(excludeGroupList) || (!excludeGroupList.Contains(card.GroupId));
     public virtual bool CostFilter(Card card) => ListHelper.IsNullOrEmpty(costList) || costList.Contains(Mathf.Min(card.cost, 10));
     public virtual bool AtkFilter(Card card) => ListHelper.IsNullOrEmpty(atkList) || atkList.Contains(Mathf.Min(card.atk, 10));
     public virtual bool HpFilter(Card card) => ListHelper.IsNullOrEmpty(hpList) || hpList.Contains(Mathf.Min(card.hp, 10));

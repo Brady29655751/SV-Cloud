@@ -12,6 +12,18 @@ public static class Identifier {
         var lhsUnit = effect.invokeUnit;
         var rhsUnit = state.GetRhsUnitById(lhsUnit.id);
 
+        if (id.TryTrimStart("lastMyTurn.", out trimId)) {
+            var lastState = lhsUnit.IsMasterUnit ? state.lastMasterTurnState : state.lastClientTurnState;
+            if (lastState != null)
+                return Identifier.GetIdentifier(trimId, effect, lastState);
+        }   
+
+        if (id.TryTrimStart("lastOpTurn.", out trimId)) {
+            var lastState = rhsUnit.IsMasterUnit ? state.lastMasterTurnState : state.lastClientTurnState;
+            if (lastState != null)
+                return Identifier.GetIdentifier(trimId, effect, lastState);
+        }
+
         if (id.TryTrimStart("enhance", out trimId)) {
             var enhance = Parser.ParseEffectExpression(trimId.TrimParentheses(), effect, state);
             var useEffect = effect;

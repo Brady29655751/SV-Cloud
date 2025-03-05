@@ -1,18 +1,18 @@
 <versionData>
-    <gameVersion>1.5</gameVersion>
-    <buildVersion>1.5</buildVersion>
-    <releaseDate>2025-02-20+08:00</releaseDate>
+    <gameVersion>1.6</gameVersion>
+    <buildVersion>1.6</buildVersion>
+    <releaseDate>2025-03-05+08:00</releaseDate>
     <releaseNote>
-    【當前版本】1.5
-    【版本日期】2025/02/20
-    【更新內容】卡片能力調整、新增回合結束提示
-    【修復錯誤】修復對戰紀錄系統的顯示錯誤
+    【當前版本】1.6
+    【版本日期】2025/03/05
+    【更新內容】《至高傑作》中立、死靈、復仇者卡片，《新界基石》部分卡片能力調整
+    【修復錯誤】修復部分錯誤、在房間中也可複製牌組代碼
     </releaseNote>
     
     <keywordCount>44</keywordCount>
     <traitCount>15</traitCount>
-    <cardCount>927</cardCount>
-    <cardPack>0/1/1/0</cardPack>
+    <cardCount>998</cardCount>
+    <cardPack>0/2/0/0</cardPack>
     <topicDeck>
         <deck>
           <name>節奏妖（新界基石）</name>

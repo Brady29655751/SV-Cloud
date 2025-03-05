@@ -146,10 +146,10 @@ public class EffectTargetInfo  {
 
         var sourceEffectAllCards = (new List<BattleCard>(){ sourceEffect.source }).Concat(sourceEffect.invokeTarget);
         var effectCards = sourceUnit switch {
-            "source" => new List<BattleCard>(){ sourceEffect.source },
-            "target" => sourceEffect.invokeTarget,
-            "me"     => sourceEffectAllCards.Where(x => state.GetBelongUnit(x).id == invokeUnit.id).ToList(),
-            "op"     => sourceEffectAllCards.Where(x => state.GetBelongUnit(x).id == rhsUnit.id).ToList(),
+            "source"    => new List<BattleCard>(){ sourceEffect.source },
+            "target"    => sourceEffect.invokeTarget,
+            "me"        => sourceEffectAllCards.Where(x => state.GetBelongUnit(x).id == invokeUnit.id).ToList(),
+            "op"        => sourceEffectAllCards.Where(x => state.GetBelongUnit(x).id == rhsUnit.id).ToList(),
             _ => new List<BattleCard>(),
         };
 

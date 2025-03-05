@@ -93,13 +93,15 @@ public class BattleCard : IIdentifyHandler
         string trimId;
 
         if (id.TryTrimStart("current", out trimId)) {
+            if (trimId.TryTrimStart(".", out var trimOption))
+                return CurrentCard.GetIdentifier(trimOption);
+
             if (trimId.TryTrimParentheses(out var option)) {
                 return option switch {
                     "IF" => BattleCardFilter.Parse(trimId.TrimStart("[IF]")).FilterWithCurrentCard(this) ? 1 : 0,
                     _ => 0
                 };
             }
-            return CurrentCard.GetIdentifier(trimId.TrimStart('.'));
         }
 
         if (id.TryTrimStart("base.", out trimId))
@@ -198,15 +200,30 @@ public class BattleCard : IIdentifyHandler
         unitInfoKeys = unitInfoKeys.Distinct().ToList();
         sourceInfoKeys = sourceInfoKeys.Distinct().ToList();
 
-        var unit = Hud.CurrentState.GetBelongUnit(this);
-        var rhsUnit = (unit == null) ? null : Hud.CurrentState.GetRhsUnitById(unit.id);
-
         for (int i = 0; i < unitInfoKeys.Count; i++) {
-            bool isOp = unitInfoKeys[i].TryTrimStart("op.", out var trimUnitInfoKey);
+            string trimInfoKey = unitInfoKeys[i];
+            string stateDescription = string.Empty;
+
+            var infoState = Hud.CurrentState;
+            var unit = Hud.CurrentState.GetBelongUnit(this);
+            var rhsUnit = (unit == null) ? null : Hud.CurrentState.GetRhsUnitById(unit.id);
+
+            if (unitInfoKeys[i].TryTrimStart("lastMyTurn.", out trimInfoKey)) {
+                stateDescription = "上個自己的回合中，";
+                infoState = unit.IsMasterUnit ? Hud.CurrentState.lastMasterTurnState : Hud.CurrentState.lastClientTurnState;
+            } else if (unitInfoKeys[i].TryTrimStart("lastOpTurn.", out trimInfoKey)) {
+                stateDescription = "上個敵方的回合中，";
+                infoState = rhsUnit.IsMasterUnit ? Hud.CurrentState.lastMasterTurnState : Hud.CurrentState.lastClientTurnState;
+            }
+            
+            unit = (unit == null) ? null : infoState?.GetUnitById(unit.id);
+            rhsUnit = (unit == null) ? null : infoState?.GetRhsUnitById(unit.id);
+                
+            bool isOp = trimInfoKey.TryTrimStart("op.", out var trimUnitInfoKey);
             var infoUnit = isOp ? rhsUnit : unit;
             var num = infoUnit?.GetIdentifier(trimUnitInfoKey) ?? 0;
             var unitIndicator = isOp ? "敵方" : "我方";
-            description += "（" + unitIndicator + " " + trimUnitInfoKey.ToUnitInfoValue() + " 為 " + num + "）\n";
+            description += "（" + stateDescription + unitIndicator + "「" + trimUnitInfoKey.ToUnitInfoValue() + "」為 " + num + "）\n";
         }
 
         for (int i = 0; i < sourceInfoKeys.Count; i++) {
@@ -304,9 +321,9 @@ public class BattleCard : IIdentifyHandler
                 }
 
                 var appendixEffect = currentEffect;
-                while (appendixEffect.abilityOptionDict.TryGetValue("appendix", out var appendixId)) {
+                while (appendixEffect.abilityOptionDict.TryGetValue("appendix", out var appendixId) && int.TryParse(appendixId, out var effectId)) {
                     var sourceEffect = appendixEffect;
-                    appendixEffect = Effect.Get(int.Parse(appendixId));
+                    appendixEffect = Effect.Get(effectId);
                     if (appendixEffect == null)
                         break;
 

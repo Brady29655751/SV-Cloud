@@ -151,6 +151,15 @@ public class Card : IIdentifyHandler
     {
         string trimId;
 
+        if (id.TryTrimStart("effect", out trimId)) {
+            if (trimId.TryTrimParentheses(out var effectTiming)) {
+                if (int.TryParse(effectTiming, out var effectId))
+                    return effects.Exists(x => x.id == effectId) ? 1 : 0;
+
+                return effects.Exists(x => x.timing == effectTiming) ? 1 : 0;
+            }
+        }
+
         if (id.TryTrimStart("trait", out trimId)) {
             if (trimId == string.Empty)
                 return traits.Select(x => (int)x).DefaultIfEmpty(-1).Aggregate((total, next) => total * GameManager.versionData.traitCount + next);
@@ -188,6 +197,7 @@ public class Card : IIdentifyHandler
 
         return id switch {
             "uid" => this.id,
+            "baseUid" => Card.GetBaseId(this.id),
             "id" => NameId,
             "group" => GroupId,
             "zone" => ZoneId,

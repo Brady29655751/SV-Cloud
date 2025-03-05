@@ -33,15 +33,15 @@ public static class StringHelper {
         trim = TrimStart(str, prefix);
         return str.StartsWith(prefix);
     }
-    public static string TrimParentheses(this string str) {
-        int startIndex = str.IndexOf('[');
-        int endIndex = str.IndexOf(']');
+    public static string TrimParentheses(this string str, string parentheses = "[]") {
+        int startIndex = str.IndexOf(parentheses[0]);
+        int endIndex = str.IndexOf(parentheses[1]);
         if ((startIndex == -1) || (endIndex == -1) || (endIndex < startIndex))
             return str;
         return str.Substring(startIndex + 1, endIndex - startIndex - 1);
     }
-    public static bool TryTrimParentheses(this string str, out string trim) {
-        trim = str.TrimParentheses();
+    public static bool TryTrimParentheses(this string str, out string trim, string parentheses = "[]") {
+        trim = str.TrimParentheses(parentheses);
         return trim != str;
     }
 
@@ -139,7 +139,7 @@ public static class StringHelper {
     /// We expect input to be "xxx,yyy"
     /// </summary>
     public static Vector2 ToVector2(this string pos, Vector2 defaultValue = default(Vector2)) {
-        var list = pos.ToFloatList();
+        var list = pos?.ToFloatList();
         return ((list == null) || (list.Count != 2)) ? defaultValue : new Vector2(list[0], list[1]);
     }
     /// <summary>
@@ -147,7 +147,7 @@ public static class StringHelper {
     /// We expect input to be "xxx,yyy,zzz,www"
     /// </summary>
     public static Vector4 ToVector4(this string pos, Vector4 defaultValue = default(Vector4)) {
-        var list = pos.ToFloatList();
+        var list = pos?.ToFloatList();
         return ((list == null) || (list.Count != 4)) ? defaultValue : new Vector4(list[0], list[1], list[2], list[3]);
     }
     /// <summary>
@@ -155,7 +155,7 @@ public static class StringHelper {
     /// We expect input to be "rrr,ggg,bbb,aaa"
     /// </summary>
     public static Color ToColor(this string color, Color defaultValue = default(Color)) {
-        var list = color.ToFloatList();
+        var list = color?.ToFloatList();
         return ((list == null) || (list.Count != 4)) ? defaultValue : new Color(list[0], list[1], list[2], list[3]);
     }
     /// <summary>
@@ -164,7 +164,7 @@ public static class StringHelper {
     /// </summary>
     public static Quaternion ToQuaternion(this string rotation, Quaternion defaultValue = default(Quaternion)) {
         var q = Quaternion.identity;
-        var list = rotation.ToFloatList();
+        var list = rotation?.ToFloatList();
         q.eulerAngles = ((list == null) || (list.Count != 3)) ? defaultValue.eulerAngles : new Vector3(list[0], list[1], list[2]);
         return q;
     }

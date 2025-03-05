@@ -182,6 +182,13 @@ public class ResourceManager : Singleton<ResourceManager>
         return infoDict;
     }
 
+    public void LoadDialogInfo(string dialogPath, Action<Dictionary<int, Dialog>> onSuccess = null) {
+        LoadCSV(dialogPath, (data) => {
+            var dialogDict = GetDescriptionInfoDict(data, Dialog.DATA_COL).ToDictionary(x => x.Key, x => new Dialog(x.Value));
+            onSuccess?.Invoke(dialogDict);
+        });
+    }
+
     public void LoadEffectInfo(Action<Dictionary<int, Effect>> onSuccess = null) {
         LoadCSV(cardUrl + "effect.csv", (data) => onSuccess?.Invoke(
             GetInfo<Effect>(data, Effect.DATA_COL, (d, i) => new Effect(d, i))

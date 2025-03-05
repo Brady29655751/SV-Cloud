@@ -86,7 +86,7 @@ public class DeckListController : IMonoBehaviour
 
     private void CreateDeckByCode(string code) {
         var deck = Deck.Decode(code);
-        if (deck == null) {
+        if ((deck == null) || deck.Cards.Exists(x => x.Group != CardGroup.Normal)) {
             Hintbox.OpenHintbox("無效的牌組代碼");
             return;
         }

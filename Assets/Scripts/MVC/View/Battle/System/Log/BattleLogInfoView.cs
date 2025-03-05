@@ -58,9 +58,6 @@ public class BattleLogInfoView : BattleBaseView
     }
 
     public void SetWho(bool isMe) {
-        if (this.isMe == isMe)
-            return;
-
         this.isMe = isMe;
         myButton.SetColor(isMe ? ColorHelper.chosen : Color.black);
         opButton.SetColor(isMe ? Color.black : ColorHelper.chosen);

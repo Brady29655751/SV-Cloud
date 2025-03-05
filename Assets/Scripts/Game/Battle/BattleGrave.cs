@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Runtime.InteropServices;
 
 public class BattleGrave : BattlePlace
 {
@@ -42,9 +43,11 @@ public class BattleGrave : BattlePlace
             var listName = BattleGrave.CardListNames[i];
             if (id.TryTrimStart(listName, out var trimId)) {
                 var cardList = GetCardListByName(listName);
-                var prefix = trimId.Split('.')[0];
                 if (trimId.StartsWith("[")) {
-                    var filter = CardFilter.Parse(prefix);
+                    var endIndex = trimId.IndexOf("].");
+                    var prefix = trimId.Substring(0, endIndex + 1);
+                    var filter = CardFilter.Parse(prefix, (filterType, paramToSet) => 
+                            Parser.ParseEffectExpression(paramToSet, Player.currentBattle.CurrentState.currentEffect, Player.currentBattle.CurrentState).ToString());
                     if (filter.options.TryGetValue("usedTurn", out var usedTurn))
                         filter.options.Set("usedTurn", turn - usedTurn);
                     

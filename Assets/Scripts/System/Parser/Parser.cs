@@ -108,6 +108,25 @@ public static class Parser {
             expr = expr.Substring(1);
         }
 
+        if (expr.TryTrimStart("[FOR]", out expr)) {
+            var loop = expr.TrimParentheses("{}");
+            var what = loop.Split(':');
+            var name = what[0];
+            var range = what[1].Split('~').Select(x => Parser.ParseEffectExpression(x, effect, state)).ToList();
+            var step = (range.Count < 3) ? 1 : range[2];
+
+            expr = expr.TrimStart("{" + loop + "}");
+            expr.TryTrimParentheses(out var op, "{}");
+
+            var content = expr.TrimStart("{" + op + "}");
+
+            expr = string.Empty;
+            for (int num = range[0]; num <= range[1]; num += step)
+                expr += content.Replace(name, num.ToString()) + op;
+
+            expr = expr.TrimEnd(op);
+        }
+
         string[] id = expr.Split(Operator.opDict.Keys.ToArray(), StringSplitOptions.RemoveEmptyEntries);
         int value = Identifier.GetIdentifier(id[0], effect, state) * (negativeFirst ? -1 : 1);
         

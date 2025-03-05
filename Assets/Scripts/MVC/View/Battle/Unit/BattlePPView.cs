@@ -50,7 +50,7 @@ public class BattlePPView : BattleBaseView
             return;
         }
 
-        if (myUnit.field.cards.Exists(x => x.IsAttackable(myUnit))) {
+        if (myUnit.field.cards.Exists(x => x.CurrentCard.IsFollower() && x.IsAttackable(myUnit))) {
             var hintbox = Hintbox.OpenHintbox("尚有可進行攻擊的從者，確定要結束回合嗎？");
             hintbox.SetOptionNum(2);
             hintbox.SetOptionCallback(TurnEnd);

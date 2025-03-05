@@ -25,6 +25,7 @@ public class CardInfoEffectView : IMonoBehaviour
 
         SetBuffValueText(buff[0], buff[1]);
         SetEffectDescriptionText(split[1]);
+        rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, GetBackgroundPreferredSize(card));
     }
 
     public void SetBuffValueText(string atkBuff, string hpBuff) {
@@ -39,6 +40,16 @@ public class CardInfoEffectView : IMonoBehaviour
 
     public float GetDescriptionTextPreferredSize() {
         return descriptionText?.PreferredSize.y ?? 0;
+    }
+
+    public float GetBackgroundPreferredSize(BattleCard card) {
+        if (card == null)
+            return 0;
+
+        if (card.CurrentCard.Type != CardType.Leader)
+            return 110;
+
+        return Mathf.Clamp(GetDescriptionTextPreferredSize(), 60, 170) + 50;
     }
 
     public void SetAnchoredPos(Vector2 pos) {

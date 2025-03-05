@@ -17,6 +17,7 @@ public static class CardDatabase
         
         { CardPack.EngineeringBasic,    "基本卡包" },
         { CardPack.NewWorldStone,       "新界基石" },
+        { CardPack.MagnumOpus,          "至高傑作" },
 
         { CardPack.SharkBasic,          "基本卡包" },
         { CardPack.SharkTrial,          "試行卡包" },
@@ -75,6 +76,16 @@ public static class CardDatabase
     };
 
     public static Dictionary<BattlePlaceId, string> placeNameDict = new Dictionary<BattlePlaceId, string>() {
+        { BattlePlaceId.Deck,         "牌堆"      },
+        { BattlePlaceId.Hand,         "手牌"      },
+        { BattlePlaceId.Leader,       "主戰者"    },
+        { BattlePlaceId.Territory,    "領域"      },
+        { BattlePlaceId.Field,        "戰場"     },
+        { BattlePlaceId.Grave,        "墓地"     },
+        { BattlePlaceId.Token,        "特殊卡"    },
+    };
+
+    public static Dictionary<BattlePlaceId, string> placeEnglishNameDict = new Dictionary<BattlePlaceId, string>() {
         { BattlePlaceId.Deck,         "deck"      },
         { BattlePlaceId.Hand,         "hand"      },
         { BattlePlaceId.Leader,       "leader"    },
@@ -158,10 +169,14 @@ public static class CardDatabase
     }
 
     public static BattlePlaceId ToBattlePlace(this string place) {
-        if (!placeNameDict.ContainsValue(place))
+        if (!placeEnglishNameDict.ContainsValue(place))
             return BattlePlaceId.None;
 
-        return placeNameDict.FirstOrDefault(x => x.Value == place).Key;
+        return placeEnglishNameDict.FirstOrDefault(x => x.Value == place).Key;
+    }
+
+    public static string GetBattlePlaceName(this BattlePlaceId placeId) {
+        return placeNameDict.Get(placeId, "虛空");
     }
 }
 
@@ -191,7 +206,7 @@ public enum BestOf
 public enum CardPack
 {
     Basic = 0,
-    EngineeringBasic = 100, NewWorldStone = 101,
+    EngineeringBasic = 100, NewWorldStone = 101, MagnumOpus = 102,
     SharkBasic = 200, SharkTrial = 201,
 }
 

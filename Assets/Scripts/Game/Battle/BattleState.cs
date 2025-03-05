@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class BattleState
 {
+    public BattleState lastMasterTurnState, lastClientTurnState;
     public BattleSettings settings;
     public BattleResult result;
     public Effect currentEffect;
@@ -31,6 +32,9 @@ public class BattleState
     }
 
     public BattleState(BattleState rhs) {
+        lastMasterTurnState = rhs.lastMasterTurnState;
+        lastClientTurnState = rhs.lastClientTurnState;
+
         isMasterTurn = rhs.isMasterTurn;
         settings = new BattleSettings(rhs.settings);
         result = new BattleResult(rhs.result);

@@ -26,6 +26,7 @@ public class CreateRoomController : IMonoBehaviour
 
     //! Currently for debug battle.
     public void WatchRoom() {
+        // Panel.OpenPanel<DialogPanel>().SetStory("Data/Story/svd.csv");
         ResourceManager.LoadCSV(GameManager.serverUrl + "System/deckTest.csv", PrepareBattle, Debug.Log);
     }
 

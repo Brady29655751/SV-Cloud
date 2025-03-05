@@ -2849,6 +2849,7 @@ MonoBehaviour:
   ESCButton: {fileID: 4028850775911848822}
   deckCopyObjects:
   - {fileID: 2409003794538491383}
+  deckShareObjects:
   - {fileID: 8795508266136413793}
   titleView: {fileID: 1851446369209878851}
   detailView: {fileID: 8065350229092714972}
