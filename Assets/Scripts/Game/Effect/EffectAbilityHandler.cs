@@ -706,17 +706,44 @@ public static class EffectAbilityHandler
         var modify = effect.abilityOptionDict.Get("modify", "add");
         var modifyOption = modify.ToModifyOption(ModifyOption.Add);
         var untilFunc = effect.GetCheckCondition(effect.abilityOptionDict.Get("until", "none"), state);
-        var keywordId = Identifier.GetNumIdentifier(effect.abilityOptionDict.Get("keyword", "1"));
+        var keywordExpr = effect.abilityOptionDict.Get("keyword", "1");
+        var keywordId = Identifier.GetNumIdentifier(keywordExpr);
         var keyword = (CardKeyword)keywordId;
         var keywordName = keyword.GetKeywordName();
         var keywordEnglishName = keyword.GetKeywordEnglishName();
 
+        var keywordRange = new List<CardKeyword>();
+        if (keywordExpr.TryTrimStart("unique", out var rangeExpr)) {
+            rangeExpr = rangeExpr.TrimStart('[').TrimEnd(']');
+            var range = rangeExpr.Split('~');
+            if (range.Length == 1) {
+                range = rangeExpr.Split('|');
+                keywordRange = range.Select(x => (CardKeyword)Parser.ParseEffectExpression(x, effect, state)).ToList();
+            } else {
+                var start = Parser.ParseEffectExpression(range[0], effect, state);
+                var end = Parser.ParseEffectExpression(range[1], effect, state);
+                var step = (range.Length > 2) ? Parser.ParseEffectExpression(range[2], effect, state) : 1;
+                while (start <= end) {
+                    keywordRange.Add((CardKeyword)start);
+                    start += step;
+                }
+            }
+        }
+
         for (int i = 0; i < effect.invokeTarget.Count; i++) {
+            int copy = i;
+            //! Currently, unique only support for 1 target. Otherwise the code below this for loop will behave wrong.
+            if (keywordExpr.TryTrimStart("unique", out _)) {
+                keyword = keywordRange.Where(x => !effect.invokeTarget[copy].actionController.IsKeywordAvailable(x)).ToList().Random();
+                keywordName = keyword.GetKeywordName();
+                keywordEnglishName = keyword.GetKeywordEnglishName();
+            }
+
             effect.invokeTarget[i].SetKeyword(untilFunc, keyword, modifyOption);
         }
 
         var modifyLog = (modifyOption == ModifyOption.Add) ? "獲得" : "失去";
-        effect.hudOptionDict.Set("log", effect.invokeTarget.Select(x => x.CurrentCard.name + " " + modifyLog + " " + keywordName + " 效果").ConcatToString());
+        effect.hudOptionDict.Set("log", effect.invokeTarget.Select((x, i) => x.CurrentCard.name + " " + modifyLog + " " + keywordName + " 效果").ConcatToString());
         Hud.SetState(state);
 
         EnqueueEffect("on_this_" + keywordEnglishName + "_" + modify, effect.invokeTarget, state);
@@ -842,14 +869,18 @@ public static class EffectAbilityHandler
                 break;
         }
 
+        var source = effect.source;
         var target = effect.invokeTarget.Take(availableCount).ToList();
+        var summonCount = Mathf.Min(availableCount, target.Count);
         if (target.Count == 0)
             return false;
 
         target.ForEach(x => x.buffController.ClearCostBuff());
 
-        for (int i = 0; i < Mathf.Min(availableCount, target.Count); i++) {
-            effect.invokeTarget = new List<BattleCard>() { target[i] };
+        var onSummonEffectList = new List<Effect>();
+        for (int i = 0; i < summonCount; i++) {
+            effect.source = target[i];
+            effect.invokeTarget = target[i].SingleToList();
 
             switch (where) {
                 default:
@@ -877,6 +908,7 @@ public static class EffectAbilityHandler
 
         fieldUnit.leader.AddIdentifier("rally", target.Count(x => x.CurrentCard.IsFollower()));
 
+        effect.source = source;
         effect.invokeTarget = target;
         effect.hudOptionDict.Set("log", effect.invokeTarget.Select(x => x.CurrentCard.name + " 進入戰場").ConcatToString());
         Hud.SetState(state);
@@ -2005,6 +2037,7 @@ public static class EffectAbilityHandler
         var who = effect.abilityOptionDict.Get("who", "me");
         var unit = (who == "me") ? effect.invokeUnit : state.GetRhsUnitById(effect.invokeUnit.id);
         var isMyUnit = unit.id == state.myUnit.id;
+        var hide = bool.Parse(effect.abilityOptionDict.Get("hide", "false"));
 
         var whereId = effect.abilityOptionDict.Get("where", "hand");
         var placeId = whereId.ToBattlePlace();
@@ -2043,7 +2076,7 @@ public static class EffectAbilityHandler
         OnPhaseChange("on_leave_" + whereId, state);
         OnPhaseChange("on_discard_" + type, state);
 
-        string log = isMyUnit ? effect.invokeTarget.Select(x => x.CurrentCard.name + " " + typeLog).ConcatToString("\n")
+        string log = (isMyUnit && (!hide)) ? effect.invokeTarget.Select(x => x.CurrentCard.name + " " + typeLog).ConcatToString("\n")
             : (effect.invokeTarget.Count + " 張卡片" + typeLog);
 
         effect.hudOptionDict.Set("log", log);
@@ -2054,6 +2087,7 @@ public static class EffectAbilityHandler
 
     public static bool Travel(this Effect effect, BattleState state) {
         var isMyUnit = effect.invokeUnit.id == state.myUnit.id;
+        var ability = effect.abilityOptionDict.Get("ability", "get_token").ToEffectAbility();
         var filter = CardFilter.Parse(effect.abilityOptionDict.Get("filter", string.Empty), (type, param) => Parser.ParseEffectExpression(param, effect, state).ToString());
         var count = Parser.ParseEffectExpression(effect.abilityOptionDict.Get("count", "1"), effect, state);
         var tokenIds = CardDatabase.CardMaster.Where(filter.Filter).ToList().Random(count, false).Select(x => x.id).ToList();
@@ -2061,7 +2095,7 @@ public static class EffectAbilityHandler
         if (tokenIds.Count == 0)
             return false;
 
-        Effect tokenEffect = new Effect("none", "none", null, null, EffectAbility.GetToken, new Dictionary<string, string>()
+        Effect tokenEffect = new Effect("none", "none", null, null, ability, new Dictionary<string, string>()
         {
             { "hide", "true" },
         })

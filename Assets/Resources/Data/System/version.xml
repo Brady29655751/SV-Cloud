@@ -1,17 +1,17 @@
 <versionData>
-    <gameVersion>1.6</gameVersion>
-    <buildVersion>1.6</buildVersion>
-    <releaseDate>2025-03-05+08:00</releaseDate>
+    <gameVersion>1.7</gameVersion>
+    <buildVersion>1.7</buildVersion>
+    <releaseDate>2025-03-08+08:00</releaseDate>
     <releaseNote>
-    【當前版本】1.6
-    【版本日期】2025/03/05
-    【更新內容】《至高傑作》中立、死靈、復仇者卡片，《新界基石》部分卡片能力調整
-    【修復錯誤】修復部分錯誤、在房間中也可複製牌組代碼
+    【當前版本】1.7
+    【版本日期】2025/03/08
+    【更新內容】《至高傑作》巫師卡片，部分卡片能力調整
+    【修復錯誤】修復部分錯誤
     </releaseNote>
     
     <keywordCount>44</keywordCount>
     <traitCount>15</traitCount>
-    <cardCount>998</cardCount>
+    <cardCount>1025</cardCount>
     <cardPack>0/2/0/0</cardPack>
     <topicDeck>
         <deck>

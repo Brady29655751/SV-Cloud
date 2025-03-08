@@ -189,10 +189,10 @@ public class CardFilter
     public virtual bool TraitFilter(Card card) => ListHelper.IsNullOrEmpty(traitList) || card.traits.Contains(CardTrait.All) || traitList.Select(x => (CardTrait)x).Intersect(card.traits).Any();
     public virtual bool KeywordFilter(Card card) => ListHelper.IsNullOrEmpty(keywordList) || keywordList.Select(x => (CardKeyword)x).Intersect(card.keywords).Any();
     public virtual bool DescriptionFilter(Card card) => string.IsNullOrEmpty(description) || card.description.Contains(description);
-    public virtual bool TokenFilter(Card card) => (card.Group == CardGroup.Normal) || (isWithToken && (card.Group == CardGroup.Token));
+    public virtual bool TokenFilter(Card card) => (card.Group == CardGroup.Normal) || (isWithToken && (card.Group == CardGroup.Token)) || (groupList?.Contains(0) ?? false);
     public virtual bool OptionFilter(Card card) => (options.Count == 0) || options.All(entry => card.GetIdentifier(entry.Key) == entry.Value);
 
-    public virtual bool GroupFilter(Card card) => ListHelper.IsNullOrEmpty(groupList) || groupList.Contains(card.GroupId);
+    public virtual bool GroupFilter(Card card) => ListHelper.IsNullOrEmpty(groupList) || groupList.Contains(0) || groupList.Contains(card.GroupId);
     public virtual bool ExcludeGroupFilter(Card card) => ListHelper.IsNullOrEmpty(excludeGroupList) || (!excludeGroupList.Contains(card.GroupId));
     public virtual bool CostFilter(Card card) => ListHelper.IsNullOrEmpty(costList) || costList.Contains(Mathf.Min(card.cost, 10));
     public virtual bool AtkFilter(Card card) => ListHelper.IsNullOrEmpty(atkList) || atkList.Contains(Mathf.Min(card.atk, 10));

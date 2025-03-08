@@ -27,8 +27,9 @@ public static class Identifier {
         if (id.TryTrimStart("enhance", out trimId)) {
             var enhance = Parser.ParseEffectExpression(trimId.TrimParentheses(), effect, state);
             var useEffect = effect;
+            var placeId = lhsUnit.GetBelongPlace(effect.source)?.PlaceId ?? BattlePlaceId.None;
 
-            if (lhsUnit.GetBelongPlace(effect.source).PlaceId == BattlePlaceId.Hand)
+            if ((placeId == BattlePlaceId.Hand) || ((effect.source.CurrentCard.Type == CardType.Spell) && (placeId == BattlePlaceId.None)))
                 return lhsUnit.leader.PP >= enhance ? 1 : 0;
 
             while (useEffect.ability != EffectAbility.Use) {

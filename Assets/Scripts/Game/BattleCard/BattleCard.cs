@@ -150,7 +150,7 @@ public class BattleCard : IIdentifyHandler
         result.atk = Mathf.Max(buffController.GetBuffedAtk(result.atk), 0);
         result.hpMax = Mathf.Max(buffController.GetBuffedHp(result.hpMax), 0);
         result.hp = Mathf.Max(result.hpMax - buffController.Damage, 0);
-        result.effects.AddRange(newEffects.Select(x => x.Value));
+        result.effects.AddRange(newEffects.Where(x => x.Value != null).Select(x => new Effect(x.Value)));
         result.effects.ForEach(x => x.source = this);
         return result;
     }

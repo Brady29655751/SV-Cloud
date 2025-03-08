@@ -182,7 +182,7 @@ public static class CardDatabase
 
 public enum CardGroup 
 {
-    Normal = 1, Balanced = 2, Special = 5, Territorize = 6, Crystalize = 7, Accelerate = 8, Token = 9
+    All = 0, Normal = 1, Balanced = 2, Special = 5, Territorize = 6, Crystalize = 7, Accelerate = 8, Token = 9
 }
 
 public enum GameFormat 

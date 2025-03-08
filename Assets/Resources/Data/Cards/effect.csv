@@ -562,7 +562,7 @@ id,timing,target,condition,cond_option,ability,ability_option
 1535,on_this_use,self,none,me.hand[id:910081101].count>0,set_keyword,keyword=2
 1536,on_this_destroy,none,none,me.hand.count[GTE]4,get_token,id=910081101&count=1
 1537,on_this_destroy,none,none,me.hand.count[LTE]3,get_token,id=910081101/110182103&count=1/1
-1538,on_this_use,me_hand_1_index_[type:1|9],none,none,add_effect,id=1539&keyword=8&description=[ffbb00]謝幕曲[-] 增加1張[ffbb00]懸絲傀儡[-]到手牌中
+1538,on_this_use,me_hand_1_index+other_[type:1|9],none,none,add_effect,id=1539&keyword=8&description=[ffbb00]謝幕曲[-] 增加1張[ffbb00]懸絲傀儡[-]到手牌中
 1539,on_this_destroy,none,none,none,get_token,id=910081101&count=1
 1540,on_this_evolve_with_ep,all_field_0_all+other_[type:1|9],none,none,remove_effect,timing=all
 1541,on_this_destroy,none,none,none,add_deck,position=top&id=910081106&count=1
@@ -963,9 +963,9 @@ id,timing,target,condition,cond_option,ability,ability_option
 1936,on_this_destroy,op_field_1_random_[type:1|9],none,none,set_keyword,until=op_next_turn_end&keyword=29
 1937,on_this_attack,op_field_1_random_[type:1|9],none,none,set_keyword,until=op_next_turn_end&keyword=29
 1938,on_this_defense,op_field_1_random_[type:1|9],none,none,set_keyword,until=op_next_turn_end&keyword=29
-1939,on_this_use,none,none,me.grave.usedCards[usedTurn:0][type:1|9][token:true].count>0,draw,count=1&filter=[type:2|3]
-1940,on_this_use,none,none,me.grave.usedCards[usedTurn:0][type:2][token:true].count>1,draw,count=1&filter=[type:1|3|9]
-1941,on_this_use,none,none,me.grave.usedCards[usedTurn:0][type:3][token:true].count>0,draw,count=1&filter=[type:1|2|9]
+1939,on_this_use,none,none,me.grave.usedCards[usedTurn:0][type:1|9][group:0].count>0,draw,count=1&filter=[type:2|3]
+1940,on_this_use,none,none,me.grave.usedCards[usedTurn:0][type:2][group:0].count>1,draw,count=1&filter=[type:1|3|9]
+1941,on_this_use,none,none,me.grave.usedCards[usedTurn:0][type:3][group:0].count>0,draw,count=1&filter=[type:1|2|9]
 1942,on_this_use,me_hand_0_all_[id:910011101],none,none,discard,appendix=1943
 1943,on_this_use,me_field_1_index_[id:910011101][type:1|9],none,none,buff,add=sourceEffect.target.count/sourceEffect.target.count
 1944,on_after_this_attack,self,none,effect.source.where=5&effect.source.current[IF][hp:0]=0,return,appendix=1945
@@ -1009,7 +1009,7 @@ id,timing,target,condition,cond_option,ability,ability_option
 2010,on_this_use,me_deck_1_random_[type:1|9][cost:3],none,none,summon,where=deck
 2011,on_this_use,me_deck_1_random_[type:1|9][cost:2],none,none,summon,where=deck
 2012,on_this_use,me_deck_1_random_[type:1|9][cost:1],none,none,summon,where=deck
-2013,on_this_use,all_field_1_index_[type:1|9],none,none,none,appendix=2019
+2013,on_this_use,all_field_1_index_[type:1|9],none,me.field[type:1|9].count+op.field[type:1|9].count>0,none,appendix=2019
 2014,on_this_use,self,none,me.field.count[GTE]1,buff,add=1/1
 2015,on_this_use,op_leader_0_all_[type:0],none,me.field.count[GTE]2,damage,damage=2
 2016,on_this_use,op_field_1_random_[type:1|9],none,me.field.count[GTE]3,damage,damage=3
@@ -1023,14 +1023,14 @@ id,timing,target,condition,cond_option,ability,ability_option
 2024,on_this_use,none,none,none,draw,count=sourceEffect.target.count
 2025,on_this_destroy,none,none,none,draw,count=1
 2026,on_other_use,self,none,effect.source.where=5&sourceEffect.target.first.isMe=1&sourceEffect.target.first.current[IF][type:2]=1,set_value,appendix=2027&id=effect.source.option_tmpId&value=sourceEffect.target.first.current.id
-2027,on_other_use,none,none,me.grave.usedCards[id:effect.source.option_tmpId][token:true].count=1,get_token,id=effect.source.option_tmpId&count=2
+2027,on_other_use,none,none,me.grave.usedCards[id:effect.source.option_tmpId][group:0].count=1,get_token,id=effect.source.option_tmpId&count=2
 2028,on_this_use,op_deck_1_first,none,none,discard,appendix=2029&who=op&where=deck&type=vanish
 2029,on_this_use,none,none,none,get_token,id=sourceEffect.target.first.current.id&count=1
 2030,on_this_evolve_with_ep,self,none,none,add_effect,id=2031&description=下一次受到的傷害-3
 2031,on_before_this_damage,self,none,none,set_damage,autoRemove=true&add=-3
 2032,on_before_this_damage,self,none,sourceEffect.ability[situation:attack]=0&sourceEffect.ability[situation:defense]=0,set_damage,set=0
 2033,on_this_use,me_deck_10_random,none,none,discard,where=deck
-2034,on_other_evolve,none,none,effect.source.where=5,get_token,id=910081101&count=1
+2034,on_other_evolve,none,none,effect.source.where=5&sourceEffect.target.first.isMe=1,get_token,id=910081101&count=1
 2035,on_this_use,self,none,none,buff,enhance=7&add=3/3
 2036,on_this_use,none,none,none,get_token,enhance=7&id=910081101&count=2
 2037,on_this_use,none,none,none,get_token,id=910081102&count=1
@@ -1048,7 +1048,7 @@ id,timing,target,condition,cond_option,ability,ability_option
 2049,on_this_use,none,none,none,get_token,appendix=2050&id=910081101&count=1
 2050,on_this_use,sourceEffect.target_hand_0_all,none,none,add_effect,id=2051&keyword=7&description=[ffbb00]入場曲[-] 給予1個敵方的從者1點傷害
 2051,on_this_use,op_field_1_index_[type:1|9],none,none,damage,damage=1
-2052,on_this_use,me_hand_1_index_[type:1|9][id:910081101],none,none,add_effect,id=2053&keyword=7&description=[ffbb00]入場曲[-] 使這個從者進化
+2052,on_this_use,me_hand_1_index_[type:1][id:910081101],none,none,add_effect,id=2053&keyword=7&description=[ffbb00]入場曲[-] 使這個從者進化
 2053,on_this_use,self,none,none,evolve,none
 2054,on_other_summon,sourceEffect.target_field_0_all_[type:1|9][trait:4],none,effect.source.where=5&sourceEffect.target.first.isMe=1&sourceEffect.target.first.current[IF][type:1|9][trait:4]=1,buff,appendix=2055&add=1/1
 2055,on_other_summon,sourceEffect.target_field_0_all_[type:1|9][trait:4],none,none,set_keyword,keyword=25
@@ -1068,7 +1068,7 @@ id,timing,target,condition,cond_option,ability,ability_option
 2069,on_this_use,self,none,me.isReson=0,evolve,none
 2070,on_this_destroy,none,none,none,get_token,appendix=2071&id=910081101&count=1
 2071,on_this_destroy,sourceEffect.target_hand_0_all_[type:1|9],none,none,buff,add=1/1
-2072,on_other_summon,sourceEffect.target_field_0_all_[id:910081101],none,none,transform,autoRemove=true&id=110284102
+2072,on_other_summon,sourceEffect.target_field_0_all_[id:910081101],none,me.isMyTurn=1&effect.source.where=5&sourceEffect.target.first.isMe=1&sourceEffect.target.first.current[IF][id:910081101]=1,transform,autoRemove=true&id=110284102
 2073,on_this_use,self,none,me.field[id:910051103].count>0,set_keyword,keyword=1
 2074,on_this_use,self,none,me.field[id:910051102].count>0,buff,add=1/1
 2075,on_this_use,self,none,me.field[id:910051101].count>0,set_keyword,keyword=3
@@ -1104,11 +1104,61 @@ id,timing,target,condition,cond_option,ability,ability_option
 2105,on_this_evolve_with_ep,sourceEffect.me_grave_0_all_[type:1|9],none,none,summon,where=target
 2106,on_this_evolve_with_ep,sourceEffect.op_grave_0_all_[type:1|9],none,none,summon,where=target&field=op
 2107,on_other_destroy,self,none,effect.source.where=2&sourceEffect.target.first.isMe=1&sourceEffect.target.first.current[IF][type:1|9]=1,set_cost,add=-1
-2108,on_turn_end,me_field_1_random_[type:1|9][excludeGroup:1],none,me.isMyTurn=1&effect.source.where=5,evolve,none
-2109,on_this_use,me_field_1_index_[type:1|9][excludeGroup:1],none,none,evolve,none
-2110,on_this_destroy,me_leader_0_all_[type:0],none,none,add_effect,id=2111&description=每當特殊卡從者進入自己的戰場時，由[ffbb00]疾馳[-]、[ffbb00]守護[-]、[ffbb00]必殺[-]、[ffbb00]吸血[-]、[ffbb00]突進[-]、[ffbb00]潛行[-]之中，隨機獲得1種效果
+2108,on_turn_end,me_field_1_random_[type:1][excludeGroup:1],none,me.isMyTurn=1&effect.source.where=5,evolve,none
+2109,on_this_use,me_field_1_index_[type:1][excludeGroup:1],none,none,evolve,none
+2110,on_this_destroy,me_leader_0_all_[type:0],none,none,add_effect,id=2111&description=每當特殊卡從者進入自己的戰場時，由[ffbb00]疾馳[-]、[ffbb00]守護[-]、[ffbb00]必殺[-]、[ffbb00]突進[-]、[ffbb00]潛行[-]、[ffbb00]吸血[-]之中，隨機獲得1種效果
 2111,on_other_summon,sourceEffect.target_field_0_all_[type:1|9][excludeGroup:1],none,sourceEffect.target.first.isMe=1&sourceEffect.target.first.current[IF][type:1|9][excludeGroup:1]=1,set_keyword,keyword=random[1~6]
 2112,on_this_use,me_hand_1_index+other_[type:1|9],none,me.field.availableCount[GTE]2,bury,appendix=2113
 2113,on_this_use,me_leader_0_all_[type:0],none,none,set_ep,add=1
 2114,on_this_evolve_with_ep,op_field_1_index_[type:1|9],none,none,destroy,appendix=2115
 2115,on_this_evolve_with_ep,none,none,necromance[6]=1,reanimate,necromance=6&cost=sourceEffect.target.first.current.cost
+2116,on_this_destroy,none,none,none,get_token,id=110032201&count=1
+2117,on_this_use,me_hand_1_index+other_[type:2],none,none,add_effect,id=2118&description=給予敵方的主戰者3點傷害。
+2118,on_this_use,op_leader_0_all_[type:0],none,none,damage,damage=3
+2119,on_this_use,none,none,none,summon,id=910031301&count=1
+2120,on_this_evolve_with_ep,me_hand_1_index,none,none,discard,none
+2121,on_this_evolve_with_ep,none,none,none,summon,id=110031301&count=1
+2122,on_this_use,all_field_2_index_[type:1|9],none,none,none,appendix=2123
+2123,on_this_use,sourceEffect.target_none_2_at_[type:1|9],none,none,set_buff,atk=sourceEffect.target.first.current.atk&hp=sourceEffect.target.first.current.hp
+2124,on_other_destroy,self,none,effect.source.where=5&sourceEffect.target.first.isMe=1&sourceEffect.target.first.current[IF][type:1|9][trait:5]=1,buff,add=1/1
+2125,on_this_use,self,none,none,buff,enhance=6&add=3/3
+2126,on_this_use,me_field_1_index+other_[type:1|9][trait:5],none,enhance[6]=1,set_keyword,enhance=6&keyword=1
+2127,on_this_use,me_hand_1_index+other_[type:2],none,none,add_effect,id=2128&description=給予敵方的從者全體2點傷害。
+2128,on_this_use,op_field_0_all_[type:1|9],none,none,damage,damage=2
+2129,on_this_use,me_field_1_index_[type:1|9],none,none,set_keyword,keyword=unique[1~6]
+2130,on_this_use,none,none,enhance[6]=0,draw,appendix=2131&count=1
+2131,on_this_use,op_field_1_index_[type:1|9],none,none,damage,damage=me.hand.count
+2132,on_this_use,none,none,enhance[6]=1,draw,enhance=6&appendix=2131&count=3
+2133,on_this_use,none,none,none,get_token,id=110031202&count=1
+2134,on_this_evolve_with_ep,me_hand_1_index+other_[type:2],none,none,add_effect,id=2135&description=抽取1張卡片。
+2135,on_this_use,none,none,none,draw,count=1
+2136,on_this_use,me_deck_0_all,none,none,discard,where=deck&type=vanish&hide=true
+2137,on_this_use,me_token_1_index,none,earth[1]=1,choose,earth=1&appendix=2138&token=910233301/910233302/910233303
+2138,on_this_use,sourceEffect.target_none_0_all,none,none,summon,where=target
+2139,on_this_use,op_field_1_index_[type:1|9],none,none,damage,appendix=2140&damage=3
+2140,on_this_use,op_field_1_random_[type:1|9],none,earth[1]=1,damage,earth=1&damage=3
+2141,on_this_destroy,none,none,none,summon,id=910234301&count=2
+2142,on_this_use,me_hand_3_index+other_[type:2],none,none,none,appendix=2163/2164/2165
+2143,on_this_use,sourceEffect.target_none_1_first_[type:2],none,none,add_effect,id=2148&description=召喚1個[ffbb00]飛龍[-]到戰場上。
+2144,on_this_use,sourceEffect.target_none_1_first_[type:2],none,none,add_effect,id=2149&description=隨機給予1個自己的從者+2/+2效果。
+2145,on_this_use,sourceEffect.target_none_1_first_[type:2],none,none,add_effect,id=2150&description=回復自己的主戰者3點生命值。
+2146,on_this_use,sourceEffect.target_none_1_first_[type:2],none,none,add_effect,id=2151&description=隨機破壞1個敵方戰場上的從者。
+2147,on_this_use,sourceEffect.target_none_1_first_[type:2],none,none,add_effect,id=2152&description=回復自己的EP 1點。
+2148,on_this_use,none,none,none,summon,id=910041103&count=1
+2149,on_this_use,me_field_1_random_[type:1|9],none,none,buff,add=2/2
+2150,on_this_use,me_leader_0_all_[type:0],none,none,heal,heal=3
+2151,on_this_use,op_field_1_random_[type:1|9],none,none,destroy,none
+2152,on_this_use,me_leader_0_all_[type:0],none,none,set_ep,add=1
+2153,on_this_use,none,source.boost,none,travel,appendix=2154&ability=add_deck&filter=[zone:1]&count=1+effect.source.boost
+2154,on_this_use,me_deck_0_all,none,none,set_cost,add=-5
+2155,on_this_destroy,op_field_1_random_[type:1|9],none,none,damage,damage=5
+2156,on_turn_end,self,none,op.isMyTurn=1&effect.source.where=5,destroy,none
+2157,on_this_destroy,op_leader_0_all_[type:0],none,none,damage,damage=2
+2158,on_other_use,self,none,op.isMyTurn=1&effect.source.where=5&sourceEffect.target.first.isOp=1&sourceEffect.target.first.current[IF][type:1|9]=1,destroy,none
+2159,on_this_destroy,op_field_1_random_[type:1|9],none,none,return,none
+2160,on_this_destroy,none,none,none,summon,id=910231101&count=1
+2161,on_this_destroy,me_leader_0_all_[type:0],none,none,heal,heal=2
+2162,on_this_destroy,none,none,none,draw,count=2
+2163,on_this_use,sourceEffect.target_none_1_at_[type:2],none,none,random,count=3&pdf=1/1/1/1/1&effect=2143/2144/2145/2146/2147
+2164,on_this_use,sourceEffect.target_none_2_at_[type:2],none,none,random,count=3&pdf=1/1/1/1/1&effect=2143/2144/2145/2146/2147
+2165,on_this_use,sourceEffect.target_none_3_at_[type:2],none,none,random,count=3&pdf=1/1/1/1/1&effect=2143/2144/2145/2146/2147

@@ -163,6 +163,7 @@ public class EffectTargetInfo  {
             "all"       => effectCards,
             "random"    => effectCards.Random(num, false),
             "first"     => effectCards.Take(num).ToList(),
+            "last"      => Enumerable.TakeLast(effectCards, num).ToList(),
             "at"        => ListHelper.SingleToList(effectCards.ElementAtOrDefault(num - 1)).Where(x => x != null).ToList(),
             _           => effect.invokeTarget,
         };
@@ -195,6 +196,7 @@ public class EffectTargetInfo  {
             "all"       => allCards,
             "random"    => allCards.Random(num, false),
             "first"     => allCards.Take(num).ToList(),
+            "last"      => Enumerable.TakeLast(allCards, num).ToList(),
             "at"        => ListHelper.SingleToList(allCards.ElementAtOrDefault(num - 1)).Where(x => x != null).ToList(),
             "index"     => GetIndexTarget(allCards, invokeUnit),
             _ => effect.invokeTarget,
