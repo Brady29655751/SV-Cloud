@@ -109,7 +109,7 @@ public static class CardDatabase
     public static CardKeyword[] KeywordEffects => (new CardKeyword[] { 
         CardKeyword.Storm, CardKeyword.Ward, CardKeyword.Bane,
         CardKeyword.Rush, CardKeyword.Ambush, CardKeyword.Drain,
-        CardKeyword.Pressure, CardKeyword.Aura, CardKeyword.Freeze,
+        CardKeyword.Deter, CardKeyword.Aura, CardKeyword.Freeze,
         CardKeyword.Unignorable,
     }).Concat(UneffectableKeywords).ToArray();
 
@@ -242,11 +242,11 @@ public enum CardKeyword
     Fanfare = 7, Lastword = 8, Attack = 9, Defense = 10, Evolve = 11, 
     Combo = 12, Rally = 13, SpellBoost = 14, Awake = 15, Necromance = 16,
     Venge = 17, Countdown = 18, Reson = 19, EarthRitual = 20, Enhance = 21,
-    Pressure = 22, Bury = 23, Reanimate = 24, Aura = 25, Accelerate = 26,
+    Deter = 22, Bury = 23, Reanimate = 24, Aura = 25, Accelerate = 26,
     Crystalize = 27, Travel = 28, Freeze = 29, Choose = 30, Greedy = 31,
     Eager = 32, Chase = 33, Red = 34, Abuse = 35, Undestroyable = 36,
     Unvanishable = 37, Union = 38, Untransformable = 39, Unreturnable = 40,
-    Unignorable = 41, Switch = 42,
+    Unignorable = 41, Switch = 42, Border = 43, Barrier = 44,
 
 }
 

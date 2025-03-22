@@ -21,7 +21,7 @@ public class BattleCardEffectView : IMonoBehaviour
         }
         effectObjects[0]?.SetActive(card.actionController.IsKeywordAvailable(CardKeyword.Ward));
         effectObjects[1]?.SetActive(card.actionController.IsKeywordAvailable(CardKeyword.Ambush));
-        effectObjects[2]?.SetActive(card.actionController.IsKeywordAvailable(CardKeyword.Pressure));
+        effectObjects[2]?.SetActive(card.actionController.IsKeywordAvailable(CardKeyword.Deter));
         effectObjects[3]?.SetActive(card.CurrentCard.effects.Exists(x => x.ability == EffectAbility.SetDamage));
         effectObjects[4]?.SetActive(CardDatabase.UneffectableKeywords.Any(keyword =>
             card.actionController.IsKeywordAvailable(keyword)));

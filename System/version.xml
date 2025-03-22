@@ -1,7 +1,7 @@
 <versionData>
     <gameVersion>1.7</gameVersion>
     <buildVersion>1.7</buildVersion>
-    <releaseDate>2025-03-08+08:00</releaseDate>
+    <releaseDate>2025-03-22+08:00</releaseDate>
     <releaseNote>
     【當前版本】1.7
     【版本日期】2025/03/08
@@ -9,7 +9,7 @@
     【修復錯誤】修復部分錯誤
     </releaseNote>
     
-    <keywordCount>44</keywordCount>
+    <keywordCount>45</keywordCount>
     <traitCount>15</traitCount>
     <cardCount>1025</cardCount>
     <cardPack>0/2/0/0</cardPack>
