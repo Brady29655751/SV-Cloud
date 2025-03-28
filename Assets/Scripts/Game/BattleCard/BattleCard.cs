@@ -24,9 +24,9 @@ public class BattleCard : IIdentifyHandler
     public Dictionary<string, int> options = new Dictionary<string, int>();
     
     public BattleCard(Card card) {
-        IsEvolved = false;
+        IsEvolved = (card != null) && (card.Type == CardType.Evolved);
 
-        baseCard = (card == null) ? null : new Card(card);
+        baseCard = (card?.BaseCard == null) ? null : new Card(card.BaseCard);
         evolveCard = (baseCard?.EvolveCard == null) ? null : new Card(baseCard.EvolveCard);
         
         baseCard?.effects.ForEach(x => x.source = this);
@@ -38,7 +38,7 @@ public class BattleCard : IIdentifyHandler
 
     public BattleCard(BattleCard rhs) {
         IsEvolved = rhs.IsEvolved;
-        
+
         baseCard = (rhs.baseCard == null) ? null : new Card(rhs.baseCard);
         evolveCard = (rhs.evolveCard == null) ? null : new Card(rhs.evolveCard);
 
@@ -579,11 +579,11 @@ public class BattleCard : IIdentifyHandler
         var setEffects = damageEffects.Where(x => x.abilityOptionDict.ContainsKey("set")).ToList();
 
         addEffects = GetValidTakeEffects(addEffects, effect, state, "damage", damage);
-        addEffects.ForEach(x => damage += Parser.ParseEffectExpression(x.abilityOptionDict.Get("add"), effect, state));
+        addEffects.ForEach(x => damage += Parser.ParseEffectExpression(x.abilityOptionDict.Get("add").Replace("[num]", damage.ToString()), effect, state));
 
         setEffects = GetValidTakeEffects(setEffects, effect, state, "damage", damage);
         if (setEffects.Count > 0)
-            damage = setEffects.Select(x => Parser.ParseEffectExpression(x.abilityOptionDict.Get("set"), effect, state)).Min();
+            damage = setEffects.Select(x => Parser.ParseEffectExpression(x.abilityOptionDict.Get("set").Replace("[num]", damage.ToString()), effect, state)).Min();
 
         // Do postprocess for take effects.
         // "damage" here is same as GetValidTakeEffects function param.
@@ -611,11 +611,11 @@ public class BattleCard : IIdentifyHandler
         var setEffects = healEffects.Where(x => x.abilityOptionDict.ContainsKey("set")).ToList();
         
         addEffects = GetValidTakeEffects(addEffects, effect, state, "heal", heal);
-        addEffects.ForEach(x => heal += Parser.ParseEffectExpression(x.abilityOptionDict.Get("add"), effect, state));
+        addEffects.ForEach(x => heal += Parser.ParseEffectExpression(x.abilityOptionDict.Get("add").Replace("[num]", heal.ToString()), effect, state));
 
         setEffects = GetValidTakeEffects(setEffects, effect, state, "heal", heal);
         if (setEffects.Count > 0)
-            heal = setEffects.Select(x => Parser.ParseEffectExpression(x.abilityOptionDict.Get("set"), effect, state)).Min();
+            heal = setEffects.Select(x => Parser.ParseEffectExpression(x.abilityOptionDict.Get("set").Replace("[num]", heal.ToString()), effect, state)).Min();
 
         // Do postprocess for take effects.
         // "heal" here is same as GetValidTakeEffects function param.

@@ -77,6 +77,7 @@ public static class EffectDatabase {
         {"turn_destroyedFollowerCount", "本回合被破壞的從者數" },
         {"turn_destroyedAmuletCount",   "本回合被破壞的護符數" },
         {"turn_draw_cards", "本回合已抽取到手牌中的卡片數" },
+        {"turn_heal_times", "本回合回復生命值的次數" },
         {"turn_give_op_leader_damage", "追擊" },
         {"abuse", "凌虐" },
     };

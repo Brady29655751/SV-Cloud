@@ -88,7 +88,7 @@ public static class EffectAbilityHandler
                 effects[j].sourceEffect = (state.currentEffect == null) ? null : new Effect(state.currentEffect);
                 effects[j].invokeUnit = units[i];
 
-                bool isCorrectTiming = (effects[j].timing == timing) || (effects[j].timing == "resident");
+                bool isCorrectTiming = (effects[j].timing == timing) || ((effects[j].timing == "resident") && (effects[j].id != (effects[j].sourceEffect?.id ?? 0)));
                 bool isOtherTiming = (effects[j].timing == otherTiming) && (state.currentEffect.source != battleCards[i]);
 
                 if ((isCorrectTiming || isOtherTiming) && effects[j].Condition(state)) {
@@ -508,6 +508,8 @@ public static class EffectAbilityHandler
             };
             boost.Apply(state);
             state.currentEffect = effect;
+
+            EnqueueEffect("on_this_leave_hand", effect.invokeTarget, state);
         }
 
         // Add combo.
@@ -539,6 +541,9 @@ public static class EffectAbilityHandler
         var sourceCard = isSourceLeader ? unit.leader.leaderCard : unit.field.cards[source];
         var targetCard = isTargetLeader ? targetUnit.leader.leaderCard : targetUnit.field.cards[target];
 
+        var onAttackTarget = new List<BattleCard>() { sourceCard };
+        var onDefenseTarget = new List<BattleCard>() { sourceCard, targetCard };
+
         effect.source = sourceCard;
         effect.invokeTarget = new List<BattleCard>() { targetCard };
 
@@ -551,8 +556,8 @@ public static class EffectAbilityHandler
         Hud.SetState(state);
 
         // OnAttack and OnDefense
-        var onThisAttack = EnqueueEffect("on_this_attack", new List<BattleCard>() { sourceCard }, state, false);
-        var onThisDefense = isTargetLeader ? new List<Effect>() : EnqueueEffect("on_this_defense", new List<BattleCard>() { sourceCard, targetCard }, state, false);
+        var onThisAttack = EnqueueEffect("on_this_attack", onAttackTarget, state, false);
+        var onThisDefense = isTargetLeader ? new List<Effect>() : EnqueueEffect("on_this_defense", onDefenseTarget, state, false);
         var onAttack = OnPhaseChange("on_attack", state, false);
         var onDefense = isTargetLeader ? new List<Effect>() : OnPhaseChange("on_defense", state, false);
 
@@ -619,9 +624,9 @@ public static class EffectAbilityHandler
             destroySourceEffect.Apply(state);        
 
         state.currentEffect = effect;
-        
-        EnqueueEffect("on_after_this_attack", new List<BattleCard>(){ effect.source }, state);
-        EnqueueEffect("on_after_this_defense", effect.invokeTarget, state);
+
+        EnqueueEffect("on_after_this_attack", onAttackTarget, state);
+        EnqueueEffect("on_after_this_defense", onDefenseTarget, state);
         OnPhaseChange("on_after_attack", state);
         OnPhaseChange("on_after_defense", state);
         return true;
@@ -655,12 +660,14 @@ public static class EffectAbilityHandler
         effect.hudOptionDict.Set("index", index.ToString());
         Hud.SetState(state);
 
-        if (card != null) {
+        if (card != null)
             EnqueueEffect("on_this_evolve_with_ep", effect.invokeTarget, state);
-            OnPhaseChange("on_evolve_with_ep", state);
-        }
 
         EnqueueEffect("on_this_evolve", effect.invokeTarget, state);
+
+        if (card != null)
+            OnPhaseChange("on_evolve_with_ep", state);
+
         OnPhaseChange("on_evolve", state);
 
         return true;
@@ -815,6 +822,7 @@ public static class EffectAbilityHandler
             effect.hudOptionDict.Set("count", drawCount.ToString());
             Hud.SetState(state);
         }
+        EnqueueEffect("on_this_add_hand", effect.invokeTarget, state);
         EnqueueEffect("on_this_draw", effect.invokeTarget, state);
         EnqueueEffect("on_this_draw_discard", inGraveCards, state);
         OnPhaseChange("on_draw", state);
@@ -1055,7 +1063,7 @@ public static class EffectAbilityHandler
 
         state.currentEffect = effect;
 
-        EnqueueEffect("on_this_damage", effect.invokeTarget, state);
+        EnqueueEffect("on_this_damage", effect.invokeTarget, state).ForEach(x => x?.abilityOptionDict.Set("lastDamage", (x?.source?.buffController.LastDamage ?? 0).ToString()));
         OnPhaseChange("on_damage", state);
 
         return true;
@@ -1072,6 +1080,8 @@ public static class EffectAbilityHandler
         List<int> opIndexList = new List<int>();
         List<int> opHealList = new List<int>();
 
+        bool isMyUnit = false, isOpUnit = false;
+        
         for (int i = 0; i < effect.invokeTarget.Count; i++) {
             var belongUnit = state.GetBelongUnit(effect.invokeTarget[i]);
             var indexList = (belongUnit.id == state.myUnit.id) ? myIndexList : opIndexList;
@@ -1081,7 +1091,14 @@ public static class EffectAbilityHandler
 
             indexList.Add(index);
             healList.Add(healAllList[i]);
+
+            isMyUnit |= (belongUnit.id == state.myUnit.id);
+            isOpUnit |= (belongUnit.id == state.opUnit.id);
         }
+
+        // Record data
+        state.myUnit.leader.AddIdentifier("turn_heal_times", isMyUnit ? 1 : 0);
+        state.opUnit.leader.AddIdentifier("turn_heal_times", isOpUnit ? 1 : 0);
 
         effect.hudOptionDict.Set("log", effect.invokeTarget.Select((x, i) => effect.source.CurrentCard.name + " 回復 " + x.CurrentCard.name + " " + healAllList[i] + " 點生命值").ConcatToString());
         effect.hudOptionDict.Set("situation", situation);
@@ -1587,6 +1604,7 @@ public static class EffectAbilityHandler
         effect.hudOptionDict.Set("hide", (hide && (!isMyUnit)).ToString());
         Hud.SetState(state);
 
+        EnqueueEffect("on_this_add_hand", effect.invokeTarget, state);
         EnqueueEffect("on_this_get_token", effect.invokeTarget, state);
         OnPhaseChange("on_get_token", state);
 
@@ -1822,8 +1840,13 @@ public static class EffectAbilityHandler
         var notDestoryedList = effect.invokeTarget.Where(x => x.CurrentCard.countdown != 0).ToList();
 
         if (situation != "system") {
-            EnqueueEffect("on_this_set_countdown", notDestoryedList, state);
+            EnqueueEffect("on_this_set_countdown", effect.invokeTarget, state);
+            if (add < 0)
+                EnqueueEffect("on_this_sub_countdown", effect.invokeTarget, state);
+
             OnPhaseChange("on_set_countdown", state);
+            if (add < 0)
+                OnPhaseChange("on_sub_countdown", state);
         }
 
         if (destroyedList.Count > 0) {
@@ -2130,11 +2153,12 @@ public static class EffectAbilityHandler
 
     public static bool SetPP(this Effect effect, BattleState state) {
         var add = Parser.ParseEffectExpression(effect.abilityOptionDict.Get("add", "0"), effect, state);
+        var note = (add >= 0) ? "回復" : "消耗";
 
         effect.invokeTarget = new List<BattleCard>() { effect.invokeUnit.leader.leaderCard };
         effect.invokeUnit.leader.PP += add;
 
-        effect.hudOptionDict.Set("log", "回復自己的PP " + add + " 點");
+        effect.hudOptionDict.Set("log", note + "自己的PP " + Mathf.Abs(add) + " 點");
         Hud.SetState(state);
 
         EnqueueEffect("on_this_set_pp", effect.invokeTarget, state);

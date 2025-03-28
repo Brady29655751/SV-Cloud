@@ -246,7 +246,7 @@ public enum CardKeyword
     Crystalize = 27, Travel = 28, Freeze = 29, Choose = 30, Greedy = 31,
     Eager = 32, Chase = 33, Red = 34, Abuse = 35, Undestroyable = 36,
     Unvanishable = 37, Union = 38, Untransformable = 39, Unreturnable = 40,
-    Unignorable = 41, Switch = 42, Border = 43, Barrier = 44,
+    Unignorable = 41, Switch = 42, Border = 43, Barrier = 44, Overload = 45,
 
 }
 

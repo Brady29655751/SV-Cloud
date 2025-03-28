@@ -24,6 +24,7 @@ public class BattleLeaderView : BattleBaseView
         hpText?.SetText(leader.HP.ToString());
         hpText?.SetColor(ColorHelper.GetAtkHpTextColor(leader.HP, leader.HPMax, leader.HPInit));
         hpOutline?.SetColor(ColorHelper.GetAtkHpOutlineColor(leader.HP, leader.HPMax, leader.HPInit));
+        effectView?.SetBattleCard(leader.leaderCard);
     }
 
     public void ShowLeaderInfo() {

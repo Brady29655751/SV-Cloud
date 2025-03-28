@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class BattleCardBuffController
 {
-    private int costBuff, atkBuff, hpBuff, damage;
+    private int costBuff, atkBuff, hpBuff, damage, lastDamage;
     public List<KeyValuePair<Func<bool>, CardStatus>> tmpBuff = new List<KeyValuePair<Func<bool>, CardStatus>>();
 
     // tmpSetBuff does not involve in set-cost action.
@@ -26,6 +26,8 @@ public class BattleCardBuffController
         get => damage;
         set => damage = value;
     }
+
+    public int LastDamage => lastDamage;
 
     public BattleCardBuffController() {
         costBuff = atkBuff = hpBuff = damage = 0;
@@ -47,6 +49,7 @@ public class BattleCardBuffController
     public int GetIdentifier(string id) {
         return id switch {
             "damage" => Damage,
+            "lastDamage" => LastDamage,
             "isBuffed" => ((AtkBuff > 0) || (HpBuff > 0)) ? 1 : 0,
             "isDebuffed" => ((AtkBuff < 0) || (HpBuff < 0)) ? 1 : 0,
             _ => options.Get(id, 0),
@@ -75,6 +78,7 @@ public class BattleCardBuffController
     public int TakeDamage(int dmg) {
         int realDamage = Mathf.Max(dmg, 0);
         damage += realDamage;
+        lastDamage = realDamage;
         return realDamage;
     }
 
