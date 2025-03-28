@@ -67,6 +67,11 @@ public class BattleTokenView : BattleBaseView
     }
     
     private IEnumerator AddDeckCoroutine(bool isMe, List<Card> tokens, Action callback) {
+        if (ListHelper.IsNullOrEmpty(tokens)) {
+            callback?.Invoke();
+            yield break;
+        }
+
         for (int i = 0; i < cardViews.Count; i++)
             cardViews[i].SetCard((i < tokens.Count) ? tokens[i] : null);
         

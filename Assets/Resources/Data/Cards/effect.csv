@@ -1220,7 +1220,7 @@ id,timing,target,condition,cond_option,ability,ability_option
 2219,on_turn_start,none,none,me.isMyTurn=1&effect.source.where=5,random,pdf=2/1&effect=2220/2221
 2220,on_turn_start,none,none,none,draw,count=1
 2221,on_turn_start,none,none,none,draw,count=1&filter=[id:910261101]
-2222,on_leave_hand,sourceEffect.target_none_0_all_[excludeId:110263101],none,effect.source.where=5&sourceEffect.target.first.isMe=1,add_deck,none
+2222,on_leave_hand,sourceEffect.target_none_0_all_[excludeId:110263101],none,effect.source.where=5&sourceEffect.target.first.isMe=1&sourceEffect.target.me[excludeId:110263101].count>0,add_deck,none
 2223,on_turn_end,none,none,me.isMyTurn=1&effect.source.where=5,draw,count=1
 2224,on_this_attack,none,none,none,get_token,id=110161201&count=1
 2225,on_this_attack,self,leader.turn_give_op_leader_damage,me.isChase=1,set_keyword,keyword=3

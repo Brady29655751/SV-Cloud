@@ -491,7 +491,7 @@ id,status,trait,keyword,option,effect,token
 110143201,2/0/0,none,none,none,1770,none
 110143202,5/0/0,none,15,none,1766/1767,910041105
 110143203,5/0/0,none,15,none,1764,910041103
-110144101,2/2/2,none,7/9/21,none,1778/1779/1780/1782/1783,none
+110144101,2/2/2,none,7/9/21,none,1779/1780/1782/1783,none
 110144102,5/6/4,none,7/9,none,1784,none
 110144103,7/3/6,none,2/7,none,2/1786,910144301
 910143101,8/4/6,none,none,none,0,none
@@ -825,7 +825,7 @@ id,status,trait,keyword,option,effect,token
 110143904,8/8/8,none,7,none,1761,910041102
 110143905,8/6/8,none,none,none,1763,910143101
 110143906,10/9/11,none,7,none,0,none
-110144901,2/4/4,none,7/9/21,none,1778/1779/1780,none
+110144901,2/4/4,none,7/9/21,none,1779/1780,none
 110144902,5/6/4,none,7/9,none,1785,none
 110144903,7/5/8,none,2/7,none,2,none
 910143901,8/6/8,none,none,none,0,none
@@ -1030,7 +1030,7 @@ id,status,trait,keyword,option,effect,token
 110242201,3/0/0,none,none,none,2260,none
 110242202,5/0/0,none,none,none,2262,none
 110242901,6/10/10,none,7,none,0,910241101
-110242902,8/8/8,none,36,none,36,none
+110242902,8/10/10,none,36,none,36,none
 110243101,2/2/2,none,7/21,none,2264,910243101
 110243102,7/2/8,none,7,none,2265/2266,none
 110243301,5/0/0,none,7/15,none,2267/2268,none
