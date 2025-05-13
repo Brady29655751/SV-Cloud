@@ -510,6 +510,7 @@ public static class EffectAbilityHandler
             state.currentEffect = effect;
 
             EnqueueEffect("on_this_leave_hand", effect.invokeTarget, state);
+            OnPhaseChange("on_leave_hand", state);
         }
 
         // Add combo.
@@ -1682,6 +1683,18 @@ public static class EffectAbilityHandler
         var until = effect.abilityOptionDict.Get("until", "none");
         var untilFunc = effect.GetCheckCondition(until, state);
         var description = effect.abilityOptionDict.Get("description", string.Empty);
+        var abilityOption = effect.abilityOptionDict.Get("abilityOption", string.Empty);
+        var abilityOptionDict = new Dictionary<string, string>();
+
+        while (abilityOption.TryTrimParentheses(out var trimOption, "()")) {
+            var split = trimOption.Split(':');
+            if (split[1].TryTrimStart("[expr]", out var trimExpr))
+                abilityOptionDict.Set(split[0], Parser.ParseEffectExpression(trimExpr, effect, state).ToString());
+            else
+                abilityOptionDict.Set(split[0], split[1]);
+
+            abilityOption = abilityOption.TrimStart("(" + trimOption + ")");
+        }
 
         for (int i = 0; i < effect.invokeTarget.Count; i++) {
             var addEffect = Effect.Get(id);
@@ -1697,6 +1710,9 @@ public static class EffectAbilityHandler
             addEffect.invokeUnit = state.GetBelongUnit(effect.invokeTarget[i]);
             addEffect.hudOptionDict.Set("addSource", effect.source.baseCard.id.ToString());
             addEffect.hudOptionDict.Set("description", addEffectDescription.GetDescription());
+
+            foreach (var entry in abilityOptionDict)
+                addEffect.abilityOptionDict.Set(entry.Key, entry.Value);
 
             effect.invokeTarget[i].AddEffect(untilFunc, addEffect, state);
             keyword.ForEach(x => effect.invokeTarget[i].SetKeyword(untilFunc, (CardKeyword)x, ModifyOption.Add));
@@ -2097,7 +2113,7 @@ public static class EffectAbilityHandler
         unit.grave.GraveCount += (type == EffectAbility.Destroy) ? target.Count : 0;
 
         OnPhaseChange("on_leave_" + whereId, state);
-        OnPhaseChange("on_discard_" + type, state);
+        OnPhaseChange("on_discard_" + typeId, state);
 
         string log = (isMyUnit && (!hide)) ? effect.invokeTarget.Select(x => x.CurrentCard.name + " " + typeLog).ConcatToString("\n")
             : (effect.invokeTarget.Count + " 張卡片" + typeLog);

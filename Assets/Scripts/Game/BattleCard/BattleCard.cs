@@ -116,6 +116,9 @@ public class BattleCard : IIdentifyHandler
         if (id.TryTrimStart("action.", out trimId))
             return actionController.GetIdentifier(trimId);
 
+        if (id.TryTrimStart("option", out trimId) && trimId.TryTrimParentheses(out trimId))
+            return options.Get(trimId, 0);
+
         return id switch {
             _ => options.Get(id, 0),
         };

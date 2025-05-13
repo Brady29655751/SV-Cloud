@@ -68,6 +68,9 @@ public class Leader : BattlePlace
 
     public override int GetIdentifier(string id) 
     {
+        if (id.TryTrimStart("current", out _))
+            return leaderCard.GetIdentifier(id);
+
         return id switch {
             "craft" => CraftId,
             "hp" => HP,

@@ -281,6 +281,16 @@ public class Effect : IIdentifyHandler
             result &= abilityFunc.Invoke(this, state);
         }
 
+        var recordTarget = abilityOptionDict.Get("recordTarget");
+        if (!string.IsNullOrEmpty(recordTarget)) {
+            var recordList = recordTarget.Split('/');
+            foreach (var record in recordList) {
+                var key = "tmp" + record.Substring(0, 1).ToUpper() + record.Substring(1);
+                var value = invokeTarget?.First()?.CurrentCard.GetIdentifier(record) ?? 0;
+                source?.options.Set(key, value);
+            }
+        }
+
         if (result)
             EffectAbilityHandler.Postprocess(this, state);
         

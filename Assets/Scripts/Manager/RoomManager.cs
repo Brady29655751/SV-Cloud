@@ -97,6 +97,7 @@ public class RoomManager : Manager<RoomManager>
     private void OnOtherPlayerJoin(Photon.Realtime.Player player) {
         opView.SetName(player.NickName);
         opView.SetVictory((int)player.CustomProperties["win"]);
+        AudioSystem.instance.PlaySound(AudioResources.Bell);
     }
 
     private void OnOtherPlayerLeft(Photon.Realtime.Player player) {

@@ -223,6 +223,7 @@ public static class AudioResources {
     public static AudioClip Main => RM.instance.GetAudio("Main");
     public static AudioClip Win => RM.instance.GetAudio("Win");
     public static AudioClip Lose => RM.instance.GetAudio("Lose");
+    public static AudioClip Bell => RM.instance.GetAudio("Bell");
     public static AudioClip GetThemeBattleClip(int craft) {
         return RM.instance.GetAudio("Theme/" + craft);
     }    

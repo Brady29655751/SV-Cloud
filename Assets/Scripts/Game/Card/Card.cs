@@ -154,9 +154,9 @@ public class Card : IIdentifyHandler
         if (id.TryTrimStart("effect", out trimId)) {
             if (trimId.TryTrimParentheses(out var effectTiming)) {
                 if (int.TryParse(effectTiming, out var effectId))
-                    return effects.Exists(x => x.id == effectId) ? 1 : 0;
+                    return effects.Count(x => x.id == effectId);
 
-                return effects.Exists(x => x.timing == effectTiming) ? 1 : 0;
+                return effects.Count(x => x.timing == effectTiming);
             }
         }
 
