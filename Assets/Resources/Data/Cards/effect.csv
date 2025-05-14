@@ -1212,7 +1212,7 @@ id,timing,target,condition,cond_option,ability,ability_option
 2211,on_this_leave_hand,me_leader_0_all_[type:0],none,none,heal,heal=1
 2212,on_this_leave_hand,none,none,none,add_deck,id=110261202&count=1
 2213,on_this_use,self,leader.abuse,none,buff,add=0/me.leader.abuse
-2214,on_this_attack,self,leader.turn_give_op_leader_damage,effect.source.where=5&me.isChase=1,buff,add=2/0
+2214,on_this_attack,self,leader.turn_give_op_leader_damage,effect.source.where=5&me.isChase=1,buff,add=1/0
 2215,on_this_use,me_leader_0_all_[type:0],none,none,damage,damage=3
 2216,on_this_use,me_leader_0_all_[type:0],none,none,add_effect,until=turn_end&id=2217&description=受到的傷害皆轉變為0
 2217,on_before_this_damage,self,none,none,set_damage,set=0
@@ -1268,8 +1268,8 @@ id,timing,target,condition,cond_option,ability,ability_option
 2267,on_this_use,me_hand_0_all_[type:1|9][craft:4],none,me.isAwake=1,buff,add=0/2
 2268,on_turn_end,me_field_1_first+sort[hp:max]_[type:1|9][craft:4],none,me.isMyTurn=1&effect.source.where=5,buff,appendix=2269&add=0/2
 2269,on_turn_end,self,none,none,set_value,appendix=2270&id=effect.source.option[tmpHp]&value=sourceEffect.target.first.current.hp
-2270,on_turn_end,me_hand_1_random_[type:1|9][craft:4],none,effect.source.option[tmpHp][GTE]7,buff,appendix=2271&add=0/2
-2271,on_turn_end,sourceEffect[3].target_field_0_all_[type:1|9],none,effect.source.option[tmpHp][GTE]14,set_keyword,keyword=25
+2270,on_turn_end,me_hand_1_random_[type:1|9][craft:4],none,effect.source.option[tmpHp][GTE]8,buff,appendix=2271&add=0/2
+2271,on_turn_end,sourceEffect[3].target_field_0_all_[type:1|9],none,effect.source.option[tmpHp][GTE]12,set_keyword,keyword=25
 2272,on_this_use,me_hand_1_index+other_[type:1|9][craft:4],none,none,buff,add=1/0
 2273,on_this_use,none,none,none,draw,count=1
 2274,on_this_use,me_hand_1_index+other_[type:1|9][craft:4],none,none,buff,appendix=2275&add=2/0

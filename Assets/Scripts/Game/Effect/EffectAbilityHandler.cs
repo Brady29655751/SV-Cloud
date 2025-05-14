@@ -713,12 +713,14 @@ public static class EffectAbilityHandler
     public static bool SetKeyword(this Effect effect, BattleState state) {
         var modify = effect.abilityOptionDict.Get("modify", "add");
         var modifyOption = modify.ToModifyOption(ModifyOption.Add);
+        var modifyLog = (modifyOption == ModifyOption.Add) ? "獲得" : "失去";
         var untilFunc = effect.GetCheckCondition(effect.abilityOptionDict.Get("until", "none"), state);
         var keywordExpr = effect.abilityOptionDict.Get("keyword", "1");
         var keywordId = Identifier.GetNumIdentifier(keywordExpr);
         var keyword = (CardKeyword)keywordId;
         var keywordName = keyword.GetKeywordName();
         var keywordEnglishName = keyword.GetKeywordEnglishName();
+        var log = string.Empty;
 
         var keywordRange = new List<CardKeyword>();
         if (keywordExpr.TryTrimStart("unique", out var rangeExpr)) {
@@ -747,11 +749,14 @@ public static class EffectAbilityHandler
                 keywordEnglishName = keyword.GetKeywordEnglishName();
             }
 
+            var placeInfo = state.GetCardPlaceInfo(effect.invokeTarget[i]);
+            var hide = (placeInfo.place == BattlePlaceId.Deck) || ((placeInfo.unitId != state.myUnit.id) && (placeInfo.place != BattlePlaceId.Field));
             effect.invokeTarget[i].SetKeyword(untilFunc, keyword, modifyOption);
+            log += hide ? string.Empty : (effect.invokeTarget[i].CurrentCard.name + " " + modifyLog + " " + keywordName + " 效果\n");
         }
 
-        var modifyLog = (modifyOption == ModifyOption.Add) ? "獲得" : "失去";
-        effect.hudOptionDict.Set("log", effect.invokeTarget.Select((x, i) => x.CurrentCard.name + " " + modifyLog + " " + keywordName + " 效果").ConcatToString());
+        
+        effect.hudOptionDict.Set("log", log);
         Hud.SetState(state);
 
         EnqueueEffect("on_this_" + keywordEnglishName + "_" + modify, effect.invokeTarget, state);
@@ -1499,8 +1504,10 @@ public static class EffectAbilityHandler
         string log = string.Empty;
 
         for (int i = 0; i < effect.invokeTarget.Count; i++) {
+            var placeInfo = state.GetCardPlaceInfo(effect.invokeTarget[i]);
+            var hide = (placeInfo.place == BattlePlaceId.Deck) || ((placeInfo.unitId != state.myUnit.id) && (placeInfo.place != BattlePlaceId.Field));
             effect.invokeTarget[i].TakeBuff(new CardStatus(0, atk, hp), effect.GetCheckCondition(until, state));
-            log += effect.invokeTarget[i].CurrentCard.name + " 獲得 +" + atk + "/+" + hp + " 效果\n";
+            log += hide ? string.Empty : (effect.invokeTarget[i].CurrentCard.name + " 獲得 +" + atk + "/+" + hp + " 效果\n");
         }
 
         effect.hudOptionDict.Set("log", log);
@@ -1524,8 +1531,10 @@ public static class EffectAbilityHandler
         string log = string.Empty;
 
         for (int i = 0; i < effect.invokeTarget.Count; i++) {
+            var placeInfo = state.GetCardPlaceInfo(effect.invokeTarget[i]);
+            var hide = (placeInfo.place == BattlePlaceId.Deck) || ((placeInfo.unitId != state.myUnit.id) && (placeInfo.place != BattlePlaceId.Field));
             effect.invokeTarget[i].TakeBuff(new CardStatus(0, atk, hp), effect.GetCheckCondition(until, state));
-            log += effect.invokeTarget[i].CurrentCard.name + " 獲得 " + atk + "/" + hp + " 效果\n";
+            log += hide ? string.Empty : (effect.invokeTarget[i].CurrentCard.name + " 獲得 " + atk + "/" + hp + " 效果\n");
 
             if (effect.invokeTarget[i].CurrentCard.hp <= 0) {
                 var destroyEffect = new Effect("none", "self", null, null, EffectAbility.Destroy, new Dictionary<string, string>(){ { "situation", "debuff" } })
@@ -2231,12 +2240,14 @@ public static class EffectAbilityHandler
 
         for (int i = 0; i < effect.invokeTarget.Count; i++) {
             var target = effect.invokeTarget[i];
+            var placeInfo = state.GetCardPlaceInfo(effect.invokeTarget[i]);
+            var hide = (placeInfo.place == BattlePlaceId.Deck) || ((placeInfo.unitId != state.myUnit.id) && (placeInfo.place != BattlePlaceId.Field));
             target.SetBuff(new CardStatus(0, atk, hp), untilFunc);
             if (atk >= 0)
-                log += target.CurrentCard.name + " 的攻擊力轉變為 " + atk + "\n";
+                log += hide ? string.Empty : (target.CurrentCard.name + " 的攻擊力轉變為 " + atk + "\n");
 
             if (hp >= 0)
-                log += target.CurrentCard.name + " 的生命值轉變為 " + hp + "\n";
+                log += hide ? string.Empty : (target.CurrentCard.name + " 的生命值轉變為 " + hp + "\n");
                 
             // Destroy by rule if hp <= 0
             if (target.CurrentCard.hp <= 0) {
