@@ -296,11 +296,10 @@ public class BattleCard : IIdentifyHandler
         targetInfoQueue = new Queue<EffectTargetInfo>();
         selectableTargetQueue = new Queue<List<int>>();
 
-        if (situation == "switch") {
+        if (situation == "switch")  // 此為"轉換前"的卡片效果
             GetTargetEffectWithTimingAndCurrentCard(timing, CurrentCard, targetEffectQueue, targetInfoQueue, selectableTargetQueue);
-            return;
-        }
-        
+
+        // 此為真正使用的卡片
         GetTargetEffectWithTimingAndCurrentCard(timing, nowCard, targetEffectQueue, targetInfoQueue, selectableTargetQueue);
     }
 

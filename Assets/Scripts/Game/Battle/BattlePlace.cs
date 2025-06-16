@@ -39,7 +39,10 @@ public class BattlePlace
         var trimId = id.Split('.')[0];
 
         if (id.StartsWith("[")) {
-            var filter = BattleCardFilter.Parse(trimId);
+            trimId = id.Substring(0, id.LastIndexOf("].") + 1);
+            var filter = BattleCardFilter.Parse(trimId, (filterType, paramToSet) =>
+                Identifier.GetIdentifier(paramToSet, Player.currentBattle.CurrentState.currentEffect, Player.currentBattle.CurrentState).ToString());
+
             if (filter.options.TryGetValue("graveTurn", out var graveTurn))
                 filter.options.Set("graveTurn", turn - graveTurn);
 

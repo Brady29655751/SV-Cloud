@@ -1,23 +1,407 @@
 <versionData>
-    <gameVersion>1.9</gameVersion>
-    <buildVersion>1.9</buildVersion>
-    <releaseDate>2025-05-14+08:00</releaseDate>
+    <gameVersion>2.0</gameVersion>
+    <buildVersion>2.0</buildVersion>
+    <releaseDate>2025-06-17+08:00</releaseDate>
     <releaseNote>
-    【當前版本】1.9
-    【版本日期】2025/05/14
-    【更新內容】《至高傑作》皇家卡片。吸血鬼卡片能力調整
+    【當前版本】2.0
+    【版本日期】2025/06/17
+    【更新內容】《至高傑作》精靈卡片。部分卡片能力調整
     【修復錯誤】修復部分錯誤
     </releaseNote>
     
     <keywordCount>46</keywordCount>
     <traitCount>15</traitCount>
-    <cardCount>1131</cardCount>
+    <cardCount>1157</cardCount>
     <cardPack>0/2/0/0</cardPack>
     <topicDeck>
         <deck>
-          <name>節奏妖（新界基石）</name>
+          <name>舞蹈連擊妖（至高傑作）</name>
           <zone>1</zone>
           <format>1</format>
+          <craft>1</craft>
+          <cards>
+            <id>110214101</id>
+            <id>110214101</id>
+            <id>110214101</id>
+            <id>110011201</id>
+            <id>110011201</id>
+            <id>110011201</id>
+            <id>110011202</id>
+            <id>110011202</id>
+            <id>110011202</id>
+            <id>110111205</id>
+            <id>110111205</id>
+            <id>110111205</id>
+            <id>110213201</id>
+            <id>110213201</id>
+            <id>110213201</id>
+            <id>110112104</id>
+            <id>110112104</id>
+            <id>110112104</id>
+            <id>110114101</id>
+            <id>110114101</id>
+            <id>110012201</id>
+            <id>110012201</id>
+            <id>110012201</id>
+            <id>110212301</id>
+            <id>110212301</id>
+            <id>110212301</id>
+            <id>110111206</id>
+            <id>110111206</id>
+            <id>110111206</id>
+            <id>110211201</id>
+            <id>110211201</id>
+            <id>110211201</id>
+            <id>110213101</id>
+            <id>110213101</id>
+            <id>110113103</id>
+            <id>110113103</id>
+            <id>110113103</id>
+            <id>110113104</id>
+            <id>110113104</id>
+            <id>110113104</id>
+          </cards>
+        </deck>
+        <deck>
+          <name>音樂財寶皇（至高傑作）</name>
+          <zone>1</zone>
+          <format>1</format>
+          <craft>2</craft>
+          <cards>
+            <id>110122102</id>
+            <id>110122102</id>
+            <id>110122102</id>
+            <id>110221101</id>
+            <id>110221101</id>
+            <id>110221101</id>
+            <id>110122201</id>
+            <id>110122201</id>
+            <id>110122201</id>
+            <id>110122104</id>
+            <id>110122104</id>
+            <id>110122104</id>
+            <id>110221102</id>
+            <id>110221102</id>
+            <id>110221102</id>
+            <id>110223101</id>
+            <id>110223101</id>
+            <id>110223101</id>
+            <id>110123103</id>
+            <id>110123103</id>
+            <id>110123103</id>
+            <id>110222101</id>
+            <id>110222101</id>
+            <id>110222101</id>
+            <id>110222102</id>
+            <id>110222102</id>
+            <id>110222102</id>
+            <id>110123102</id>
+            <id>110123102</id>
+            <id>110123102</id>
+            <id>110223102</id>
+            <id>110223102</id>
+            <id>110223102</id>
+            <id>110124103</id>
+            <id>110124103</id>
+            <id>110224101</id>
+            <id>110224101</id>
+            <id>110224101</id>
+            <id>110224102</id>
+            <id>110224102</id>
+          </cards>
+        </deck>
+        <deck>
+          <name>文學火球法（至高傑作）</name>
+          <zone>1</zone>
+          <format>1</format>
+          <craft>3</craft>
+          <cards>
+            <id>110031205</id>
+            <id>110031205</id>
+            <id>110031205</id>
+            <id>110133103</id>
+            <id>110133103</id>
+            <id>110133103</id>
+            <id>110031203</id>
+            <id>110031203</id>
+            <id>110132204</id>
+            <id>110132204</id>
+            <id>110132204</id>
+            <id>110133201</id>
+            <id>110133201</id>
+            <id>110133201</id>
+            <id>110131205</id>
+            <id>110131205</id>
+            <id>110131205</id>
+            <id>110132205</id>
+            <id>110132205</id>
+            <id>110132205</id>
+            <id>110133203</id>
+            <id>110133203</id>
+            <id>110232102</id>
+            <id>110232102</id>
+            <id>110232102</id>
+            <id>110203301</id>
+            <id>110131207</id>
+            <id>110131207</id>
+            <id>110131207</id>
+            <id>110131206</id>
+            <id>110131206</id>
+            <id>110131105</id>
+            <id>110134103</id>
+            <id>110134103</id>
+            <id>110233201</id>
+            <id>110234102</id>
+            <id>110234102</id>
+            <id>110234102</id>
+            <id>110031204</id>
+            <id>110031204</id>
+          </cards>
+        </deck>
+        <deck>
+          <name>建築跳費龍（至高傑作）</name>
+          <zone>1</zone>
+          <format>1</format>
+          <craft>4</craft>
+          <cards>
+            <id>110041201</id>
+            <id>110041201</id>
+            <id>110142102</id>
+            <id>110142102</id>
+            <id>110142102</id>
+            <id>110144101</id>
+            <id>110144101</id>
+            <id>110144101</id>
+            <id>110243101</id>
+            <id>110243101</id>
+            <id>110243101</id>
+            <id>110142201</id>
+            <id>110142201</id>
+            <id>110142201</id>
+            <id>110241201</id>
+            <id>110241201</id>
+            <id>110241201</id>
+            <id>110244101</id>
+            <id>110244101</id>
+            <id>110244101</id>
+            <id>110042201</id>
+            <id>110042201</id>
+            <id>110042201</id>
+            <id>110242202</id>
+            <id>110242202</id>
+            <id>110242202</id>
+            <id>110243301</id>
+            <id>110243301</id>
+            <id>110242101</id>
+            <id>110242101</id>
+            <id>110242101</id>
+            <id>110243102</id>
+            <id>110243102</id>
+            <id>110242102</id>
+            <id>110242102</id>
+            <id>110242102</id>
+            <id>110244102</id>
+            <id>110244102</id>
+            <id>110244102</id>
+            <id>110204102</id>
+          </cards>
+        </deck>
+        <deck>
+          <name>繪畫中速死（至高傑作）</name>
+          <zone>1</zone>
+          <format>1</format>
+          <craft>5</craft>
+          <cards>
+            <id>110251101</id>
+            <id>110251101</id>
+            <id>110251101</id>
+            <id>110051102</id>
+            <id>110051102</id>
+            <id>110051102</id>
+            <id>110051103</id>
+            <id>110051103</id>
+            <id>110051103</id>
+            <id>110152102</id>
+            <id>110152102</id>
+            <id>110152102</id>
+            <id>110154101</id>
+            <id>110154101</id>
+            <id>110154101</id>
+            <id>110051201</id>
+            <id>110051201</id>
+            <id>110051201</id>
+            <id>110252201</id>
+            <id>110252201</id>
+            <id>110052101</id>
+            <id>110052101</id>
+            <id>110052101</id>
+            <id>110151204</id>
+            <id>110151204</id>
+            <id>110151204</id>
+            <id>110202102</id>
+            <id>110202102</id>
+            <id>110051203</id>
+            <id>110051203</id>
+            <id>110051203</id>
+            <id>110154102</id>
+            <id>110154102</id>
+            <id>110154102</id>
+            <id>110254101</id>
+            <id>110254101</id>
+            <id>110254101</id>
+            <id>110201201</id>
+            <id>110201201</id>
+            <id>110201201</id>
+          </cards>
+        </deck>
+        <deck>
+          <name>電影抽牌鬼（至高傑作）</name>
+          <zone>1</zone>
+          <format>1</format>
+          <craft>6</craft>
+          <cards>
+            <id>110103301</id>
+            <id>110103301</id>
+            <id>110103301</id>
+            <id>110261202</id>
+            <id>110261202</id>
+            <id>110261202</id>
+            <id>110164101</id>
+            <id>110164101</id>
+            <id>110164101</id>
+            <id>110261101</id>
+            <id>110261101</id>
+            <id>110261101</id>
+            <id>110061202</id>
+            <id>110061202</id>
+            <id>110061202</id>
+            <id>110062201</id>
+            <id>110062201</id>
+            <id>110062201</id>
+            <id>110263201</id>
+            <id>110263201</id>
+            <id>110263101</id>
+            <id>110263101</id>
+            <id>110263101</id>
+            <id>110201102</id>
+            <id>110201102</id>
+            <id>110201102</id>
+            <id>110204101</id>
+            <id>110204101</id>
+            <id>110204101</id>
+            <id>110203301</id>
+            <id>110262301</id>
+            <id>110262301</id>
+            <id>110262301</id>
+            <id>110203101</id>
+            <id>110203101</id>
+            <id>110203102</id>
+            <id>110203102</id>
+            <id>110264101</id>
+            <id>110264101</id>
+            <id>110264101</id>
+          </cards>
+        </deck>
+        <deck>
+          <name>雕塑護符教（至高傑作）</name>
+          <zone>1</zone>
+          <format>1</format>
+          <craft>7</craft>
+          <cards>
+            <id>110271201</id>
+            <id>110271201</id>
+            <id>110071301</id>
+            <id>110071301</id>
+            <id>110071301</id>
+            <id>110172101</id>
+            <id>110172101</id>
+            <id>110172101</id>
+            <id>110171201</id>
+            <id>110171201</id>
+            <id>110072301</id>
+            <id>110072301</id>
+            <id>110072301</id>
+            <id>110171303</id>
+            <id>110171303</id>
+            <id>110171303</id>
+            <id>110272301</id>
+            <id>110272301</id>
+            <id>110272301</id>
+            <id>110072101</id>
+            <id>110072101</id>
+            <id>110072101</id>
+            <id>110172202</id>
+            <id>110172202</id>
+            <id>110174301</id>
+            <id>110174301</id>
+            <id>110174301</id>
+            <id>110172203</id>
+            <id>110172203</id>
+            <id>110272201</id>
+            <id>110272201</id>
+            <id>110272201</id>
+            <id>110172303</id>
+            <id>110172303</id>
+            <id>110172303</id>
+            <id>110274101</id>
+            <id>110274101</id>
+            <id>110274101</id>
+            <id>110173106</id>
+            <id>110173106</id>
+          </cards>
+        </deck>
+        <deck>
+          <name>戲劇人偶仇（至高傑作）</name>
+          <zone>1</zone>
+          <format>1</format>
+          <craft>8</craft>
+          <cards>
+            <id>110181106</id>
+            <id>110181106</id>
+            <id>110181106</id>
+            <id>110182103</id>
+            <id>110182103</id>
+            <id>110182103</id>
+            <id>110281101</id>
+            <id>110281101</id>
+            <id>110281101</id>
+            <id>110283101</id>
+            <id>110283101</id>
+            <id>110283101</id>
+            <id>110081201</id>
+            <id>110081201</id>
+            <id>110081201</id>
+            <id>110282201</id>
+            <id>110282201</id>
+            <id>110282201</id>
+            <id>110081105</id>
+            <id>110081105</id>
+            <id>110081105</id>
+            <id>110182202</id>
+            <id>110182202</id>
+            <id>110182202</id>
+            <id>110183105</id>
+            <id>110183105</id>
+            <id>110183105</id>
+            <id>110284101</id>
+            <id>110284101</id>
+            <id>110284101</id>
+            <id>110284102</id>
+            <id>110284102</id>
+            <id>110284102</id>
+            <id>110281102</id>
+            <id>110281102</id>
+            <id>110281102</id>
+            <id>110184103</id>
+            <id>110184103</id>
+            <id>110184103</id>
+            <id>110184102</id>
+          </cards>
+        </deck>
+        <deck>
+          <name>節奏妖（新界基石）</name>
+          <zone>1</zone>
+          <format>0</format>
           <craft>1</craft>
           <cards>
             <id>110011101</id>
@@ -65,7 +449,7 @@
         <deck>
           <name>捷芬OTK妖（新界基石）</name>
           <zone>1</zone>
-          <format>1</format>
+          <format>0</format>
           <craft>1</craft>
           <cards>
             <id>110101201</id>
@@ -113,7 +497,7 @@
         <deck>
           <name>連擊妖（新界基石）</name>
           <zone>1</zone>
-          <format>1</format>
+          <format>0</format>
           <craft>1</craft>
           <cards>
             <id>110011201</id>
@@ -161,7 +545,7 @@
         <deck>
           <name>快皇（新界基石）</name>
           <zone>1</zone>
-          <format>1</format>
+          <format>0</format>
           <craft>2</craft>
           <cards>
             <id>110021101</id>
@@ -209,7 +593,7 @@
         <deck>
           <name>中速皇（新界基石）</name>
           <zone>1</zone>
-          <format>1</format>
+          <format>0</format>
           <craft>2</craft>
           <cards>
             <id>110121201</id>
@@ -257,7 +641,7 @@
         <deck>
           <name>陷陣營皇（新界基石）</name>
           <zone>1</zone>
-          <format>1</format>
+          <format>0</format>
           <craft>2</craft>
           <cards>
             <id>110121201</id>
@@ -305,7 +689,7 @@
         <deck>
           <name>增幅法（新界基石）</name>
           <zone>1</zone>
-          <format>1</format>
+          <format>0</format>
           <craft>3</craft>
           <cards>
             <id>110031205</id>
@@ -353,7 +737,7 @@
         <deck>
           <name>土法（新界基石）</name>
           <zone>1</zone>
-          <format>1</format>
+          <format>0</format>
           <craft>3</craft>
           <cards>
             <id>110031301</id>
@@ -401,7 +785,7 @@
         <deck>
           <name>中立控法（新界基石）</name>
           <zone>1</zone>
-          <format>1</format>
+          <format>0</format>
           <craft>3</craft>
           <cards>
             <id>110102101</id>
@@ -449,7 +833,7 @@
         <deck>
           <name>臉龍（新界基石）</name>
           <zone>1</zone>
-          <format>1</format>
+          <format>0</format>
           <craft>4</craft>
           <cards>
             <id>110104101</id>
@@ -497,7 +881,7 @@
         <deck>
           <name>跳費龍（新界基石）</name>
           <zone>1</zone>
-          <format>1</format>
+          <format>0</format>
           <craft>4</craft>
           <cards>
             <id>110141103</id>
@@ -545,7 +929,7 @@
         <deck>
           <name>血色汙穢濁龍（新界基石）</name>
           <zone>1</zone>
-          <format>1</format>
+          <format>0</format>
           <craft>4</craft>
           <cards>
             <id>110101201</id>
@@ -593,7 +977,7 @@
         <deck>
           <name>快攻死（新界基石）</name>
           <zone>1</zone>
-          <format>1</format>
+          <format>0</format>
           <craft>5</craft>
           <cards>
             <id>110104101</id>
@@ -641,7 +1025,7 @@
         <deck>
           <name>中速死（新界基石）</name>
           <zone>1</zone>
-          <format>1</format>
+          <format>0</format>
           <craft>5</craft>
           <cards>
             <id>110051101</id>
@@ -689,7 +1073,7 @@
         <deck>
           <name>亡骸領主死（新界基石）</name>
           <zone>1</zone>
-          <format>1</format>
+          <format>0</format>
           <craft>5</craft>
           <cards>
             <id>110051101</id>
@@ -737,7 +1121,7 @@
         <deck>
           <name>快攻追擊鬼（新界基石）</name>
           <zone>1</zone>
-          <format>1</format>
+          <format>0</format>
           <craft>6</craft>
           <cards>
             <id>110061101</id>
@@ -785,7 +1169,7 @@
         <deck>
           <name>控制追擊鬼（新界基石）</name>
           <zone>1</zone>
-          <format>1</format>
+          <format>0</format>
           <craft>6</craft>
           <cards>
             <id>110162201</id>
@@ -833,7 +1217,7 @@
         <deck>
           <name>潛行直傷鬼（新界基石）</name>
           <zone>1</zone>
-          <format>1</format>
+          <format>0</format>
           <craft>6</craft>
           <cards>
             <id>110101201</id>
@@ -881,7 +1265,7 @@
         <deck>
           <name>奶教（新界基石）</name>
           <zone>1</zone>
-          <format>1</format>
+          <format>0</format>
           <craft>7</craft>
           <cards>
             <id>110071301</id>
@@ -929,7 +1313,7 @@
         <deck>
           <name>護符教（新界基石）</name>
           <zone>1</zone>
-          <format>1</format>
+          <format>0</format>
           <craft>7</craft>
           <cards>
             <id>110071301</id>
@@ -977,7 +1361,7 @@
         <deck>
           <name>空中樂園教（新界基石）</name>
           <zone>1</zone>
-          <format>1</format>
+          <format>0</format>
           <craft>7</craft>
           <cards>
             <id>110171301</id>
@@ -1025,7 +1409,7 @@
         <deck>
           <name>傀儡仇（新界基石）</name>
           <zone>1</zone>
-          <format>1</format>
+          <format>0</format>
           <craft>8</craft>
           <cards>
             <id>110181101</id>
@@ -1073,7 +1457,7 @@
         <deck>
           <name>造物仇（新界基石）</name>
           <zone>1</zone>
-          <format>1</format>
+          <format>0</format>
           <craft>8</craft>
           <cards>
             <id>110183101</id>
@@ -1121,7 +1505,7 @@
         <deck>
           <name>彈射仇</name>
           <zone>1</zone>
-          <format>1</format>
+          <format>0</format>
           <craft>8</craft>
           <cards>
             <id>110183101</id>

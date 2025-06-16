@@ -144,25 +144,26 @@ public class BattleUnit : IIdentifyHandler
 
     public int GetIdentifier(string id)
     {
-        var prefix = id.Split('.', '[' );
+        var prefix = id.Split('.', '[');
         var place = GetPlace(prefix[0].ToBattlePlace());
         if (place != null)
             return place.GetIdentifier(id.TrimStart(prefix[0]).TrimStart('.'));
 
-        return id switch {
-            "id"        => Id,
-            "turn"      => turn,
-            "isFirst"   => isFirst ? 1 : 0,
-            "isMyTurn"  => isMyTurn ? 1 : 0,
-            "isDone"    => isDone ? 1 : 0,
-            "isAwake"   => leader.GetIdentifier("isAwake"),
-            "isVenge"   => leader.GetIdentifier("isVenge"),
-            "isEager"   => leader.GetIdentifier("isEager"),
-            "isChase"   => leader.GetIdentifier("isChase"),
-            "isRed"     => leader.GetIdentifier("isRed"),
-            "isGreedy"  => (hand.Count >= 7) ? 1 : 0,
-            "isReson"   => 1 - (deck.Count % 2),
-            "isUnion"   => field.GetIdentifier("isUnion"),
+        return id switch
+        {
+            "id" => Id,
+            "turn" => turn,
+            "isFirst" => isFirst ? 1 : 0,
+            "isMyTurn" => isMyTurn ? 1 : 0,
+            "isDone" => isDone ? 1 : 0,
+            "isAwake" => leader.GetIdentifier("isAwake"),
+            "isVenge" => leader.GetIdentifier("isVenge"),
+            "isEager" => leader.GetIdentifier("isEager"),
+            "isChase" => leader.GetIdentifier("isChase"),
+            "isRed" => leader.GetIdentifier("isRed"),
+            "isGreedy" => (hand.Count >= 7) ? 1 : 0,
+            "isReson" => 1 - (deck.Count % 2),
+            "isUnion" => field.GetIdentifier("isUnion"),
             _ => int.MinValue,
         };
     }

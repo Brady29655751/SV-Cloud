@@ -297,20 +297,23 @@ public class Effect : IIdentifyHandler
         return result;
     }
 
-    public void SetInvokeTarget(BattleState state) {
+    public void SetInvokeTarget(BattleState state)
+    {
         var rhsUnit = state.GetRhsUnitById(invokeUnit.id);
         var info = GetEffectTargetInfo(state);
 
         if (info.unit == "none")
             return;
 
-        if (info.unit == "self") {
+        if (info.unit == "self")
+        {
             invokeTarget = new List<BattleCard>() { source };
             return;
-        } 
+        }
 
-        if (info.unit.TryTrimStart("sourceEffect", out _)) {
-            invokeTarget = info.GetSourceEffectTarget(this, state);                                                                                                                                                                        
+        if (info.unit.TryTrimStart("sourceEffect", out _))
+        {
+            invokeTarget = info.GetSourceEffectTarget(this, state);
             return;
         }
 

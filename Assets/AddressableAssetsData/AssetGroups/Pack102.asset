@@ -779,6 +779,96 @@ MonoBehaviour:
     m_SerializedLabels:
     - royal
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 560a796a31876ad4683d90b1b476fb14
+    m_Address: 910213101
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - elf
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f29eaab61e1e5ea45bee8913d8795bc0
+    m_Address: 910213102
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - elf
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 229a02eea73980f49b7b67d9bad3355e
+    m_Address: 110211101
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - elf
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e7e107d95a05c4a40ba89f4ddd278321
+    m_Address: 110211102
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - elf
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3d75464a16dade343bfc96c85f1029c3
+    m_Address: 110211201
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - elf
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e68a75c511d787c4eb9740518f5e4253
+    m_Address: 110211202
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - elf
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4cffd7e6d5887c44d88227450f8b00f0
+    m_Address: 110212101
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - elf
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 69b8d87f789b2a040b30066f4b2af02c
+    m_Address: 110212102
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - elf
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 548186a2313da5144ad0dbe5ab85175c
+    m_Address: 110212103
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - elf
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a8067a53309a5a24fa57b2c8b464cec0
+    m_Address: 110212301
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - elf
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a3fdc7aca63357c4f8bed1f3de644038
+    m_Address: 110213101
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - elf
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1d6b91e574b872948ab645b8c46b0c29
+    m_Address: 110213102
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - elf
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 67203ff08eccfd34aa985a24dfc53b9b
+    m_Address: 110213201
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - elf
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dcd020b60238a4f44a21b9d1baa4eccc
+    m_Address: 110214101
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - elf
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fe6e7a621c21e8446a2eee7617b60b5e
+    m_Address: 110214102
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - elf
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 69e741ee149781a478094fca2d01f357, type: 2}
   m_SchemaSet:

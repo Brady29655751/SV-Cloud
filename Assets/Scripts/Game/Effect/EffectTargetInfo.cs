@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class EffectTargetInfo  {
+public class EffectTargetInfo {
     public Effect effect;
     public string unit;
     public List<BattlePlaceId> places;
@@ -29,23 +29,10 @@ public class EffectTargetInfo  {
         if (options.Length <= 4)
             return info;
 
-        info.filter = BattleCardFilter.Parse(options[4], (filterType, paramToSet) => 
+        info.filter = BattleCardFilter.Parse(options[4], (filterType, paramToSet) =>
             Parser.ParseEffectExpression(paramToSet, effect, state).ToString());
         info.options = options.SubArray(5).ToList();
         return info;
-    }
-
-    private List<BattleCard> GetIndexTarget(List<BattleCard> allCards, BattleUnit invokeUnit) {
-        var indexTarget = new List<BattleCard>();
-        for (int i = 0; i <= num; i++) {
-            var target = invokeUnit.targetQueue.Dequeue();
-            if (target == null)
-                break;
-
-            if (allCards.Contains(target) || places.Contains(BattlePlaceId.Token))
-                indexTarget.Add(target);
-        }
-        return indexTarget;
     }
 
     private List<BattleCard> ExcludeTargetByMode(List<BattleCard> allCards, Effect effect) {
@@ -67,7 +54,7 @@ public class EffectTargetInfo  {
 
         if (!trimMode.TryTrimParentheses(out var excludeType))
             return allCards;
-        
+
         if (!excludeType.Contains('.'))
             excludeType = "current." + excludeType;
 
@@ -90,7 +77,7 @@ public class EffectTargetInfo  {
 
         while (trimMode.TryTrimParentheses(out var excludeType)) {
             Predicate<BattleCard> predicate = excludeType switch {
-                "source"              => x => x == source,
+                "source" => x => x == source,
                 "sourceEffect.target" => sourceEffect.invokeTarget.Contains,
                 _ => x => false,
             };
@@ -137,19 +124,19 @@ public class EffectTargetInfo  {
         var sourceUnit = unit.Replace("sourceEffect.", "sourceEffect[1].");
         if (unit.TryTrimStart("sourceEffect", out _)) {
             var sourceStepExpr = sourceUnit.TrimParentheses();
-            var sourceStep = int.Parse(sourceStepExpr); 
+            var sourceStep = int.Parse(sourceStepExpr);
             for (int i = 0; i < sourceStep - 1; i++)
                 sourceEffect = sourceEffect.sourceEffect;
 
             sourceUnit = sourceUnit.TrimStart("sourceEffect[" + sourceStepExpr + "].");
         }
 
-        var sourceEffectAllCards = (new List<BattleCard>(){ sourceEffect.source }).Concat(sourceEffect.invokeTarget);
+        var sourceEffectAllCards = (new List<BattleCard>() { sourceEffect.source }).Concat(sourceEffect.invokeTarget);
         var effectCards = sourceUnit switch {
-            "source"    => new List<BattleCard>(){ sourceEffect.source },
-            "target"    => sourceEffect.invokeTarget,
-            "me"        => sourceEffectAllCards.Where(x => state.GetBelongUnit(x).id == invokeUnit.id).ToList(),
-            "op"        => sourceEffectAllCards.Where(x => state.GetBelongUnit(x).id == rhsUnit.id).ToList(),
+            "source" => new List<BattleCard>() { sourceEffect.source },
+            "target" => sourceEffect.invokeTarget,
+            "me" => sourceEffectAllCards.Where(x => state.GetBelongUnit(x).id == invokeUnit.id).ToList(),
+            "op" => sourceEffectAllCards.Where(x => state.GetBelongUnit(x).id == rhsUnit.id).ToList(),
             _ => new List<BattleCard>(),
         };
 
@@ -160,12 +147,12 @@ public class EffectTargetInfo  {
         effectCards.RemoveAll(x => !filter.FilterWithCurrentCard(x));
 
         return mode[0] switch {
-            "all"       => effectCards,
-            "random"    => effectCards.Random(num, false),
-            "first"     => effectCards.Take(num).ToList(),
-            "last"      => Enumerable.TakeLast(effectCards, num).ToList(),
-            "at"        => ListHelper.SingleToList(effectCards.ElementAtOrDefault(num - 1)).Where(x => x != null).ToList(),
-            _           => effect.invokeTarget,
+            "all" => effectCards,
+            "random" => effectCards.Random(num, false),
+            "first" => effectCards.Take(num).ToList(),
+            "last" => Enumerable.TakeLast(effectCards, num).ToList(),
+            "at" => ListHelper.SingleToList(effectCards.ElementAtOrDefault(num - 1)).Where(x => x != null).ToList(),
+            _ => effect.invokeTarget,
         };
     }
 
@@ -177,10 +164,10 @@ public class EffectTargetInfo  {
         var sourceEffect = effect.sourceEffect;
 
         var allUnit = unit switch {
-            "all"   =>  new List<BattleUnit>() { invokeUnit, rhsUnit },
-            "me"    =>  new List<BattleUnit>() { invokeUnit },
-            "op"    =>  new List<BattleUnit>() { rhsUnit },
-            _       =>  new List<BattleUnit>(),
+            "all" => new List<BattleUnit>() { invokeUnit, rhsUnit },
+            "me" => new List<BattleUnit>() { invokeUnit },
+            "op" => new List<BattleUnit>() { rhsUnit },
+            _ => new List<BattleUnit>(),
         };
 
         var allPlace = new List<BattlePlace>();
@@ -192,14 +179,51 @@ public class EffectTargetInfo  {
         allCards = ExcludeTargetByMode(allCards, effect);
         allCards = SortTargetByMode(allCards, effect);
 
-        return mode[0] switch {
-            "all"       => allCards,
-            "random"    => allCards.Random(num, false),
-            "first"     => allCards.Take(num).ToList(),
-            "last"      => Enumerable.TakeLast(allCards, num).ToList(),
-            "at"        => ListHelper.SingleToList(allCards.ElementAtOrDefault(num - 1)).Where(x => x != null).ToList(),
-            "index"     => GetIndexTarget(allCards, invokeUnit),
+        return mode[0] switch
+        {
+            "all" => allCards,
+            "random" => allCards.Random(num, false),
+            "first" => allCards.Take(num).ToList(),
+            "last" => Enumerable.TakeLast(allCards, num).ToList(),
+            "at" => ListHelper.SingleToList(allCards.ElementAtOrDefault(num - 1)).Where(x => x != null).ToList(),
+            "index" => GetIndexTarget(allCards, invokeUnit),
+            "adjacent" => GetAdjacentTarget(allCards, source, state),
             _ => effect.invokeTarget,
         };
+    }
+
+    private List<BattleCard> GetIndexTarget(List<BattleCard> allCards, BattleUnit invokeUnit) {
+        var indexTarget = new List<BattleCard>();
+        for (int i = 0; i <= num; i++) {
+            var target = invokeUnit.targetQueue.Dequeue();
+            if (target == null)
+                break;
+
+            if (allCards.Contains(target) || places.Contains(BattlePlaceId.Token))
+                indexTarget.Add(target);
+        }
+        return indexTarget;
+    }
+
+    private List<BattleCard> GetAdjacentTarget(List<BattleCard> allCards, BattleCard source, BattleState state)
+    {
+        var sourcePlaceInfo = state.GetCardPlaceInfo(source);
+        var placeStr = places[0].ToString().ToLower();
+        var IsSourceDifferentPlace = sourcePlaceInfo.place != places.FirstOrDefault();
+        if (IsSourceDifferentPlace)
+            sourcePlaceInfo = BattleCardPlaceInfo.Parse(source.GetIdentifier($"{placeStr}_place_info"));
+
+        var sourcePos = sourcePlaceInfo.index;
+        var targetList = allCards.Where(x => {
+            var offset = (IsSourceDifferentPlace && (state.GetCardPlaceInfo(x).index >= sourcePos)) ? 1 : 0;
+            return Mathf.Abs(state.GetCardPlaceInfo(x).index + offset - sourcePos) <= num;
+        }).OrderBy(x => state.GetCardPlaceInfo(x).index).ToList();
+
+        foreach (var target in targetList)
+        {
+            target.SetIdentifier($"{placeStr}_place_info", state.GetCardPlaceInfo(target).ToIntCode());
+        }
+
+        return targetList;
     }
 }

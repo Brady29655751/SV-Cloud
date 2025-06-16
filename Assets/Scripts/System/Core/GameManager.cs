@@ -29,7 +29,8 @@ public class GameManager : Singleton<GameManager>
     public static event Action<GameState> OnAfterStateChanged;
     protected override void Awake() {
         base.Awake();
-        
+
+        Application.targetFrameRate = 60;
         if (versionData == null)
             ChangeState(GameState.Init);
     }

@@ -462,6 +462,7 @@ public static class EffectAbilityHandler
 
         // Record data on this card
         useCard.SetIdentifier("combo", unit.leader.GetIdentifier("combo"));
+        useCard.SetIdentifier("hand_place_info", state.GetCardPlaceInfo(useCard).ToIntCode());
         useCard.baseCard.SetIdentifier("usedTurn", unit.turn);
 
         // Consume pp, remove from hand
@@ -907,7 +908,21 @@ public static class EffectAbilityHandler
                     break;
             }
 
-            fieldUnit.field.cards.AddRange(effect.invokeTarget);
+            if (effect.GetEffectTargetInfo(state).mode?.Contains("adjacent") ?? false)
+            {
+                // 相鄰進場
+                var sourceIndex = fieldUnit.field.cards.IndexOf(source);
+                if (sourceIndex < 0)
+                    continue;
+
+                var sourcePlaceInfo = BattleCardPlaceInfo.Parse(source.GetIdentifier($"{where}_place_info"));
+                var targetPlaceInfo = BattleCardPlaceInfo.Parse(target[i].GetIdentifier($"{where}_place_info"));
+                var offset = targetPlaceInfo.index - sourcePlaceInfo.index + 1;
+                Debug.Log($"{sourcePlaceInfo.index}, {targetPlaceInfo.index}, {sourceIndex}, {fieldUnit.field.cards.Count}");
+                fieldUnit.field.cards.Insert(Mathf.Clamp(sourceIndex + offset, 0, fieldUnit.field.cards.Count), target[i]);
+            }
+            else
+                fieldUnit.field.cards.AddRange(effect.invokeTarget);
 
             if (where == "hand")
                 EnqueueEffect("on_this_leave_hand", effect.invokeTarget, state);

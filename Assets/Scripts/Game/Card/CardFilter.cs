@@ -233,8 +233,10 @@ public class BattleCardFilter : CardFilter {
             var type = split[0];
             var items = split[1].Split('|').Select(x => x.Replace("BELOW", "-2").Replace("ABOVE", "-3")).ToArray();;
 
-            for (int i = 0; i < items.Length; i++) {
-                filter.SetParam(type, transformFunc.Invoke(type, items[i]));
+            for (int i = 0; i < items.Length; i++)
+            {
+                bool shouldTransform = !(filter.GetSetBoolType().Contains(type) || filter.GetSetStringType().Contains(type));
+                filter.SetParam(type, shouldTransform ? transformFunc.Invoke(type, items[i]) : items[i]);
             }
 
             options = options.TrimStart("[" + trimOptions + "]");
