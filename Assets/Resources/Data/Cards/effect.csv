@@ -1333,7 +1333,7 @@ id,timing,target,condition,cond_option,ability,ability_option
 2332,on_this_summon,self,leader.combo,effect.source.combo%2=0,set_keyword,keyword=2
 2333,on_this_leave_field,me_field_1_random_[type:1|9],leader.combo,me.leader.combo%2=1,set_keyword,keyword=4
 2334,on_this_leave_field,me_field_1_random_[type:1|9],leader.combo,me.leader.combo%2=0,set_keyword,keyword=2
-2335,on_this_use,op_field_1_index_[type:1|9],none,none,set_keyword,until=op_turn_end&keyword=29
+2335,on_this_use,op_field_1_index_[type:1|9],none,none,set_keyword,appendix=2336&until=op_turn_end&keyword=29
 2336,on_this_use,sourceEffect.target_field_0_all_[type:1|9],leader.combo,me.leader.combo[GTE]2,add_effect,id=2337&description=自己的回合開始時，使敵方抽取1張卡片。
 2337,on_turn_start,none,none,me.isMyTurn=1&effect.source.where=5,draw,who=op&count=1
 2338,on_this_use,me_hand_1_index+other_[type:1|9],none,none,add_effect,id=2339&description=[ffbb00]入場曲[-] 使這個從者返回手牌中。
