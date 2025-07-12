@@ -1411,10 +1411,10 @@ id,timing,target,condition,cond_option,ability,ability_option
 2408,on_this_use,me_grave_3_random+distinct_[type:1|9][graveReason:2],none,none,get_token,appendix=2409
 2409,on_this_use,sourceEffect.target_hand_0_all,grave.distinct_destroyedFollowerCostCount,none,set_cost,add=-me.grave.distinct_destroyedFollowerCostCount
 2410,on_other_destroy,none,none,effect.source.where=5&sourceEffect.target.first.isOp=1,summon,id=910051103&count=1
-2411,on_this_use,op_field_0_all_[type:1|9][hp:7|BELOW],none,necromance[10]=1,destroy,necromance=10
+2411,on_this_use,op_field_0_all_[type:1|9][hp:7|BELOW],none,necromance[10]=1,destroy,appendix=2454&necromance=10
 2412,on_this_destroy,me_field_1_random_[type:1|9],none,necromance[4]=1,buff,appendix=2413&necromance=4&add=1/1
 2413,on_this_destroy,me_field_1_random_[type:1|9][trait:15],none,none,buff,add=1/1
-2414,on_necromance,none,none,sourceEffect.source.where=5&sourceEffect.source.isMe=1,reanimate,cost=sourceEffect.source.necromance
+2414,on_necromance,none,none,effect.source.where=5&sourceEffect.source.isMe=1,reanimate,cost=sourceEffect.source.necromance
 2415,on_this_use,none,none,none,set_grave,add=10
 2416,on_this_evolve_with_ep,none,none,none,summon,id=910354101&count=1
 2417,on_other_summon,sourceEffect.target_field_0_all_[type:1|9],none,effect.source.where=5&effect.source.counter[effect_2420]<5&sourceEffect.target.first.isMe=1&sourceEffect.target.first.current[IF][type:1|9]=1,destroy,none
@@ -1454,7 +1454,7 @@ id,timing,target,condition,cond_option,ability,ability_option
 2451,on_this_use,op_hand_1_random_[type:1|9],none,none,reveal,appendix=2452/2453
 2452,on_this_use,sourceEffect[2].target_hand_0_all_[type:1|9],none,none,special,id=1&step=1
 2453,on_this_use,sourceEffect.target_hand_0_all_[type:1|9],none,none,special,id=1&step=2
-2454,on_this_leave_hand,none,none,none,special,id=1
+2454,on_this_use,sourceEffect.target_grave_0_all_[type:1|9][graveReason:2],none,none,summon,id=910051103&count=effect.target.count
 2455,on_other_evolve,self,none,effect.source.where=5&sourceEffect.target.first.isOp=1,evolve,appendix=2456
 2456,on_other_evolve,self,none,none,remove_effect,timing=on_this_destroy
 2457,on_this_destroy,op_hand_1_random_[type:1|9],none,none,add_effect,id=2458&description=離開手牌時，召喚1個[ffbb00]如影隨形‧瑪絲忒≠埃伊波[-]到敵方的戰場上，並給予其[ffbb00]潛行[-]效果
