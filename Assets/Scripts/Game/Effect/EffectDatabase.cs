@@ -24,6 +24,7 @@ public static class EffectDatabase {
 
         {"random",          EffectAbility.Random        },
         {"index",           EffectAbility.Index         },
+        {"special",         EffectAbility.Special       },
 
         {"set_keyword",     EffectAbility.SetKeyword    },
         {"draw",            EffectAbility.Draw          },
@@ -67,6 +68,7 @@ public static class EffectDatabase {
 
     private static Dictionary<string, string> unitInfoDict = new Dictionary<string, string>() {
         {"turn", "回合數" },
+        {"grave.distinct_destroyedFollowerCostCount", "已被破壞的從者消費種類數" },
     };
 
     private static Dictionary<string, string> leaderInfoDict = new Dictionary<string, string>() {
@@ -78,6 +80,7 @@ public static class EffectDatabase {
         {"turn_destroyedAmuletCount",   "本回合被破壞的護符數" },
         {"turn_draw_cards", "本回合已抽取到手牌中的卡片數" },
         {"turn_heal_times", "本回合回復生命值的次數" },
+        
         {"turn_give_op_leader_damage", "追擊" },
         {"abuse", "凌虐" },
     };
@@ -117,8 +120,9 @@ public enum EffectAbility {
 
     Random = 91,
     Index = 92,
+    Special = 93,
 
-    SetKeyword  = 100,   
+    SetKeyword = 100,   
     Draw        = 101, 
     Summon      = 102,   
     Damage      = 103,   

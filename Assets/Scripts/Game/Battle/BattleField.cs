@@ -16,10 +16,25 @@ public class BattleField : BattlePlace
         var attackable = result.Where(x => (!x.actionController.IsKeywordAvailable(CardKeyword.Ambush)) && (!x.actionController.IsKeywordAvailable(CardKeyword.Deter)));
         var ward = attackable.Where(x => x.actionController.IsKeywordAvailable(CardKeyword.Ward));
 
+        var attackOnly = attackSource.CurrentCard.options.Get("attackOnly");
+        if (attackOnly != null)
+        {
+            var filter = BattleCardFilter.Parse(attackOnly);
+            attackable = attackable.Where(filter.FilterWithCurrentCard);
+        }
+
+        var attackBan = attackSource.CurrentCard.options.Get("attackBan");
+        if (attackBan != null)
+        {
+            var filter = BattleCardFilter.Parse(attackBan);
+            attackable = attackable.Where(x => !filter.FilterWithCurrentCard(x));
+        }
+            
+
         result = ward.Any() ? ward : attackable;
         var index = result.Select(x => cards.IndexOf(x)).ToList();
 
-        if ((attackSource.IsLeaderAttackable(sourceUnit)) && (!ward.Any()))
+        if (attackSource.IsLeaderAttackable(sourceUnit) && (!ward.Any()))
             index.Add(-1);
 
         return index;

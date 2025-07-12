@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
 using System.Linq;
 using ExitGames.Client.Photon.StructWrapping;
 using UnityEngine;
@@ -22,6 +23,7 @@ public static class EffectAbilityHandler
             EffectAbility.Evolve        => Evolve,
 
             EffectAbility.Random        => RandomEffect,
+            EffectAbility.Special       => SpecialEffect,
 
             EffectAbility.SetKeyword    => SetKeyword,
             EffectAbility.Draw          => Draw,
@@ -181,6 +183,7 @@ public static class EffectAbilityHandler
 
             if (necromance > 0) {
                 unit.grave.GraveCount -= necromance;
+                effect.source.SetIdentifier("necromance", necromance);
 
                 EnqueueEffect("on_this_necromance", new List<BattleCard>() { effect.source }, state);
                 OnPhaseChange("on_necromance", state);
@@ -476,7 +479,7 @@ public static class EffectAbilityHandler
 
         // Follower and Amulet goes to field.
         if (useCard.CurrentCard.IsFollower() || (useCard.CurrentCard.Type == CardType.Amulet)) {
-            var abilityOptionDict = new Dictionary<string, string>() { { "where", "hand" } };
+            var abilityOptionDict = new Dictionary<string, string>() { { "where", "hand" }, {"situation", "use"} };
             Effect summon = new Effect("none", "none", null, null, 
                 EffectAbility.Summon, abilityOptionDict) 
             {
@@ -711,7 +714,47 @@ public static class EffectAbilityHandler
         return true;
     }
 
-    public static bool SetKeyword(this Effect effect, BattleState state) {
+    public static bool SpecialEffect(this Effect effect, BattleState state)
+    {
+        var id = Parser.ParseEffectExpression(effect.abilityOptionDict.Get("id", "0"), effect, state);
+        if (id == 0)
+            return false;
+
+        switch (id)
+        {
+            default:
+                return false;
+            case 1:
+                var step = effect.abilityOptionDict.Get("step", "1");
+                var addEffect = new Effect("on_this_leave_hand", "none", null, null, EffectAbility.Summon, new Dictionary<string, string>()
+                {
+                    {"who", "op"},  {"field", "op"},  {"where", "hand"}
+                })
+                {
+                    source = effect.invokeTarget.FirstOrDefault(),
+                    sourceEffect = effect,
+                    invokeUnit = (step == "1") ? effect.invokeUnit : state.GetRhsUnitById(effect.invokeUnit.id),
+                    invokeTarget = (step == "1") ? effect.sourceEffect.invokeTarget : effect.sourceEffect.sourceEffect.invokeTarget,
+                };
+                var addEffectDescription = $"[ffbb00]【{effect.source.CurrentCard.name}】[-][ENDL]" +
+                    $"離開手牌時，使敵方公開的[ffbb00]{addEffect.invokeTarget.FirstOrDefault()?.CurrentCard.name}[-]進入戰場";
+                    
+                addEffect.hudOptionDict.Set("addSource", effect.source.baseCard.id.ToString());
+                addEffect.hudOptionDict.Set("description", addEffectDescription.GetDescription());
+                effect.invokeTarget.FirstOrDefault()?.AddEffect(null, addEffect, state);
+                break;        
+        }
+
+        effect.hudOptionDict.Set("log", "發動了" + id + "號特殊效果");
+        Hud.SetState(state);
+
+        EnqueueEffect("on_this_special", effect.invokeTarget, state);
+        OnPhaseChange("on_special", state);
+        return true;
+    }
+
+    public static bool SetKeyword(this Effect effect, BattleState state)
+    {
         var modify = effect.abilityOptionDict.Get("modify", "add");
         var modifyOption = modify.ToModifyOption(ModifyOption.Add);
         var modifyLog = (modifyOption == ModifyOption.Add) ? "獲得" : "失去";
@@ -724,27 +767,34 @@ public static class EffectAbilityHandler
         var log = string.Empty;
 
         var keywordRange = new List<CardKeyword>();
-        if (keywordExpr.TryTrimStart("unique", out var rangeExpr)) {
+        if (keywordExpr.TryTrimStart("unique", out var rangeExpr))
+        {
             rangeExpr = rangeExpr.TrimStart('[').TrimEnd(']');
             var range = rangeExpr.Split('~');
-            if (range.Length == 1) {
+            if (range.Length == 1)
+            {
                 range = rangeExpr.Split('|');
                 keywordRange = range.Select(x => (CardKeyword)Parser.ParseEffectExpression(x, effect, state)).ToList();
-            } else {
+            }
+            else
+            {
                 var start = Parser.ParseEffectExpression(range[0], effect, state);
                 var end = Parser.ParseEffectExpression(range[1], effect, state);
                 var step = (range.Length > 2) ? Parser.ParseEffectExpression(range[2], effect, state) : 1;
-                while (start <= end) {
+                while (start <= end)
+                {
                     keywordRange.Add((CardKeyword)start);
                     start += step;
                 }
             }
         }
 
-        for (int i = 0; i < effect.invokeTarget.Count; i++) {
+        for (int i = 0; i < effect.invokeTarget.Count; i++)
+        {
             int copy = i;
             //! Currently, unique only support for 1 target. Otherwise the code below this for loop will behave wrong.
-            if (keywordExpr.TryTrimStart("unique", out _)) {
+            if (keywordExpr.TryTrimStart("unique", out _))
+            {
                 keyword = keywordRange.Where(x => !effect.invokeTarget[copy].actionController.IsKeywordAvailable(x)).ToList().Random();
                 keywordName = keyword.GetKeywordName();
                 keywordEnglishName = keyword.GetKeywordEnglishName();
@@ -756,7 +806,7 @@ public static class EffectAbilityHandler
             log += hide ? string.Empty : (effect.invokeTarget[i].CurrentCard.name + " " + modifyLog + " " + keywordName + " 效果\n");
         }
 
-        
+
         effect.hudOptionDict.Set("log", log);
         Hud.SetState(state);
 
@@ -845,6 +895,7 @@ public static class EffectAbilityHandler
         var field = effect.abilityOptionDict.Get("field", "me");
         var fieldUnit = (field == "me") ? unit : rhsUnit;
         var where = effect.abilityOptionDict.Get("where", "token");
+        var situation = effect.abilityOptionDict.Get("situation");
         var id = effect.abilityOptionDict.Get("id", "none").Split('/').Select(x => Parser.ParseEffectExpression(x, effect, state)).ToList();
         var count = effect.abilityOptionDict.Get("count", "0").Split('/').Select(x => Parser.ParseEffectExpression(x, effect, state)).ToList();
         var availableCount = fieldUnit.field.AvailableCount;
@@ -852,10 +903,12 @@ public static class EffectAbilityHandler
         if (availableCount <= 0)
             return false;
 
-        switch (where) {
+        switch (where)
+        {
             default:
+                effect.invokeTarget = effect.invokeTarget.Where(x => state.GetCardPlaceInfo(x).place == where.ToBattlePlace()).ToList();
                 break;
-            
+
             case "target":
                 effect.invokeTarget = effect.invokeTarget.Select(x => BattleCard.Get(x?.baseCard?.id ?? 0)).Where(x => x != null).ToList();
                 break;
@@ -866,22 +919,17 @@ public static class EffectAbilityHandler
                 break;
 
             case "grave":
-                //! USELESS!
-                /* 
-                var grave = summonUnit.grave;
-                var graveTargetInfo = effect.GetEffectTargetInfo(state);
-                var gravePool = gravePoolId switch {
-                    "distinct_destroy_card"     => grave.DistinctDestroyedCards,
-                    "distinct_destroy_follower" => grave.DistinctDestroyedFollowers,
-                    "distinct_destroy_amulet"   => grave.DistinctDestroyedAmulets,
-                    _ => grave.DestroyedCards,
-                };
-                */
                 var gravePoolId = effect.abilityOptionDict.Get("pool", "0");
                 if (gravePoolId != "reanimate")
                     effect.invokeTarget = effect.invokeTarget.Where(x => x.GetIdentifier("graveReason") == Parser.ParseEffectExpression(gravePoolId, effect, state))
                         .Select(x => BattleCard.Get(x.baseCard)).ToList();
                 break;
+                
+            case "hand":
+                if (situation?.ToEffectAbility() == EffectAbility.Use)
+                    break;
+
+                goto default;
         }
 
         var source = effect.source;
@@ -918,7 +966,6 @@ public static class EffectAbilityHandler
                 var sourcePlaceInfo = BattleCardPlaceInfo.Parse(source.GetIdentifier($"{where}_place_info"));
                 var targetPlaceInfo = BattleCardPlaceInfo.Parse(target[i].GetIdentifier($"{where}_place_info"));
                 var offset = targetPlaceInfo.index - sourcePlaceInfo.index + 1;
-                Debug.Log($"{sourcePlaceInfo.index}, {targetPlaceInfo.index}, {sourceIndex}, {fieldUnit.field.cards.Count}");
                 fieldUnit.field.cards.Insert(Mathf.Clamp(sourceIndex + offset, 0, fieldUnit.field.cards.Count), target[i]);
             }
             else

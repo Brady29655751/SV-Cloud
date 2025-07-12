@@ -18,6 +18,7 @@ public static class CardDatabase
         { CardPack.EngineeringBasic,    "基本卡包" },
         { CardPack.NewWorldStone,       "新界基石" },
         { CardPack.MagnumOpus,          "至高傑作" },
+        { CardPack.RighteousVillainy,   "惡亦有道" },
 
         { CardPack.SharkBasic,          "基本卡包" },
         { CardPack.SharkTrial,          "試行卡包" },
@@ -206,7 +207,7 @@ public enum BestOf
 public enum CardPack
 {
     Basic = 0,
-    EngineeringBasic = 100, NewWorldStone = 101, MagnumOpus = 102,
+    EngineeringBasic = 100, NewWorldStone = 101, MagnumOpus = 102, RighteousVillainy = 103,
     SharkBasic = 200, SharkTrial = 201,
 }
 
@@ -233,13 +234,13 @@ public enum CardTrait
     All = 0,
     Soldier = 1, Commander = 2, Earth = 3, Artifact = 4, Golem = 5,
     Light = 6, Dark = 7, Manaria = 8, RedMoon = 9, Sister = 10,
-    Mechanic = 11, Nature = 12, Levin = 13, Treasure = 14,
+    Mechanic = 11, Nature = 12, Levin = 13, Treasure = 14, Night = 15,
 }
 
-public enum CardKeyword 
+public enum CardKeyword
 {
     None = 0, Storm = 1, Ward = 2, Bane = 3, Rush = 4, Ambush = 5, Drain = 6,
-    Fanfare = 7, Lastword = 8, Attack = 9, Defense = 10, Evolve = 11, 
+    Fanfare = 7, Lastword = 8, Attack = 9, Defense = 10, Evolve = 11,
     Combo = 12, Rally = 13, SpellBoost = 14, Awake = 15, Necromance = 16,
     Venge = 17, Countdown = 18, Reson = 19, EarthRitual = 20, Enhance = 21,
     Deter = 22, Bury = 23, Reanimate = 24, Aura = 25, Accelerate = 26,
@@ -247,6 +248,7 @@ public enum CardKeyword
     Eager = 32, Chase = 33, Red = 34, Abuse = 35, Undestroyable = 36,
     Unvanishable = 37, Union = 38, Untransformable = 39, Unreturnable = 40,
     Unignorable = 41, Switch = 42, Border = 43, Barrier = 44, Overload = 45,
+    Cannon = 46,
 
 }
 

@@ -350,6 +350,7 @@ public class Effect : IIdentifyHandler
 
         return checkTiming switch {
             "source_evolve"     => () => source?.IsEvolved ?? true,
+            "source_leave_field"=> () => state.GetCardPlaceInfo(source).place != BattlePlaceId.Field,
             "turn_end"          => () => state.currentEffect.ability == EffectAbility.TurnEnd,
             "me_turn_end"       => () => (state.currentEffect.ability == EffectAbility.TurnEnd) && invokeUnit.isDone,
             "op_turn_end"       => () => (state.currentEffect.ability == EffectAbility.TurnEnd) && state.GetRhsUnitById(invokeUnit.id).isDone,

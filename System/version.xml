@@ -1,18 +1,18 @@
 <versionData>
-    <gameVersion>2.0</gameVersion>
-    <buildVersion>2.0</buildVersion>
-    <releaseDate>2025-06-17+08:00</releaseDate>
+    <gameVersion>2.1</gameVersion>
+    <buildVersion>2.1</buildVersion>
+    <releaseDate>2025-07-12+08:00</releaseDate>
     <releaseNote>
-    【當前版本】2.0
-    【版本日期】2025/06/17
-    【更新內容】《至高傑作》精靈卡片。部分卡片能力調整
+    【當前版本】2.1
+    【版本日期】2025/07/12
+    【更新內容】《惡亦有道》中立、死靈、巫師卡片。部分卡片能力調整
     【修復錯誤】修復部分錯誤
     </releaseNote>
     
-    <keywordCount>46</keywordCount>
-    <traitCount>15</traitCount>
-    <cardCount>1157</cardCount>
-    <cardPack>0/2/0/0</cardPack>
+    <keywordCount>47</keywordCount>
+    <traitCount>16</traitCount>
+    <cardCount>1231</cardCount>
+    <cardPack>0/3/0/0</cardPack>
     <topicDeck>
         <deck>
           <name>舞蹈連擊妖（至高傑作）</name>

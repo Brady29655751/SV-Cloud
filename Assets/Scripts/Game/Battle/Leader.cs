@@ -14,10 +14,24 @@ public class Leader : BattlePlace
     public int HP => leaderCard.CurrentCard.hp;
     public int HPMax => leaderCard.CurrentCard.hpMax;
 
-    private int pp, ppMax, ep, epMax;
+    private int pp, ppMax, ppMaxLimit, ep, epMax;
+
+    public int PPMaxLimit {
+        get => ppMaxLimit;
+        set
+        {
+            ppMaxLimit = value;
+            PPMax = PPMax;
+        }
+    }
+
     public int PPMax {
         get => ppMax;
-        set => ppMax = Mathf.Clamp(value, 0, 10);
+        set
+        {
+            ppMax = Mathf.Clamp(value, 0, PPMaxLimit);
+            PP = PP;
+        }
     }
 
     public int PP {
@@ -27,7 +41,11 @@ public class Leader : BattlePlace
 
     public int EPMax {
         get => epMax;
-        set => epMax = Mathf.Clamp(value, 0, 3);
+        set
+        {
+            epMax = Mathf.Clamp(value, 0, 3);
+            EP = EP;
+        }
     }
 
     public int EP {
@@ -36,17 +54,21 @@ public class Leader : BattlePlace
     }
     public bool isEpUsed;
 
-    public Leader(bool isFirst, int craftId) : base(new List<BattleCard>() { BattleCard.Get(Card.GetLeaderCard(craftId)) }) {
+    public Leader(bool isFirst, int craftId) : base(new List<BattleCard>() { BattleCard.Get(Card.GetLeaderCard(craftId)) })
+    {
+        PPMaxLimit = 10;
         ep = pp = PPMax = 0;
         EPMax = isFirst ? 2 : 3;
         isEpUsed = false;
+        // leaderCard.buffController.TakeDamage(10);
     }
 
     public Leader(Leader rhs) : base(rhs) {
-        pp = rhs.pp;
+        PPMaxLimit = rhs.PPMaxLimit;
         PPMax = rhs.PPMax;
-        ep = rhs.ep;
+        PP = rhs.PP;
         EPMax = rhs.EPMax;
+        EP = rhs.EP;
         isEpUsed = rhs.isEpUsed;
     }
 
@@ -78,6 +100,7 @@ public class Leader : BattlePlace
             "hpInit" => HPInit,
             "pp" => PP,
             "ppMax" => PPMax,
+            "ppMaxLimit" => PPMaxLimit,
             "ep" => EP,
             "epMax" => EPMax,
             "isEpUsed" => isEpUsed ? 1 : 0,
@@ -100,6 +123,9 @@ public class Leader : BattlePlace
                 return;
             case "ppMax":
                 PPMax = (int)num;
+                return;
+            case "ppMaxLimit":
+                PPMaxLimit = (int)num;
                 return;
             case "ep":
                 EP = (int)num;

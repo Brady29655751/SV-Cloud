@@ -66,6 +66,7 @@ public class BattleGrave : BattlePlace
 
         return id switch {
             "num" => GraveCount,
+            "distinct_destroyedFollowerCostCount" => DistinctDestroyedFollowers.Select(x => x.cost).Distinct().Count(),
             _ => base.GetIdentifier(id),
         };
     }
