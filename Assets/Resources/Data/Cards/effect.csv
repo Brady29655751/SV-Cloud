@@ -1437,8 +1437,8 @@ id,timing,target,condition,cond_option,ability,ability_option
 2434,on_this_use,none,none,none,draw,count=1
 2435,on_this_evolve_with_ep,none,none,none,draw,count=1&filter=[keyword:14]
 2436,on_this_use,none,none,sourceEffect.target.first.current[IF][type:1|9][excludeId:910334101]=1,summon,field=op&id=910334101&count=1
-2437,on_this_use,all_field_1_index_[type:1|9],none,none,none,appendix=2438
-2438,on_this_use,me_hand_1_index+other_[type:1|9],none,none,none,appendix=2439
+2437,on_this_use,me_hand_1_index+other_[type:1|9],none,none,none,appendix=2438
+2438,on_this_use,all_field_1_index_[type:1|9],none,none,none,appendix=2439
 2439,on_this_use,sourceEffect[2].target_field_0_all_[type:1|9],none,none,transform,id=sourceEffect.target.first.current.id
 2440,on_other_evolve,self,none,effect.source.where=2&sourceEffect.target.first.isMe=1,set_cost,set=2
 2441,on_this_use,op_field_1_index_[type:1|9],none,none,damage,damage=2
@@ -1446,7 +1446,7 @@ id,timing,target,condition,cond_option,ability,ability_option
 2443,on_other_use,self,none,me.isMyTurn=1&effect.source.where=5&sourceEffect.target.first.current[IF][type:2|3]=1,set_value,id=effect.target.all.base.evolveCost&value=0
 2444,on_this_evolve_with_ep,me_hand_1_index+other,none,none,none,appendix=2445/2446/2447/2448
 2445,on_this_evolve_with_ep,none,none,sourceEffect.target.first.current[IF][keyword:14]=1,draw,count=1
-2446,on_this_evolve_with_ep,sourceEffect.target_hand_0_all_[keyword:14],none,sourceEffect.target.first.current[IF][keyword:14]=1,boost,add=1
+2446,on_this_evolve_with_ep,me_hand_0_all_[keyword:14],none,sourceEffect.target.first.current[IF][keyword:14]=1,boost,add=1
 2447,on_this_evolve_with_ep,none,none,sourceEffect.target.first.current[IF][keyword:20]=1,summon,id=910031301&count=1
 2448,on_this_evolve_with_ep,me_leader_0_all_[type:0],none,sourceEffect.target.first.current[IF][keyword:20]=1,set_pp,add=1
 2449,on_turn_end,self,none,me.isMyTurn=1&effect.source.where=5,add_effect,id=-44
